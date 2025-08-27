@@ -1,0 +1,293 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
+
+  <!-- SEO -->
+  <meta name="title" content="AnimeFound - Найди своё аниме">
+  <meta name="description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском. Находи любое аниме легко!">
+
+  <!-- Open Graph (для Facebook, Telegram, VK) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://your-site.com/">
+  <meta property="og:title" content="AnimeFound - Найди своё аниме">
+  <meta property="og:description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском.">
+  <meta property="og:image" content="https://your-site.com/preview.png">
+
+  <!-- Twitter Card (для Twitter/X) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://your-site.com/">
+  <meta name="twitter:title" content="AnimeFound - Найди своё аниме">
+  <meta name="twitter:description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском.">
+  <meta name="twitter:image" content="https://your-site.com/preview.png">
+
+  <!-- Favicon -->
+ 
+
+
+  <title>AnimeFound</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0 15px;
+      font-size: 2em;
+      letter-spacing: 1px;
+      color: #4da6ff;
+    }
+    .search {
+      text-align: center;
+      margin: 15px auto 25px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .search input {
+      padding: 10px 14px 10px 40px;
+      width: 100%;
+      border: none;
+      border-radius: 25px;
+      font-size: 1em;
+      background: #1c1f26 url("image.png") no-repeat 12px center;
+      background-size: 18px;
+      color: #fff;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      outline: none;
+    }
+    .search input::placeholder {
+      color: #aaa;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 20px 40px;
+      max-width: 1400px;
+      margin: auto;
+    }
+    .anime-box {
+      background: #1a1a1a;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      color: #eee;
+      max-width: 100%;
+      height: auto;
+    }
+    .anime-box:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+    }
+    .anime-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .anime-content {
+      padding: 14px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .anime-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #4da6ff;
+      text-align: center;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+    .badge {
+      background: #11294d;
+      color: #fff;
+      padding: 4px 8px;
+      font-size: 0.75em;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    .anime-desc {
+      font-size: 0.9em;
+      color: #ccc;
+      line-height: 1.4em;
+      max-height: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+    .trailer-btn {
+      margin-top: 8px;
+      padding: 8px 14px;
+      background: #4da6ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: background 0.2s;
+      align-self: center;
+    }
+    .trailer-btn:hover {
+      background: #1c75d8;
+    }
+
+    .load-more {
+      display: block;
+      margin: 20px auto 40px;
+      padding: 12px 24px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      background: #4da6ff;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .load-more:hover {
+      background: #1c75d8;
+    }
+
+    /* 📱 Адаптация для телефонов */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6em;
+      }
+      .container {
+        grid-template-columns: 1fr; /* по одной карточке */
+        padding: 0 12px 30px;
+      }
+      .anime-box {
+        max-width: 100%;
+      }
+      .anime-img {
+        height: 180px;
+      }
+      .search {
+        max-width: 90%;
+      }
+      .search input {
+        font-size: 0.9em;
+        padding: 9px 12px 9px 38px;
+      }
+      .trailer-btn {
+        font-size: 0.8em;
+        padding: 7px 12px;
+      }
+      .badge {
+        font-size: 0.7em;
+        padding: 3px 7px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>AnimeFound</h1>
+
+  <div class="search">
+    <input type="text" id="searchInput" placeholder="Search anime...">
+  </div>
+
+  <div class="container" id="animeContainer"></div>
+
+  <p id="noResults" style="text-align:center; display:none; margin-top:20px; font-size:1.2em; color:#ff6666;">
+    No results found.
+  </p>
+
+  <button class="load-more" id="loadMoreBtn">Load More</button>
+
+  <script>
+    let currentPage = 1;
+    const limit = 24;
+    let searchMode = false;
+    let searchQuery = "";
+
+    async function loadAnime(reset=false) {
+      try {
+        let url = "";
+        if (searchMode && searchQuery) {
+          url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchQuery)}&limit=${limit}&page=${currentPage}`;
+        } else {
+          url = `https://api.jikan.moe/v4/top/anime?page=${currentPage}&limit=${limit}`;
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+        const container = document.getElementById("animeContainer");
+
+        if (reset) container.innerHTML = "";
+
+        if (!data.data || data.data.length === 0) {
+          document.getElementById("noResults").style.display = "block";
+          return;
+        } else {
+          document.getElementById("noResults").style.display = "none";
+        }
+
+        data.data.forEach(anime => {
+          const box = document.createElement("div");
+          box.className = "anime-box";
+
+          const badges = [];
+          if (anime.type) badges.push(`<div class="badge">${anime.type}</div>`);
+          if (anime.status) badges.push(`<div class="badge">${anime.status}</div>`);
+          if (anime.year) badges.push(`<div class="badge">${anime.year}</div>`);
+          if (anime.episodes) badges.push(`<div class="badge">${anime.episodes} eps</div>`);
+          if (anime.score) badges.push(`<div class="badge">⭐ ${anime.score}</div>`);
+
+          box.innerHTML = `
+            <img class="anime-img" src="${anime.images.jpg.image_url}" alt="${anime.title}">
+            <div class="anime-content">
+              <div class="anime-title">${anime.title}</div>
+              <div class="badges">${badges.join("")}</div>
+              <div class="anime-desc">${anime.synopsis ? anime.synopsis.slice(0, 150) + "..." : "No description available"}</div>
+              ${
+                anime.trailer && anime.trailer.url
+                  ? `<button class="trailer-btn" onclick="window.open('${anime.trailer.url}','_blank')">Watch Trailer</button>`
+                  : `<button class="trailer-btn" disabled>No Trailer</button>`
+              }
+            </div>
+          `;
+          container.appendChild(box);
+        });
+
+      } catch (e) {
+        console.error("Error loading anime:", e);
+      }
+    }
+
+    async function loadInitial() {
+      for (let i=1; i<=2; i++) {
+        currentPage = i;
+        await loadAnime();
+      }
+      currentPage = 2;
+    }
+    loadInitial();
+
+    document.getElementById("loadMoreBtn").addEventListener("click", () => {
+      currentPage++;
+      loadAnime();
+    });
+
+    document.getElementById("searchInput").addEventListener("keyup", async function() {
+      searchQuery = this.value.trim();
+      currentPage = 1;
+      searchMode = searchQuery.length > 0;
+      await loadAnime(true);
+    });
+  </script>
+</body>
+</html>

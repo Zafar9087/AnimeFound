@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeFound — Найди своё аниме</title>
+        <style>
+                body {
+                    margin: 0;
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    background: #10131a;
+                    color: #eee;
+                }
+                .navbar {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 32px 80px 0 80px;
+                    background: #181c24;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+                }
+                .navbar-logo {
+                    font-size: 2.4em;
+                    font-weight: bold;
+                    color: #4da6ff;
+                    letter-spacing: 2px;
+                }
+                .navbar-links a {
+                    color: #eee;
+                    text-decoration: none;
+                    font-weight: 500;
+                    margin-left: 40px;
+                    font-size: 1.1em;
+                    transition: color 0.2s;
+                }
+            .navbar-links a:hover {
+                color: #4da6ff;
+            }
+                .hero {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 60vh;
+                    padding: 80px 0 60px 0;
+                    background: #181c24;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+                }
+            .hero-img {
+                width: 440px;
+                max-width: 40vw;
+                border-radius: 24px;
+                object-fit: cover;
+                box-shadow: 0 4px 32px #4da6ff22;
+                margin-right: 64px;
+            }
+            .hero-content {
+                max-width: 540px;
+            }
+                .hero-title {
+                    font-size: 3.2em;
+                    font-weight: 800;
+                    color: #4da6ff;
+                    margin-bottom: 24px;
+                    letter-spacing: 2px;
+                }
+                .hero-desc {
+                    font-size: 1.5em;
+                    color: #eee;
+                    margin-bottom: 40px;
+                    opacity: 0.92;
+                }
+            .hero-btn {
+                background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
+                color: #fff;
+                border: none;
+                border-radius: 20px;
+                font-size: 1.3em;
+                padding: 18px 56px;
+                cursor: pointer;
+                font-weight: bold;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                transition: background 0.2s, transform 0.2s;
+            }
+            .hero-btn:hover {
+                background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
+                transform: scale(1.05);
+            }
+                .section {
+                    display: flex;
+                    align-items: stretch;
+                    max-width: 1200px;
+                    margin: 64px auto;
+                    background: #181c24;
+                    border-radius: 24px;
+                    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+                    overflow: hidden;
+                }
+            .section-img {
+                width: 480px;
+                max-width: 45vw;
+                object-fit: cover;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .section-content {
+                flex: 1;
+                padding: 56px 56px 56px 56px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+                .section-title {
+                    font-size: 2.6em;
+                    color: #4da6ff;
+                    margin-bottom: 24px;
+                    font-weight: bold;
+                }
+                .section-content ul {
+                    font-size: 1.25em;
+                    color: #eee;
+                    margin-bottom: 32px;
+                    opacity: 0.95;
+                }
+                .section-content p {
+                    font-size: 1.15em;
+                    color: #ccc;
+                    margin-bottom: 0;
+                    opacity: 0.92;
+                }
+                @media (max-width: 900px) {
+                    .navbar {
+                        flex-direction: column;
+                        padding: 18px 12px 0 12px;
+                    }
+                    .hero {
+                        flex-direction: column;
+                        padding: 40px 0 30px 0;
+                    }
+                    .hero-img {
+                        margin-right: 0;
+                        margin-bottom: 32px;
+                        width: 90vw;
+                        max-width: 90vw;
+                    }
+                    .section {
+                        flex-direction: column;
+                        max-width: 98vw;
+                    }
+                    .section-img {
+                        width: 100vw;
+                        max-width: 100vw;
+                        height: 240px;
+                        object-fit: cover;
+                    }
+                    .section-content {
+                        padding: 32px 18px 32px 18px;
+                    }
+                    .section-title {
+                        font-size: 1.5em;
+                    }
+                    .section-content ul {
+                        font-size: 1em;
+                    }
+                }
+                .footer {
+                    width: 100%;
+                    background: #181c24;
+                    color: #aaa;
+                    text-align: center;
+                    padding: 32px 0 24px 0;
+                    font-size: 1.1em;
+                    margin-top: 64px;
+                    border-top: 1px solid #222;
+                }
+            </style>
+        </style>
+</head>
+<body>
+    <div class="navbar">
+       <a href="#" class="navbar-logo" style="text-decoration: none;">AnimeFound</a>
+        <div class="navbar-links">
+            <a href="#why">Почему мы?</a>
+            <a href="#about">О нас</a>
+            <a href="#contacts">Контакты</a>
+            <a href="index.html">Войти</a>
+        </div>
+    </div>
+                <div class="hero">
+                    <img class="hero-img" src="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png" alt="Naruto Uzumaki">
+                    <div class="hero-content">
+                        <div class="hero-title">AnimeFound</div>
+                        <div class="hero-desc">Ищи. Находи. Смотри.<br>Вся база аниме, трейлеры, описания и рейтинги — в одном месте!</div>
+                        <a href="index.html"><button class="hero-btn">Начать</button></a>
+                    </div>
+                </div>
+                        <div class="section" id="why">
+                            <div class="section-content">
+                                <div class="section-title">Почему мы?</div>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    <li>🔎 <b>Быстрый и удобный поиск аниме</b> — находите любимые сериалы за секунды</li>
+                                    <li>🎬 <b>Трейлеры, описания и галереи</b> — всегда актуальная информация, видео и арты</li>
+                                    <li>⭐ <b>Рейтинги, отзывы и рекомендации</b> — выбирайте лучшее по мнению зрителей и редакции</li>
+                                    <li>🌐 <b>Ссылки на просмотр и стриминг</b> — переходите на проверенные сервисы одним кликом</li>
+                                    <li>🇷🇺🇬🇧 <b>Поддержка русского и английского языков</b> — удобно для всех</li>
+                                    <li>📱 <b>Современный дизайн</b> — удобно на телефоне, планшете и компьютере</li>
+                                </ul>
+                                <p style="margin-top:18px;">Мы постоянно добавляем новые функции, чтобы сделать ваш опыт ещё лучше!</p>
+                            </div>
+                            <img class="section-img" src="https://assets.mycast.io/posters/naruto-fan-casting-poster-407772-large.jpg?1702102347" alt="Sasuke Uchiha">
+                        </div>
+                        <div class="section" id="about">
+                            <img class="section-img" src="https://m.media-amazon.com/images/M/MV5BMGVhZTY1YTctOWJlYS00MjcxLTlkNDgtYTUxZTM5MzMzZjI2XkEyXkFqcGc@._V1_.jpg" alt="Sakura Haruno">
+                            <div class="section-content">
+                                <div class="section-title">О нас</div>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    <li>AnimeFound — это команда энтузиастов, которая любит аниме и хочет сделать поиск и просмотр любимых сериалов максимально простым и приятным.</li>
+                                    <li><b>Что мы предлагаем:</b></li>
+                                    <li>— Смотреть трейлеры, читать описания и просматривать арты на русском и английском</li>
+                                    <li>— Получать свежие рейтинги, рекомендации и подборки</li>
+                                    <li>— Быстро переходить к просмотру на популярных платформах</li>
+                                    <li>— Пользоваться удобным и красивым интерфейсом</li>
+                                    <li>— Следить за новинками и обновлениями мира аниме</li>
+                                </ul>
+                                <p style="margin-top:18px;">Мы постоянно работаем над улучшением сервиса, чтобы сделать ваш опыт максимально комфортным и интересным! Присоединяйтесь к нашему сообществу и делитесь впечатлениями!</p>
+                            </div>
+                        </div>
+                        <div class="section" id="contacts">
+                            <div class="section-content">
+                                <div class="section-title">Контакты</div>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    <li>Email: <a href="mailto:info@animefound.ru" style="color:#4da6ff;">info@animefound.ru</a></li>
+                                    <li>Telegram: <a href="https://t.me/animefound" style="color:#4da6ff;">@animefound</a></li>
+                                    <li>Мы всегда открыты для предложений, сотрудничества и обратной связи. Пишите нам — мы рады общению!</li>
+                                    <li>Следите за новостями и обновлениями на нашем сайте и в соцсетях.</li>
+                                </ul>
+                            </div>
+                            <img class="section-img" src="https://i.pinimg.com/originals/45/fb/ad/45fbad01178e5df0f2860b54793c26be.jpg" alt="Sasuke Uchiha">
+                        </div>
+
+        <footer class="footer">
+            <div style="max-width:1200px;margin:auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;">
+                <div style="flex:1;min-width:220px;text-align:left;padding:0 16px;">
+                    <div style="font-size:1.2em;font-weight:bold;color:#4da6ff;margin-bottom:8px;">AnimeFound</div>
+                    <div style="margin-bottom:8px;">© 2025 Все права защищены</div>
+                    <div style="margin-bottom:8px;">Адрес: г. Москва, ул. Аниме, 77</div>
+                    <div style="margin-bottom:8px;">Телефон: <a href="tel:+998959031124" style="color:#4da6ff;">+7 (495) 123-45-67</a></div>
+                    <div style="margin-bottom:8px;">Email: <a href="mailto:zavlatkamalov@gmail.com" style="color:#4da6ff;">info@animefound.ru</a></div>
+                </div>
+                <div style="flex:1;min-width:220px;text-align:center;padding:0 16px;">
+                    <div style="margin-bottom:12px;">
+                        <a href="#why" style="color:#4da6ff;margin:0 12px;text-decoration:none;">Почему мы?</a>
+                        <a href="#about" style="color:#4da6ff;margin:0 12px;text-decoration:none;">О нас</a>
+                        <a href="#contacts" style="color:#4da6ff;margin:0 12px;text-decoration:none;">Контакты</a>
+                        <a href="index.html" style="color:#4da6ff;margin:0 12px;text-decoration:none;">Войти</a>
+                    </div>
+                    <div style="margin-bottom:8px;">Следите за нами:</div>
+                    <a href="https://t.me/Zafarboy1224" style="color:#4da6ff;margin:0 8px;text-decoration:none;">Telegram</a>
+                    <a href="#" style="color:#4da6ff;margin:0 8px;text-decoration:none;">VK</a>
+                    <a href="https://www.instagram.com/zafardesign1/" style="color:#4da6ff;margin:0 8px;text-decoration:none;">Instagram</a>
+                </div>
+            </div>
+        </footer>
+</body>
+</html>

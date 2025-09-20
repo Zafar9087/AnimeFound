@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 140px);
+        gap: 24px;
+        margin-top: 100px;
+      }
+      .card {
+        min-width: 0;
+        width: 90vw;
+        max-width: 340px;
+        margin: 0 auto;
+      }
+      .site-logo {
+        width: 100vw;
+        height: 70px;
+      }
+      .site-logo svg {
+        width: 90vw;
+        height: 44px;
+      }
+      .site-logo-text {
+        font-size: 16px !important;
+        margin-top: 10px !important;
+      }
+    }
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 120px);
+        gap: 18px;
+        margin-top: 80px;
+      }
+      .card {
+        width: 96vw;
+        max-width: 98vw;
+        min-width: 0;
+        margin: 0 auto;
+        border-radius: 16px;
+      }
+      .site-logo {
+        height: 54px;
+      }
+      .site-logo svg {
+        width: 98vw;
+        height: 32px;
+      }
+      .site-logo-text {
+        font-size: 13px !important;
+        margin-top: 8px !important;
+      }
+    }
+    .top-logo-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 80px;
+      background: linear-gradient(90deg, #181f2a 0%, #2a2f4d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .site-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .site-logo svg {
+      height: 48px;
+      width: 180px;
+      margin-bottom: 2px;
+    }
+    .site-logo-text {
+      font-size: 15px;
+      color: #fff;
+      opacity: 0.7;
+      letter-spacing: 1px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .grid {
+      margin-top: 110px;
+    }
+    .card img {
+      max-height: 80px;
+      max-width: 80%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
+      background: transparent;
+      border-radius: 10px;
+      transition: box-shadow 0.2s;
+    }
+    .card img:hover {
+  box-shadow: none;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <title>AnimeFound Services Showcase</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at center, #0f0f0f, #000000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 300px);
+      grid-template-rows: repeat(2, 200px);
+      gap: 40px;
+    }
+
+    .card {
+      position: relative;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1), 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .card img {
+      max-height: 80px;
+      max-width: 80%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
+    }
+
+    /* Specific branding glow */
+    .crunchyroll {
+      border: 1px solid #ff8000;
+      box-shadow: 0 0 10px #ff8000aa, inset 0 0 10px #ff800088;
+    }
+
+    .netflix {
+      border: 1px solid #e50914;
+      box-shadow: 0 0 10px #e50914aa, inset 0 0 10px #e5091488;
+    }
+
+    .hulu {
+      border: 1px solid #1ce783;
+      box-shadow: 0 0 10px #1ce783aa, inset 0 0 10px #1ce78388;
+    }
+
+    .funimation {
+      border: 1px solid #fff2cc;
+      box-shadow: 0 0 10px #fff2ccaa, inset 0 0 10px #fff2cc88;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-logo-bar">
+    <div class="site-logo" style="width:100vw;height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <svg width="320" height="70" viewBox="0 0 320 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI, sans-serif" font-size="54" font-weight="bold" fill="url(#animeGradient)">
+          AnimeFound
+        </text>
+        <defs>
+          <linearGradient id="animeGradient" x1="0" y1="0" x2="320" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4da6ff"/>
+            <stop offset="1" stop-color="#ff80b0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="site-logo-text" style="font-size:22px;margin-top:18px;color:#fff;opacity:0.97;letter-spacing:2px;text-shadow:0 2px 8px #181f2a;text-align:center;">Лучшие аниме онлайн</div>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card crunchyroll" id="crunchyroll-card" style="cursor:pointer;">
+      <img src="https://cdn.worldvectorlogo.com/logos/crunchyroll-1.svg" alt="Crunchyroll Logo">
+    </div>
+    <div class="card netflix" id="netflix-card" style="cursor:pointer;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo">
+    </div>
+    <div class="card hulu" id="hulu-card" style="cursor:pointer;">
+      <img src="https://cdn.worldvectorlogo.com/logos/hulu-2.svg" alt="Hulu Logo">
+    </div>
+    <div class="card funimation" id="funimation-card" style="cursor:pointer;">
+     <span style="font-family:'Segoe UI',sans-serif;font-size:2.3em;font-weight:bold;color:#fff;letter-spacing:2px;">Funimation</span>
+    </div>
+  </div>
+  <script>
+    // Get anime title from URL
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) || '';
+    }
+    const animeTitle = getQueryParam('anime');
+
+    // Click handlers for each service
+    document.getElementById('crunchyroll-card').onclick = function() {
+      window.open(`https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+    document.getElementById('netflix-card').onclick = function() {
+      window.open(`https://www.netflix.com/search?q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+    document.getElementById('hulu-card').onclick = function() {
+      window.open(`https://www.hulu.com/search?q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+    document.getElementById('funimation-card').onclick = function() {
+      window.open(`https://www.funimation.com/search/?q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+  </script>
+</body>
+</html>

@@ -1,10 +1,9 @@
 <head>
   <meta charset="UTF-8">
-  <meta name="google-site-verification" content="9bBo2MAxK3NHVZWouw9RNPq6MuUw-ZCV7x1Gz5g5uIA" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
-  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
 
+<link rel="icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png" image>
+<link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
   <!-- SEO -->
   <meta name="title" content="AnimeFound - Найди своё аниме">
   <meta name="description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском. Находи любое аниме легко!">
@@ -29,6 +28,46 @@
 
   <title>AnimeFound</title>
   <style>
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 32px 0 32px;
+      }
+      .lang-btn {
+        background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-size: 1em;
+        padding: 10px 24px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transition: background 0.2s, transform 0.2s;
+      }
+      .lang-btn:hover {
+        background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
+        transform: scale(1.05);
+      }
+      .watch-btn {
+        background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.1em;
+        padding: 12px 32px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transition: background 0.2s, transform 0.2s;
+        margin: 0 auto 24px auto;
+        display: block;
+      }
+      .watch-btn:hover {
+        background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
+        transform: scale(1.05);
+      }
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
@@ -43,10 +82,18 @@
       color: #4da6ff;
     }
     .search {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
       text-align: center;
-      margin: 15px auto 25px;
       width: 100%;
       max-width: 400px;
+      background: rgba(20, 30, 50, 0.95);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border-radius: 25px;
+      padding: 10px 0;
     }
     .search input {
       padding: 10px 14px 10px 40px;
@@ -195,12 +242,14 @@
 </head>
 <body>
 
-  <h1>AnimeFound</h1>
-
-  <div class="search">
-    <input type="text" id="searchInput" placeholder="Search anime...">
+  <div class="top-bar" style="position:fixed;top:0;left:0;width:100vw;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:18px 32px 0 32px;background:linear-gradient(135deg,#0a0f1a 0%,#11294d 100%);box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+  <a href="intro.html" style="text-decoration:none;"><h1 style="margin:0;color:#4da6ff;">AnimeFound</h1></a>
+    <button class="lang-btn" id="langBtn">English</button>
+    <div class="search" style="position:static;margin-left:32px;margin-bottom:0;box-shadow:none;background:none;padding:0;max-width:400px;width:100%;">
+      <input type="text" id="searchInput" placeholder="Search anime..." />
+    </div>
   </div>
-
+  <div style="height:140px;"></div> <!-- Spacer for fixed top bar -->
   <div class="container" id="animeContainer"></div>
 
   <p id="noResults" style="text-align:center; display:none; margin-top:20px; font-size:1.2em; color:#ff6666;">
@@ -210,6 +259,57 @@
   <button class="load-more" id="loadMoreBtn">Load More</button>
 
   <script>
+      // Language selector logic
+    const langBtn = document.getElementById('langBtn');
+    let currentLang = 'en';
+    const translations = {
+      en: {
+        searchPlaceholder: 'Search anime...',
+        noResults: 'No results found.',
+        loadMore: 'Load More',
+        watchAnime: 'Watch Anime',
+        trailer: 'Watch Trailer',
+        noTrailer: 'No Trailer',
+        siteTitle: 'AnimeFound'
+      },
+      ru: {
+        searchPlaceholder: 'Поиск аниме...',
+        noResults: 'Ничего не найдено.',
+        loadMore: 'Показать ещё',
+        watchAnime: 'Смотреть аниме',
+        trailer: 'Смотреть трейлер',
+        noTrailer: 'Нет трейлера',
+        siteTitle: 'АнимеПоиск'
+      }
+    };
+    function updateLanguageUI() {
+  document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
+  document.getElementById('noResults').textContent = translations[currentLang].noResults;
+  document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
+  document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
+  document.getElementById('langBtn').textContent = currentLang === 'en' ? 'Русский' : 'English';
+    }
+
+      function updateLanguageUI() {
+        document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
+        document.getElementById('noResults').textContent = translations[currentLang].noResults;
+        document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
+      }
+
+      langBtn.addEventListener('click', () => {
+        if (currentLang === 'en') {
+          langBtn.textContent = 'Русский';
+          currentLang = 'ru';
+          document.body.setAttribute('lang', 'ru');
+        } else {
+          langBtn.textContent = 'English';
+          currentLang = 'en';
+          document.body.setAttribute('lang', 'en');
+        }
+        updateLanguageUI();
+        loadAnime(true); // reload anime cards with new language
+      });
+      updateLanguageUI();
     let currentPage = 1;
     const limit = 24;
     let searchMode = false;
@@ -218,17 +318,29 @@
     async function loadAnime(reset=false) {
       try {
         let url = "";
-        if (searchMode && searchQuery) {
-          url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchQuery)}&limit=${limit}&page=${currentPage}`;
-        } else {
-          url = `https://api.jikan.moe/v4/top/anime?page=${currentPage}&limit=${limit}`;
-        }
-
-        const res = await fetch(url);
-        const data = await res.json();
+        let data = { data: [] };
         const container = document.getElementById("animeContainer");
-
         if (reset) container.innerHTML = "";
+
+        if (currentLang === 'ru') {
+          // Use Shikimori API for Russian
+          if (searchMode && searchQuery) {
+            url = `https://shikimori.one/api/animes?search=${encodeURIComponent(searchQuery)}&limit=${limit}&page=${currentPage}`;
+          } else {
+            url = `https://shikimori.one/api/animes?limit=${limit}&page=${currentPage}&order=popularity`;
+          }
+          const res = await fetch(url);
+          data.data = await res.json();
+        } else {
+          // Use Jikan API for English
+          if (searchMode && searchQuery) {
+            url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchQuery)}&limit=${limit}&page=${currentPage}`;
+          } else {
+            url = `https://api.jikan.moe/v4/top/anime?page=${currentPage}&limit=${limit}`;
+          }
+          const res = await fetch(url);
+          data = await res.json();
+        }
 
         if (!data.data || data.data.length === 0) {
           document.getElementById("noResults").style.display = "block";
@@ -240,25 +352,47 @@
         data.data.forEach(anime => {
           const box = document.createElement("div");
           box.className = "anime-box";
-
+          let title, desc, img, episodes, score, year;
+          if (currentLang === 'ru') {
+            // Shikimori fields
+            title = anime.russian || anime.name;
+            img = anime.image && anime.image.preview ? `https://shikimori.one${anime.image.preview}` : "";
+            episodes = anime.episodes;
+            score = anime.score;
+            year = anime.aired_on ? anime.aired_on.split('-')[0] : "";
+            desc = (anime.description && anime.description.trim().length > 0)
+              ? anime.description.slice(0, 150) + "..."
+              : "";
+          } else {
+            // Jikan fields
+            title = anime.title;
+            desc = anime.synopsis ? anime.synopsis.slice(0, 150) + "..." : "No description available";
+            img = anime.images.jpg.image_url;
+            episodes = anime.episodes;
+            score = anime.score;
+            year = anime.year;
+          }
           const badges = [];
-          if (anime.type) badges.push(`<div class="badge">${anime.type}</div>`);
-          if (anime.status) badges.push(`<div class="badge">${anime.status}</div>`);
-          if (anime.year) badges.push(`<div class="badge">${anime.year}</div>`);
-          if (anime.episodes) badges.push(`<div class="badge">${anime.episodes} eps</div>`);
-          if (anime.score) badges.push(`<div class="badge">⭐ ${anime.score}</div>`);
+          if (episodes) badges.push(`<div class="badge">${episodes} eps</div>`);
+          if (score) badges.push(`<div class="badge">⭐ ${score}</div>`);
+          if (year) badges.push(`<div class="badge">${year}</div>`);
+
+          // Watch Anime button links
+          let animeLink = '';
+          if (currentLang === 'ru') {
+            // Use Anilibria streaming page for Russian
+            animeLink = `https://www.anilibria.tv/release/?search=${encodeURIComponent(title)}`;
+          } else {
+            animeLink = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
+          }
 
           box.innerHTML = `
-            <img class="anime-img" src="${anime.images.jpg.image_url}" alt="${anime.title}">
+            <img class="anime-img" src="${img}" alt="${title}">
             <div class="anime-content">
-              <div class="anime-title">${anime.title}</div>
+              <div class="anime-title">${title}</div>
               <div class="badges">${badges.join("")}</div>
-              <div class="anime-desc">${anime.synopsis ? anime.synopsis.slice(0, 150) + "..." : "No description available"}</div>
-              ${
-                anime.trailer && anime.trailer.url
-                  ? `<button class="trailer-btn" onclick="window.open('${anime.trailer.url}','_blank')">Watch Trailer</button>`
-                  : `<button class="trailer-btn" disabled>No Trailer</button>`
-              }
+              <div class="anime-desc">${desc}</div>
+              <button class="watch-btn" onclick="${currentLang === 'en' ? `window.location.href='choose.html?anime=${encodeURIComponent(title)}'` : `window.open('${animeLink}','_blank')`}">${translations[currentLang].watchAnime}</button>
             </div>
           `;
           container.appendChild(box);
@@ -292,4 +426,3 @@
   </script>
 </body>
 </html>
-

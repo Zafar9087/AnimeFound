@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #20263a;
+      color: #fff;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .anime-card-balanced {
+      display: flex;
+      align-items: stretch;
+      background: #232a45;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px 0 rgba(44, 80, 180, 0.18), 0 2px 12px 0 rgba(0,0,0,0.12);
+      width: 900px;
+      height: 520px;
+      overflow: hidden;
+      margin: 0 auto;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .anime-card-balanced:hover {
+      box-shadow: 0 12px 36px 0 rgba(44, 80, 180, 0.28), 0 2px 24px 0 rgba(0,0,0,0.18);
+      transform: scale(1.012);
+    }
+    .anime-card-img {
+      width: 400px;
+      height: 520px;
+      background: #1c2236;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .anime-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      transition: transform 0.2s;
+    }
+    .anime-card-img img:hover {
+      transform: scale(1.03);
+    }
+    .anime-card-content {
+      flex: 1;
+      padding: 32px 32px 32px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: none;
+      justify-content: center;
+      position: relative;
+    }
+    .anime-card-title {
+      font-size: 2em;
+      font-weight: 700;
+      color: #4da6ff;
+      margin: 0 0 12px 0;
+      text-align: left;
+      letter-spacing: 0.5px;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .anime-card-desc {
+      font-size: 1.1em;
+      color: #e0e6f7;
+      margin-bottom: 8px;
+      text-align: left;
+      line-height: 1.5em;
+      background: rgba(24,28,47,0.10);
+      border-radius: 0 6px 6px 0;
+      font-family: 'Inter', Arial, sans-serif;
+      padding-left: 12px;
+    }
+    .anime-card-badges {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .badge {
+      background: #314a7c;
+      color: #fff;
+      padding: 6px 16px;
+      font-size: 1em;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .watch-btn {
+      background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1em;
+      padding: 12px 32px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 12px;
+      align-self: flex-start;
+      letter-spacing: 0.3px;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+    .watch-btn:hover {
+      background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
+      transform: scale(1.04);
+      box-shadow: 0 2px 10px #27ae60;
+    }
+    @media (max-width: 900px) {
+      .anime-card-balanced {
+        flex-direction: column;
+        width: 98vw;
+        height: auto;
+        border-radius: 10px;
+      }
+      .anime-card-img {
+        width: 100%;
+        height: 220px;
+      }
+      .anime-card-content {
+        padding: 16px 8px;
+      }
+      .anime-card-title {
+        font-size: 1.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="anime-card-balanced" id="animeCard">
+    <div class="anime-card-img">
+      <img id="animeImg" src="" alt="Anime Poster">
+    </div>
+    <div class="anime-card-content">
+      <h2 class="anime-card-title" id="animeTitle"></h2>
+      <p class="anime-card-desc" id="animeDesc"></p>
+      <div class="anime-card-badges">
+        <span class="badge" id="animeYear"></span>
+        <span class="badge" id="animeEpisodes"></span>
+        <span class="badge" id="animeScore"></span>
+      </div>
+      <button class="watch-btn" id="watchBtn">Смотреть аниме</button>
+    </div>
+  </div>
+  <script>
+    // Получаем параметры из URL
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('animeTitle').textContent = params.get('title') || '';
+    document.getElementById('animeDesc').textContent = params.get('desc') || '';
+    document.getElementById('animeImg').src = params.get('img') || '';
+    document.getElementById('animeImg').alt = params.get('title') || '';
+    document.getElementById('animeYear').textContent = params.get('year') ? params.get('year') : '';
+    document.getElementById('animeEpisodes').textContent = params.get('episodes') ? params.get('episodes') + ' eps' : '';
+    document.getElementById('animeScore').textContent = params.get('score') ? '⭐ ' + params.get('score') : '';
+    // Кнопка "Смотреть аниме" — работает как в index.html
+    document.getElementById('watchBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const lang = document.documentElement.lang || 'ru';
+      const title = params.get('title') || '';
+      if (lang === 'en') {
+        window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
+      } else {
+        // Для русского — открыть streaming (пример: ссылка из index.html)
+        const originalName = title;
+        function slugify(str) {
+          return str
+            .toLowerCase()
+            .replace(/ё/g, 'e')
+            .replace(/[^a-z0-9\s-]/gi, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+        }
+        const animeLink = `https://anilibria.wiki//release/${slugify(originalName)}.html`;
+        window.open(animeLink, '_blank');
+      }
+    });
+  </script>
+</body>
+</html>

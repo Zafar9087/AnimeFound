@@ -73,11 +73,31 @@
       font-family: "Segoe UI", Arial, sans-serif;
       background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
       color: #fff;
-    }
-    h1 {
-      text-align: center;
-      margin: 20px 0 15px;
-      font-size: 2em;
+        const allowedTypes = ['tv', 'movie', 'ova', 'ona', 'special'];
+        const hentaiGenres = ['hentai', 'хентай', 'adult'];
+        const hentaiRatings = ['rx', 'r18', '18+', 'r+ (mild nudity)'];
+        for (const anime of data.data) {
+          // Показывать только аниме
+          if (!allowedTypes.includes(anime.kind)) {
+            continue;
+          }
+          // Усиленная фильтрация хентая
+          let isHentai = false;
+          if (anime.genres && anime.genres.some(g => g.name && hentaiGenres.includes(g.name.toLowerCase()))) {
+            isHentai = true;
+          }
+          if (anime.rating && hentaiRatings.includes(anime.rating.toLowerCase())) {
+            isHentai = true;
+          }
+          if (anime.russian && anime.russian.toLowerCase().includes('хентай')) {
+            isHentai = true;
+          }
+          if (anime.name && anime.name.toLowerCase().includes('hentai')) {
+            isHentai = true;
+          }
+          if (isHentai) {
+            continue;
+          }
       letter-spacing: 1px;
       color: #4da6ff;
     }
@@ -349,13 +369,30 @@
           document.getElementById("noResults").style.display = "none";
         }
 
-        data.data.forEach(anime => {
-          // Filter out hentai
-          if ((anime.genres && anime.genres.some(g => g.name?.toLowerCase() === 'hentai')) || (anime.rating && anime.rating.toLowerCase() === 'rx')) {
-            return;
+        const hentaiGenres = ['hentai', 'хентай', 'adult'];
+        const hentaiRatings = ['rx', 'r18', '18+', 'r+ (mild nudity)'];
+        const blockKeywords = [
+          'атака девушек', 'напор девушек', 'поворот девушек', 'girl attack', 'girl twist', 'ecchi', 'эротика', 'фансервис', 'fanservice', 'sexual', 'sex', 'nsfw', 'r18', 'adult', 'хентай', 'hentai'
+        ];
+        function isHentai(anime) {
+          if (anime.genres && anime.genres.some(g => g.name && hentaiGenres.includes(g.name.toLowerCase()))) return true;
+          if (anime.rating && hentaiRatings.includes(anime.rating.toLowerCase())) return true;
+          if (anime.russian && anime.russian.toLowerCase().includes('хентай')) return true;
+          if (anime.name && anime.name.toLowerCase().includes('hentai')) return true;
+          if (anime.title && anime.title.toLowerCase().includes('hentai')) return true;
+          // Блокировать по ключевым словам
+          for (const kw of blockKeywords) {
+            if ((anime.russian && anime.russian.toLowerCase().includes(kw)) || (anime.name && anime.name.toLowerCase().includes(kw)) || (anime.title && anime.title.toLowerCase().includes(kw))) {
+              return true;
+            }
           }
+          return false;
+        }
+        data.data.forEach(anime => {
+          if (isHentai(anime)) return;
           const box = document.createElement("div");
           box.className = "anime-box";
+          box.style.cursor = "pointer";
           let title, desc, img, episodes, score, year;
           if (currentLang === 'ru') {
             // Shikimori fields
@@ -384,8 +421,18 @@
           // Watch Anime button links
           let animeLink = '';
           if (currentLang === 'ru') {
-            // Use Anilibria streaming page for Russian
-            animeLink = `https://www.anilibria.tv/release/?search=${encodeURIComponent(title)}`;
+            // Используем оригинальное название для slug
+            function slugify(str) {
+              return str
+                .toLowerCase()
+                .replace(/ё/g, 'e')
+                .replace(/[^a-z0-9\s-]/gi, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+            }
+            const originalName = anime.name;
+            animeLink = `https://anilibria.wiki//release/${slugify(originalName)}.html`;
           } else {
             animeLink = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
           }
@@ -396,9 +443,32 @@
               <div class="anime-title">${title}</div>
               <div class="badges">${badges.join("")}</div>
               <div class="anime-desc">${desc}</div>
-              <button class="watch-btn" onclick="${currentLang === 'en' ? `window.location.href='choose.html?anime=${encodeURIComponent(title)}'` : `window.open('${animeLink}','_blank')`}">${translations[currentLang].watchAnime}</button>
+              <button class="watch-btn">${translations[currentLang].watchAnime}</button>
             </div>
           `;
+          // Обработчик для кнопки 'Смотреть аниме'
+          box.querySelector('.watch-btn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (currentLang === 'en') {
+              window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
+            } else {
+              window.open(animeLink, '_blank');
+            }
+          });
+          // При клике на карточку — переход на card.html с параметрами
+          box.addEventListener('click', function(e) {
+            // Не срабатывает при клике на кнопку "Смотреть аниме"
+            if (e.target.classList.contains('watch-btn')) return;
+            const params = new URLSearchParams({
+              title,
+              desc,
+              img,
+              episodes: episodes || '',
+              score: score || '',
+              year: year || ''
+            });
+            window.location.href = `card.html?${params.toString()}`;
+          });
           container.appendChild(box);
         });
 

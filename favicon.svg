@@ -1,0 +1,19 @@
+<svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo-text {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 80px;
+      font-weight: bold;
+      fill: #11294d; /* Цвет для светлой темы по умолчанию */
+    }
+    @media (prefers-color-scheme: dark) {
+      .logo-text {
+        fill: #4da6ff; /* Цвет для тёмной темы */
+      }
+    }
+  </style>
+  <!-- "A" и "F" от AnimeFound -->
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" class="logo-text">
+    AF
+  </text>
+</svg>

@@ -2,8 +2,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png" image>
-<link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
   <!-- SEO -->
   <meta name="title" content="AnimeFound - Найди своё аниме">
   <meta name="description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском. Находи любое аниме легко!">
@@ -28,25 +28,37 @@
 
   <title>AnimeFound</title>
   <style>
-      .top-bar {
+      .top-bar { /* Updated to glassmorphism */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 200;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 18px 32px 0 32px;
+        padding: 12px 32px;
+        background: rgba(10, 15, 26, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(77, 166, 255, 0.1);
       }
-      .lang-btn {
+      .top-bar-btn {
         background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
         color: #fff;
         border: none;
         border-radius: 20px;
         font-size: 1em;
-        padding: 10px 24px;
+        padding: 10px 20px;
         cursor: pointer;
         font-weight: bold;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         transition: background 0.2s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 30px;
       }
-      .lang-btn:hover {
+      .top-bar-btn:hover {
         background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
         transform: scale(1.05);
       }
@@ -72,63 +84,29 @@
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
-      color: #fff;
-        const allowedTypes = ['tv', 'movie', 'ova', 'ona', 'special'];
-        const hentaiGenres = ['hentai', 'хентай', 'adult'];
-        const hentaiRatings = ['rx', 'r18', '18+', 'r+ (mild nudity)'];
-        for (const anime of data.data) {
-          // Показывать только аниме
-          if (!allowedTypes.includes(anime.kind)) {
-            continue;
-          }
-          // Усиленная фильтрация хентая
-          let isHentai = false;
-          if (anime.genres && anime.genres.some(g => g.name && hentaiGenres.includes(g.name.toLowerCase()))) {
-            isHentai = true;
-          }
-          if (anime.rating && hentaiRatings.includes(anime.rating.toLowerCase())) {
-            isHentai = true;
-          }
-          if (anime.russian && anime.russian.toLowerCase().includes('хентай')) {
-            isHentai = true;
-          }
-          if (anime.name && anime.name.toLowerCase().includes('hentai')) {
-            isHentai = true;
-          }
-          if (isHentai) {
-            continue;
-          }
-      letter-spacing: 1px;
-      color: #4da6ff;
+      color: #e0e6f7;
     }
-    .search {
-      position: fixed;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      text-align: center;
-      width: 100%;
+    .search { /* Simplified and integrated into top-bar */
+      margin-left: 32px;
       max-width: 400px;
-      background: rgba(20, 30, 50, 0.95);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      border-radius: 25px;
-      padding: 10px 0;
-    }
-    .search input {
-      padding: 10px 14px 10px 40px;
       width: 100%;
-      border: none;
-      border-radius: 25px;
-      font-size: 1em;
-      background: #1c1f26 url("image.png") no-repeat 12px center;
-      background-size: 18px;
-      color: #fff;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-      outline: none;
     }
-    .search input::placeholder {
-      color: #aaa;
+    #searchInput {
+      padding: 10px 18px;
+      width: 100%;
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 12px;
+      font-size: 1em;
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fff;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    #searchInput::placeholder {
+      color: #8a9ac1;
     }
 
     .container {
@@ -140,20 +118,21 @@
       margin: auto;
     }
     .anime-box {
-      background: #1a1a1a;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       transition: transform 0.25s, box-shadow 0.25s;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       color: #eee;
-      max-width: 100%;
-      height: auto;
     }
     .anime-box:hover {
       transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
     }
     .anime-img {
       width: 100%;
@@ -161,7 +140,7 @@
       object-fit: cover;
     }
     .anime-content {
-      padding: 14px 16px 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -179,12 +158,12 @@
       justify-content: center;
     }
     .badge {
-      background: #11294d;
-      color: #fff;
-      padding: 4px 8px;
-      font-size: 0.75em;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      background: rgba(77, 166, 255, 0.15);
+      border: 1px solid rgba(77, 166, 255, 0.3);
+      color: #e0e6f7;
+      padding: 5px 12px;
+      font-size: 0.8em;
+      border-radius: 30px;
     }
     .anime-desc {
       font-size: 0.9em;
@@ -194,21 +173,21 @@
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: center;
+      flex-grow: 1;
+      margin-bottom: 10px;
     }
-    .trailer-btn {
-      margin-top: 8px;
-      padding: 8px 14px;
-      background: #4da6ff;
+    .watch-btn {
+      background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
       color: #fff;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 12px;
       font-size: 0.9em;
-      transition: background 0.2s;
+      padding: 8px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
+      transition: all 0.3s ease;
       align-self: center;
-    }
-    .trailer-btn:hover {
-      background: #1c75d8;
     }
 
     .load-more {
@@ -245,10 +224,6 @@
       .search {
         max-width: 90%;
       }
-      .search input {
-        font-size: 0.9em;
-        padding: 9px 12px 9px 38px;
-      }
       .trailer-btn {
         font-size: 0.8em;
         padding: 7px 12px;
@@ -262,14 +237,17 @@
 </head>
 <body>
 
-  <div class="top-bar" style="position:fixed;top:0;left:0;width:100vw;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:18px 32px 0 32px;background:linear-gradient(135deg,#0a0f1a 0%,#11294d 100%);box-shadow:0 2px 8px rgba(0,0,0,0.3);">
-  <a href="intro.html" style="text-decoration:none;"><h1 style="margin:0;color:#4da6ff;">AnimeFound</h1></a>
-    <button class="lang-btn" id="langBtn">English</button>
-    <div class="search" style="position:static;margin-left:32px;margin-bottom:0;box-shadow:none;background:none;padding:0;max-width:400px;width:100%;">
+  <div class="top-bar">  
+    <a href="intro.html" style="text-decoration:none; flex-shrink: 0;"><h1 style="margin:0;color:#4da6ff;">AnimeFound</h1></a>
+    <div class="search" style="flex-grow: 1; margin-left: 20px; margin-right: 20px;">
       <input type="text" id="searchInput" placeholder="Search anime..." />
     </div>
+    <div class="top-bar-actions" style="display: flex; align-items: center; flex-shrink: 0;">
+      <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn">🎲 Рандом</a>
+      <button class="top-bar-btn" id="langBtn">English</button>
+    </div>
   </div>
-  <div style="height:140px;"></div> <!-- Spacer for fixed top bar -->
+  <div style="height:80px;"></div> <!-- Spacer for fixed top bar -->
   <div class="container" id="animeContainer"></div>
 
   <p id="noResults" style="text-align:center; display:none; margin-top:20px; font-size:1.2em; color:#ff6666;">
@@ -280,7 +258,7 @@
 
   <script>
       // Language selector logic
-    const langBtn = document.getElementById('langBtn');
+    const langBtn = document.getElementById('langBtn');    
     let currentLang = 'en';
     const translations = {
       en: {
@@ -290,7 +268,8 @@
         watchAnime: 'Watch Anime',
         trailer: 'Watch Trailer',
         noTrailer: 'No Trailer',
-        siteTitle: 'AnimeFound'
+        siteTitle: 'AnimeFound',
+        randomizerBtn: '🎲 Random'
       },
       ru: {
         searchPlaceholder: 'Поиск аниме...',
@@ -299,13 +278,15 @@
         watchAnime: 'Смотреть аниме',
         trailer: 'Смотреть трейлер',
         noTrailer: 'Нет трейлера',
-        siteTitle: 'АнимеПоиск'
+        siteTitle: 'АнимеПоиск',
+        randomizerBtn: '🎲 Рандом'
       }
     };
     function updateLanguageUI() {
   document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
   document.getElementById('noResults').textContent = translations[currentLang].noResults;
   document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
+  document.getElementById('randomizerBtn').textContent = translations[currentLang].randomizerBtn;
   document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
   document.getElementById('langBtn').textContent = currentLang === 'en' ? 'Русский' : 'English';
     }
@@ -369,13 +350,30 @@
           document.getElementById("noResults").style.display = "none";
         }
 
-        const hentaiGenres = ['hentai', 'хентай', 'adult'];
+        const hentaiGenres = ['hentai', 'хентай', 'adult', 'ecchi'];
         const hentaiRatings = ['rx', 'r18', '18+', 'r+ (mild nudity)'];
         const blockKeywords = [
           'атака девушек', 'напор девушек', 'поворот девушек', 'girl attack', 'girl twist', 'ecchi', 'эротика', 'фансервис', 'fanservice', 'sexual', 'sex', 'nsfw', 'r18', 'adult', 'хентай', 'hentai'
         ];
+        const bannedTitles = [
+          'девичье обучение', 'пятнадцать красивых девушек', 'ансамбль девушек', 'сними меня', 'крусалочка', 'атака пиратов',
+          'неприличные развлечения для девушек', 'жизнь двух девушек', 'полное событие', 'сникерс', 'секретное назначение девушек. ниндзя. спецвыпуски',
+          'секретное назначение девушек. ниндзя. ова', 'девушка в офсайте', 'девушка в скарлупе', 'девушка из векельных новостей',
+          'девушка из прогноза', 'девушка влюбилась в старший спецвыпуск', 'девушка со странностями', 'девушка-волшебница ай',
+          'девушка-волшебница мерруру', 'девушка со странностями 2', 'девушка влюбилась в старшую сестру ова',
+          'девушка-детектив похвалил хулиганы', 'девушка из фантазии', 'девушка-демон за курой спецвыпуски',
+          'девушка с гитарой', 'девушка что надо',
+          'академия святая мария', 'фортуна и удача', 'аякаши и мегами: священный дух', 'аукцион рабынь',
+          // Оригинальные английские названия
+          'offside girl', 'girl in offside', 'ensemble of girls', 'take me off', 'crusalka', 'pirates attack',
+          'naughty entertainment for girls', 'life of two girls', 'full event', 'snickers', 'secret mission girls ninja special',
+          'secret mission girls ninja ova', 'girl in shell', 'girl from vekel news', 'girl from forecast',
+          'girl fell in love with older special', 'girl with oddities', 'magical girl ai', 'magical girl merruru',
+          'girl with oddities 2', 'girl fell in love with older sister ova', 'girl-detective praised hooligans', 'girl from fantasy',
+          'girl-demon for chicken special', 'girl with guitar', 'girl what you need'
+        ];
         function isHentai(anime) {
-          if (anime.genres && anime.genres.some(g => g.name && hentaiGenres.includes(g.name.toLowerCase()))) return true;
+          if (anime.genres && anime.genres.some(g => g.name && (hentaiGenres.includes(g.name.toLowerCase()) || g.name.toLowerCase() === 'ecchi' || g.name.toLowerCase() === 'этти'))) return true;
           if (anime.rating && hentaiRatings.includes(anime.rating.toLowerCase())) return true;
           if (anime.russian && anime.russian.toLowerCase().includes('хентай')) return true;
           if (anime.name && anime.name.toLowerCase().includes('hentai')) return true;
@@ -390,6 +388,11 @@
         }
         data.data.forEach(anime => {
           if (isHentai(anime)) return;
+          // Бан по названиям
+          const allNames = [anime.russian, anime.name, anime.title].map(x => (x || '').toLowerCase());
+          if (bannedTitles.some(ban => allNames.some(n => n.includes(ban)))) {
+            return;
+          }
           const box = document.createElement("div");
           box.className = "anime-box";
           box.style.cursor = "pointer";

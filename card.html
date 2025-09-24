@@ -3,139 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
   <title>Anime Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #20263a;
-      color: #fff;
+      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+      color: #e0e6f7;
       font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-sizing: border-box;
     }
     .anime-card-balanced {
       display: flex;
       align-items: stretch;
-      background: #232a45;
-      border-radius: 18px;
-      box-shadow: 0 6px 24px 0 rgba(44, 80, 180, 0.18), 0 2px 12px 0 rgba(0,0,0,0.12);
-      width: 900px;
-      height: 520px;
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      min-height: 500px;
       overflow: hidden;
       margin: 0 auto;
-      position: relative;
-      transition: box-shadow 0.2s, transform 0.2s;
+      transition: box-shadow 0.3s, transform 0.3s;
     }
     .anime-card-balanced:hover {
-      box-shadow: 0 12px 36px 0 rgba(44, 80, 180, 0.28), 0 2px 24px 0 rgba(0,0,0,0.18);
-      transform: scale(1.012);
+      box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
+      transform: translateY(-5px);
     }
     .anime-card-img {
-      width: 400px;
-      height: 520px;
-      background: #1c2236;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 380px;
+      flex-shrink: 0;
       overflow: hidden;
     }
     .anime-card-img img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 0;
-      transition: transform 0.2s;
+      transition: transform 0.3s ease-out;
     }
-    .anime-card-img img:hover {
-      transform: scale(1.03);
+    .anime-card-img:hover img {
+      transform: scale(1.05);
     }
     .anime-card-content {
       flex: 1;
-      padding: 32px 32px 32px 32px;
+      padding: 40px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      background: none;
+      gap: 20px;
       justify-content: center;
-      position: relative;
     }
     .anime-card-title {
-      font-size: 2em;
+      font-size: 2.4em;
       font-weight: 700;
-      color: #4da6ff;
-      margin: 0 0 12px 0;
-      text-align: left;
-      letter-spacing: 0.5px;
-      font-family: 'Inter', Arial, sans-serif;
+      color: #fff;
+      margin: 0;
+      text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
+      letter-spacing: 1px;
     }
     .anime-card-desc {
-      font-size: 1.1em;
-      color: #e0e6f7;
-      margin-bottom: 8px;
-      text-align: left;
-      line-height: 1.5em;
-      background: rgba(24,28,47,0.10);
-      border-radius: 0 6px 6px 0;
-      font-family: 'Inter', Arial, sans-serif;
-      padding-left: 12px;
+      font-size: 1.05em;
+      color: #c0c8e7;
+      line-height: 1.6em;
+      border-left: 3px solid #4da6ff;
+      padding-left: 16px;
+      max-height: 180px;
+      overflow-y: auto;
     }
     .anime-card-badges {
       display: flex;
-      gap: 16px;
-      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
     }
     .badge {
-      background: #314a7c;
-      color: #fff;
-      padding: 6px 16px;
-      font-size: 1em;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      background: rgba(77, 166, 255, 0.15);
+      border: 1px solid rgba(77, 166, 255, 0.3);
+      color: #e0e6f7;
+      padding: 8px 16px;
+      font-size: 0.95em;
+      border-radius: 30px;
       font-weight: 500;
-      letter-spacing: 0.3px;
-      font-family: 'Inter', Arial, sans-serif;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .badge:hover {
+      background: rgba(77, 166, 255, 0.3);
+      color: #fff;
     }
     .watch-btn {
-      background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
+      background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 1.1em;
-      padding: 12px 32px;
+      padding: 14px 36px;
       cursor: pointer;
-      font-weight: 600;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.10);
-      transition: background 0.2s, transform 0.2s;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
+      transition: all 0.3s ease;
       margin-top: 12px;
       align-self: flex-start;
-      letter-spacing: 0.3px;
-      font-family: 'Inter', Arial, sans-serif;
+      letter-spacing: 0.5px;
     }
     .watch-btn:hover {
-      background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
-      transform: scale(1.04);
-      box-shadow: 0 2px 10px #27ae60;
+      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 20px rgba(77, 166, 255, 0.4);
     }
     @media (max-width: 900px) {
+      body {
+        padding: 0;
+      }
       .anime-card-balanced {
         flex-direction: column;
         width: 98vw;
         height: auto;
-        border-radius: 10px;
+        min-height: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
       }
       .anime-card-img {
         width: 100%;
-        height: 220px;
+        height: 300px;
       }
       .anime-card-content {
-        padding: 16px 8px;
+        padding: 24px;
       }
       .anime-card-title {
-        font-size: 1.2em;
+        font-size: 1.8em;
+      }
+      .anime-card-desc {
+        font-size: 1em;
+        max-height: 150px;
+      }
+      .watch-btn {
+        align-self: stretch;
+        text-align: center;
       }
     }
   </style>
@@ -159,33 +174,66 @@
   <script>
     // Получаем параметры из URL
     const params = new URLSearchParams(window.location.search);
-    document.getElementById('animeTitle').textContent = params.get('title') || '';
-    document.getElementById('animeDesc').textContent = params.get('desc') || '';
-    document.getElementById('animeImg').src = params.get('img') || '';
-    document.getElementById('animeImg').alt = params.get('title') || '';
-    document.getElementById('animeYear').textContent = params.get('year') ? params.get('year') : '';
-    document.getElementById('animeEpisodes').textContent = params.get('episodes') ? params.get('episodes') + ' eps' : '';
-    document.getElementById('animeScore').textContent = params.get('score') ? '⭐ ' + params.get('score') : '';
-    // Кнопка "Смотреть аниме" — работает как в index.html
+    const title = params.get('title') || 'Название не найдено';
+    const desc = params.get('desc') || 'Описание отсутствует.';
+    const img = params.get('img') || '';
+    const year = params.get('year');
+    const episodes = params.get('episodes');
+    const score = params.get('score');
+
+    document.getElementById('animeTitle').textContent = title;
+    document.getElementById('animeDesc').textContent = desc;
+    document.getElementById('animeImg').src = img;
+    document.getElementById('animeImg').alt = title;
+
+    const yearBadge = document.getElementById('animeYear');
+    const episodesBadge = document.getElementById('animeEpisodes');
+    const scoreBadge = document.getElementById('animeScore');
+
+    if (year) {
+      yearBadge.textContent = year;
+    } else {
+      yearBadge.style.display = 'none';
+    }
+
+    if (episodes) {
+      episodesBadge.textContent = `${episodes} эп.`;
+    } else {
+      episodesBadge.style.display = 'none';
+    }
+
+    if (score) {
+      scoreBadge.textContent = `⭐ ${score}`;
+    } else {
+      scoreBadge.style.display = 'none';
+    }
+
+    // Кнопка "Смотреть аниме"
     document.getElementById('watchBtn').addEventListener('click', function(e) {
       e.stopPropagation();
       const lang = document.documentElement.lang || 'ru';
-      const title = params.get('title') || '';
+      
       if (lang === 'en') {
         window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
       } else {
-        // Для русского — открыть streaming (пример: ссылка из index.html)
-        const originalName = title;
+        // Для русского — создаем ссылку на Anilibria
+        const russianChars = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+            'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+            'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
+            'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+        };
+
         function slugify(str) {
-          return str
-            .toLowerCase()
-            .replace(/ё/g, 'e')
-            .replace(/[^a-z0-9\s-]/gi, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
+            return str.toLowerCase().split('').map(char => russianChars[char] || char)
+            .join('')
+            .replace(/[^a-z0-9\s-]/gi, '') // remove unsupported chars
+            .trim()
+            .replace(/\s+/g, '-') // collapse whitespace and replace by -
+            .replace(/-+/g, '-'); // collapse dashes
         }
-        const animeLink = `https://anilibria.wiki//release/${slugify(originalName)}.html`;
+        
+        const animeLink = `https://anilibria.wiki/release/${slugify(title)}.html`;
         window.open(animeLink, '_blank');
       }
     });

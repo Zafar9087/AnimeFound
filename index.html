@@ -58,6 +58,21 @@
         display: inline-block;
         margin-left: 30px;
       }
+      .top-bar-btn1 {
+        background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-size: 1em;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transition: background 0.2s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 400px;
+      }
       .top-bar-btn:hover {
         background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
         transform: scale(1.05);
@@ -222,29 +237,54 @@
         height: 180px;
       }
       .search {
-        max-width: 90%;
+        display: none;
       }
-      .trailer-btn {
-        font-size: 0.8em;
-        padding: 7px 12px;
+      .top-bar-actions {
+        display: flex;
       }
-      .badge {
-        font-size: 0.7em;
-        padding: 3px 7px;
-      }
+    }
+    .more-dropdown {
+      position: absolute;
+      top: calc(100% + 5px); /* Позиция под родительским элементом + отступ */
+      right: 0;
+      background: rgba(10, 15, 26, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(77, 166, 255, 0.1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+      pointer-events: none; /* Невидимый блок не должен перехватывать клики */
+    }
+    .more-dropdown.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
   </style>
 </head>
 <body>
+  
 
-  <div class="top-bar">  
+  <div class="top-bar">
     <a href="intro.html" style="text-decoration:none; flex-shrink: 0;"><h1 style="margin:0;color:#4da6ff;">AnimeFound</h1></a>
-    <div class="search" style="flex-grow: 1; margin-left: 20px; margin-right: 20px;">
-      <input type="text" id="searchInput" placeholder="Search anime..." />
-    </div>
-    <div class="top-bar-actions" style="display: flex; align-items: center; flex-shrink: 0;">
-      <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn">🎲 Рандом</a>
-      <button class="top-bar-btn" id="langBtn">English</button>
+    <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <div class="search" style="margin: 0;">
+        <input type="text" id="searchInput" placeholder="Search anime..." />
+      </div>
+      <div class="top-bar-actions" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
+        <button class="top-bar-btn" id="moreBtn">More</button>
+        <div id="more-buttons-dropdown" class="more-dropdown">
+          <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0;">🎲 Рандом</a>
+          <button class="top-bar-btn" id="langBtn" style="margin: 0;">English</button>
+        </div>
+      </div>
     </div>
   </div>
   <div style="height:80px;"></div> <!-- Spacer for fixed top bar -->
@@ -283,19 +323,13 @@
       }
     };
     function updateLanguageUI() {
-  document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
-  document.getElementById('noResults').textContent = translations[currentLang].noResults;
-  document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
-  document.getElementById('randomizerBtn').textContent = translations[currentLang].randomizerBtn;
-  document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
-  document.getElementById('langBtn').textContent = currentLang === 'en' ? 'Русский' : 'English';
+      document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
+      document.getElementById('noResults').textContent = translations[currentLang].noResults;
+      document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
+      document.getElementById('randomizerBtn').textContent = translations[currentLang].randomizerBtn;
+      document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
+      document.getElementById('langBtn').textContent = currentLang === 'en' ? 'Русский' : 'English';
     }
-
-      function updateLanguageUI() {
-        document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
-        document.getElementById('noResults').textContent = translations[currentLang].noResults;
-        document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
-      }
 
       langBtn.addEventListener('click', () => {
         if (currentLang === 'en') {
@@ -500,6 +534,13 @@
       searchMode = searchQuery.length > 0;
       await loadAnime(true);
     });
+
+    document.getElementById('moreBtn').addEventListener('click', function() {
+      const dropdown = document.getElementById('more-buttons-dropdown');
+      dropdown.classList.toggle('visible');
+    });
+
   </script>
+  
 </body>
 </html>

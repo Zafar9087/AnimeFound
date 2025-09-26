@@ -2,6 +2,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
   <!-- SEO -->
@@ -23,6 +25,18 @@
   <meta name="twitter:image" content="https://your-site.com/preview.png">
 
   <!-- Favicon -->
+   <!-- Стандартный favicon для старых браузеров и Яндекса -->
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- Современный вариант (SVG) -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- PNG для универсальности -->
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+
+<!-- Apple Touch Icon -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
  
 
 
@@ -281,6 +295,18 @@
       <div class="top-bar-actions" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
         <button class="top-bar-btn" id="moreBtn">More</button>
         <div id="more-buttons-dropdown" class="more-dropdown">
+          <div id="g_id_onload"
+              data-client_id="169151760587-vkicieu6ehum6e1kvatc3i4qpplnt6hj.apps.googleusercontent.com"
+              data-callback="handleCredentialResponse">
+          </div>
+          <div class="g_id_signin"
+              data-type="standard"
+              data-size="large"
+              data-theme="outline"
+              data-text="sign_in_with"
+              data-shape="rectangular"
+              data-logo_alignment="left">
+          </div>
           <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0;">🎲 Рандом</a>
           <button class="top-bar-btn" id="langBtn" style="margin: 0;">English</button>
         </div>
@@ -483,19 +509,39 @@
               <button class="watch-btn">${translations[currentLang].watchAnime}</button>
             </div>
           `;
-          // Обработчик для кнопки 'Смотреть аниме'
           box.querySelector('.watch-btn').addEventListener('click', function(e) {
             e.stopPropagation();
+
+            // Save state to sessionStorage
+            const state = {
+              searchQuery: document.getElementById('searchInput').value,
+              currentLang: currentLang,
+              scrollPos: window.scrollY,
+              animeHTML: document.getElementById('animeContainer').innerHTML,
+              currentPage: currentPage
+            };
+            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+
             if (currentLang === 'en') {
               window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
             } else {
               window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=${currentLang}`;
             }
           });
-          // При клике на карточку — переход на card.html с параметрами
           box.addEventListener('click', function(e) {
             // Не срабатывает при клике на кнопку "Смотреть аниме"
             if (e.target.classList.contains('watch-btn')) return;
+
+            // Save state to sessionStorage
+            const state = {
+              searchQuery: document.getElementById('searchInput').value,
+              currentLang: currentLang,
+              scrollPos: window.scrollY,
+              animeHTML: document.getElementById('animeContainer').innerHTML,
+              currentPage: currentPage
+            };
+            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+
             const params = new URLSearchParams({
               title,
               desc,
@@ -514,13 +560,31 @@
       }
     }
 
-    async function loadInitial() {
-      for (let i=1; i<=2; i++) {
-        currentPage = i;
-        await loadAnime();
+    function loadInitial() {
+      const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
+
+      if (savedState) {
+        document.getElementById('searchInput').value = savedState.searchQuery;
+        searchQuery = savedState.searchQuery;
+        searchMode = searchQuery.length > 0;
+        currentLang = savedState.currentLang;
+        document.getElementById('animeContainer').innerHTML = savedState.animeHTML;
+        currentPage = savedState.currentPage;
+        
+        updateLanguageUI();
+        
+        // Restore scroll position after a short delay
+        setTimeout(() => {
+          window.scrollTo(0, savedState.scrollPos);
+        }, 100);
+
+        sessionStorage.removeItem('animeFoundState');
+      } else {
+        // Load fresh data if no state is saved
+        loadAnime(true);
       }
-      currentPage = 2;
     }
+
     loadInitial();
 
     document.getElementById("loadMoreBtn").addEventListener("click", () => {
@@ -540,6 +604,45 @@
       dropdown.classList.toggle('visible');
     });
 
+    document.getElementById('more-buttons-dropdown').addEventListener('click', function(event) {
+      if (event.target.tagName === 'A' || event.target.tagName === 'BUTTON') {
+        this.classList.remove('visible');
+      }
+    });
+
+    function parseJwt (token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
+    function handleCredentialResponse(response) {
+      console.log("Encoded JWT ID token: " + response.credential);
+      const responsePayload = parseJwt(response.credential);
+      localStorage.setItem('googleUser', JSON.stringify(responsePayload));
+      console.log('Signed in as ' + responsePayload.name);
+      hideSignInButton();
+      showProfileInfo(responsePayload);
+    }
+    function showProfileInfo(user) {
+      const profileInfoContainer = document.getElementById('profile-info');
+      const profilePic = document.getElementById('profile-pic');
+      const profileName = document.getElementById('profile-name');
+      const signOutBtn = document.getElementById('sign-out-btn');
+
+      profilePic.src = user.picture;
+      profileName.textContent = user.name;
+      profileInfoContainer.style.display = 'flex';
+
+      signOutBtn.addEventListener('click', () => {
+        localStorage.removeItem('googleUser');
+        profileInfoContainer.style.display = 'none';
+        document.getElementById('google-signin-btn-container').style.display = 'block';
+      });
+    }
   </script>
   
 </body>

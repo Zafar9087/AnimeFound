@@ -489,7 +489,7 @@
             if (currentLang === 'en') {
               window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
             } else {
-              window.open(animeLink, '_blank');
+              window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=${currentLang}`;
             }
           });
           // При клике на карточку — переход на card.html с параметрами

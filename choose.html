@@ -1,230 +1,257 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Выбор сервиса</title>
   <style>
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(4, 140px);
-        gap: 24px;
-        margin-top: 100px;
-      }
-      .card {
-        min-width: 0;
-        width: 90vw;
-        max-width: 340px;
-        margin: 0 auto;
-      }
-      .site-logo {
-        width: 100vw;
-        height: 70px;
-      }
-      .site-logo svg {
-        width: 90vw;
-        height: 44px;
-      }
-      .site-logo-text {
-        font-size: 16px !important;
-        margin-top: 10px !important;
-      }
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 120px);
-        gap: 18px;
-        margin-top: 80px;
-      }
-      .card {
-        width: 96vw;
-        max-width: 98vw;
-        min-width: 0;
-        margin: 0 auto;
-        border-radius: 16px;
-      }
-      .site-logo {
-        height: 54px;
-      }
-      .site-logo svg {
-        width: 98vw;
-        height: 32px;
-      }
-      .site-logo-text {
-        font-size: 13px !important;
-        margin-top: 8px !important;
-      }
-    }
-    .top-logo-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 80px;
-      background: linear-gradient(90deg, #181f2a 0%, #2a2f4d 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .site-logo {
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #e0e6f7;
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
     }
-    .site-logo svg {
-      height: 48px;
-      width: 180px;
-      margin-bottom: 2px;
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 85% 35%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 45% 75%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 100px 100px;
     }
-    .site-logo-text {
-      font-size: 15px;
-      color: #fff;
-      opacity: 0.7;
-      letter-spacing: 1px;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .grid {
-      margin-top: 110px;
-    }
-    .card img {
-      max-height: 80px;
-      max-width: 80%;
-      object-fit: contain;
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
-      background: transparent;
+
+    .browser-bar {
+      width: 90%;
+      max-width: 800px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: 10px;
-      transition: box-shadow 0.2s;
-    }
-    .card img:hover {
-  box-shadow: none;
-    }
-  </style>
-  <meta charset="UTF-8">
-  <title>AnimeFound Services Showcase</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      height: 100vh;
-      background: radial-gradient(circle at center, #0f0f0f, #000000);
+      margin-top: 20px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-family: 'Segoe UI', sans-serif;
+      padding: 0 15px;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 300px);
-      grid-template-rows: repeat(2, 200px);
+    .browser-buttons-left {
+      display: flex;
+    }
+
+    .browser-buttons-right {
+      display: flex;
+    }
+
+    .browser-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .browser-button.red { background: #ff5f56; }
+    .browser-button.yellow { background: #ffbd2e; }
+    .browser-button.green { background: #27c93f; }
+    .browser-button.grey { background: #a9a9a9; }
+
+    h1 {
+      font-size: 2.5em;
+      color: #4a90e2;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin: 40px 0;
+      text-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+    }
+
+    .card-container {
+      display: flex;
       gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .card {
-      position: relative;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 300px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      transition: 0.3s;
+      justify-content: space-between;
+      padding: 30px;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1), 0 25px 50px rgba(0, 0, 0, 0.4);
+      transform: translateY(-10px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
     }
 
-    .card img {
-      max-height: 80px;
-      max-width: 80%;
-      object-fit: contain;
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
+    .logo-container {
+      width: 150px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    /* Specific branding glow */
-    .crunchyroll {
-      border: 1px solid #ff8000;
-      box-shadow: 0 0 10px #ff8000aa, inset 0 0 10px #ff800088;
+    .logo-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #4da6ff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .netflix {
-      border: 1px solid #e50914;
-      box-shadow: 0 0 10px #e50914aa, inset 0 0 10px #e5091488;
+    .card-title {
+      font-size: 1.8em;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: auto;
     }
 
-    .hulu {
-      border: 1px solid #1ce783;
-      box-shadow: 0 0 10px #1ce783aa, inset 0 0 10px #1ce78388;
+    .anilibria .card-title { color: #4a90e2; }
+    .jutsu .card-title { color: #e50914; }
+
+    .choose-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #1a1a2e;
+      font-size: 1.2em;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
     }
 
-    .funimation {
-      border: 1px solid #fff2cc;
-      box-shadow: 0 0 10px #fff2ccaa, inset 0 0 10px #fff2cc88;
+    .choose-button:hover {
+      background: #4a90e2;
+      color: #fff;
     }
+
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .card {
+        width: 80%;
+        max-width: 300px;
+        height: auto;
+      }
+      h1 {
+        font-size: 2em;
+        margin: 30px 0;
+      }
+    }
+
   </style>
 </head>
 <body>
-  <div class="top-logo-bar">
-    <div class="site-logo" style="width:100vw;height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-      <svg width="320" height="70" viewBox="0 0 320 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Segoe UI, sans-serif" font-size="54" font-weight="bold" fill="url(#animeGradient)">
-          AnimeFound
-        </text>
-        <defs>
-          <linearGradient id="animeGradient" x1="0" y1="0" x2="320" y2="0" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#4da6ff"/>
-            <stop offset="1" stop-color="#ff80b0"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="site-logo-text" style="font-size:22px;margin-top:18px;color:#fff;opacity:0.97;letter-spacing:2px;text-shadow:0 2px 8px #181f2a;text-align:center;">Лучшие аниме онлайн</div>
+
+  <div class="browser-bar">
+    <div class="browser-buttons-left">
+      <div class="browser-button red"></div>
+      <div class="browser-button yellow"></div>
+      <div class="browser-button green"></div>
+    </div>
+    <div class="browser-buttons-right">
+      <div class="browser-button grey"></div>
+      <div class="browser-button grey"></div>
     </div>
   </div>
-  <div class="grid">
-    <div class="card crunchyroll" id="crunchyroll-card" style="cursor:pointer;">
-      <img src="https://cdn.worldvectorlogo.com/logos/crunchyroll-1.svg" alt="Crunchyroll Logo">
+
+  <h1 id="title">ВЫБОР</h1>
+
+  <div class="card-container">
+    <div class="card anilibria" id="anilibria-card">
+      <div class="logo-container">
+        <img class="logo-img" src="https://avatars.mds.yandex.net/i?id=ababde1a64a9820ccac746e01d080033f6bed8de-12569850-images-thumbs&n=13" alt="Anilibria Logo">
+      </div>
+      <h2 class="card-title">ANILIBRIA</h2>
+      <button class="choose-button" id="anilibria-btn">Выбрать</button>
     </div>
-    <div class="card netflix" id="netflix-card" style="cursor:pointer;">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo">
-    </div>
-    <div class="card hulu" id="hulu-card" style="cursor:pointer;">
-      <img src="https://cdn.worldvectorlogo.com/logos/hulu-2.svg" alt="Hulu Logo">
-    </div>
-    <div class="card funimation" id="funimation-card" style="cursor:pointer;">
-     <span style="font-family:'Segoe UI',sans-serif;font-size:2.3em;font-weight:bold;color:#fff;letter-spacing:2px;">Funimation</span>
+
+    <div class="card jutsu" id="jutsu-card">
+      <div class="logo-container">
+        <img  class="logo-img" src="https://videos.openai.com/vg-assets/assets%2Ftask_01k61v2jzwf0rr0zrzhfk50jac%2F1758851113_img_0.webp?st=2025-09-26T00%3A19%3A07Z&se=2025-10-02T01%3A19%3A07Z&sks=b&skt=2025-09-26T00%3A19%3A07Z&ske=2025-10-02T01%3A19%3A07Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=5e5fc900-07cf-43e7-ab5b-314c0d877bb0&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=PWMKIHkjr0JAtQR7rNo1tQIXJ87u%2FQo6Ae6EyIA%2B8TM%3D&az=oaivgprodscus" alt="Jut-su Logo">
+      </div>
+      <h2 class="card-title">JUTSU</h2>
+      <button class="choose-button" id="jutsu-btn">Выбрать</button>
     </div>
   </div>
+
   <script>
-    // Get anime title from URL
     function getQueryParam(name) {
       const url = new URL(window.location.href);
       return url.searchParams.get(name) || '';
     }
     const animeTitle = getQueryParam('anime');
+    const animeLink = getQueryParam('animeLink');
+    const lang = getQueryParam('lang');
 
-    // Click handlers for each service
-    document.getElementById('crunchyroll-card').onclick = function() {
-      window.open(`https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(animeTitle)}`, '_blank');
+    const translations = {
+      en: {
+        title: 'CHOOSE',
+        anilibria: 'ANILIBRIA',
+        jutsu: 'JUTSU',
+        choose: 'Choose'
+      },
+      ru: {
+        title: 'ВЫБОР',
+        anilibria: 'АНИЛИБРИЯ',
+        jutsu: 'ДЖУТСУ',
+        choose: 'Выбрать'
+      }
     };
-    document.getElementById('netflix-card').onclick = function() {
-      window.open(`https://www.netflix.com/search?q=${encodeURIComponent(animeTitle)}`, '_blank');
+
+    if (lang === 'ru') {
+      document.getElementById('title').textContent = translations.ru.title;
+      document.querySelector('.anilibria .card-title').textContent = translations.ru.anilibria;
+      document.querySelector('.jutsu .card-title').textContent = translations.ru.jutsu;
+      document.getElementById('anilibria-btn').textContent = translations.ru.choose;
+      document.getElementById('jutsu-btn').textContent = translations.ru.choose;
+    } else {
+      document.getElementById('title').textContent = translations.en.title;
+      document.querySelector('.anilibria .card-title').textContent = translations.en.anilibria;
+      document.querySelector('.jutsu .card-title').textContent = translations.en.jutsu;
+      document.getElementById('anilibria-btn').textContent = translations.en.choose;
+      document.getElementById('jutsu-btn').textContent = translations.en.choose;
+    }
+
+    document.getElementById('anilibria-card').onclick = function() {
+      if (animeLink) {
+        window.open(animeLink, '_blank');
+      }
     };
-    document.getElementById('hulu-card').onclick = function() {
-      window.open(`https://www.hulu.com/search?q=${encodeURIComponent(animeTitle)}`, '_blank');
-    };
-    document.getElementById('funimation-card').onclick = function() {
-      window.open(`https://www.funimation.com/search/?q=${encodeURIComponent(animeTitle)}`, '_blank');
+
+    document.getElementById('jutsu-card').onclick = function() {
+      window.open(`https://jut-su.net/index.php?do=search&subaction=search&story=${encodeURIComponent(animeTitle)}`, '_blank');
     };
   </script>
+
 </body>
 </html>

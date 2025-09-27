@@ -1,6 +1,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="FcbPAZlXbYeFQRD5kB0ZvrcG4Xsa9QyQuX6rwmmHHCA" />
+
+  <script>window.yaContextCb=window.yaContextCb||[]</script>
+  <script src="https://yandex.ru/ads/system/context.js" async></script>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -449,7 +453,7 @@
           }
           return false;
         }
-        data.data.forEach(anime => {
+        data.data.forEach((anime, index) => {
           if (isHentai(anime)) return;
           // Бан по названиям
           const allNames = [anime.russian, anime.name, anime.title].map(x => (x || '').toLowerCase());
@@ -564,6 +568,25 @@
             window.location.href = `card.html?${params.toString()}`;
           });
           container.appendChild(box);
+
+          // Insert an ad card after every 5th anime card
+          if ((index + 1) % 5 === 0) {
+            // Create a unique ID for each ad container to render into
+            const adId = `yandex_rtb_ad_${currentPage}_${index}`;
+            const adCard = document.createElement('div');
+            adCard.className = 'anime-box'; // Use the same class for styling
+            adCard.innerHTML = `<div id="${adId}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; min-height: 400px;"></div>`;
+            container.appendChild(adCard);
+
+            // Initialize this specific ad block
+            window.yaContextCb.push(()=>{
+              Ya.Context.AdvManager.render({
+                // IMPORTANT: Replace with your actual Block ID from Yandex
+                blockId: "R-A-123456-5", 
+                renderTo: adId
+              })
+            });
+          }
         });
 
       } catch (e) {
@@ -717,6 +740,7 @@
 
     // Check login state on page load
     updateLoginState();
+
   </script>
   
 </body>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Выбор сервиса</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #e0e6f7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 85% 35%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 45% 75%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 100px 100px;
+    }
+
+    .browser-bar {
+      width: 90%;
+      max-width: 800px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 10px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .browser-buttons-left {
+      display: flex;
+    }
+
+    .browser-buttons-right {
+      display: flex;
+    }
+
+    .browser-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .browser-button.red { background: #ff5f56; }
+    .browser-button.yellow { background: #ffbd2e; }
+    .browser-button.green { background: #27c93f; }
+    .browser-button.grey { background: #a9a9a9; }
+
+    h1 {
+      font-size: 2.5em;
+      color: #4a90e2;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin: 40px 0;
+      text-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+    }
+
+    .card-container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      width: 300px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 30px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-container {
+      width: 150px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #4da6ff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.8em;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: auto;
+    }
+
+    .anilibria .card-title { color: #4a90e2; }
+    .netflix .card-title { color: #e50914; }
+
+    .choose-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #1a1a2e;
+      font-size: 1.2em;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .choose-button:hover {
+      background: #4a90e2;
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .card {
+        width: 80%;
+        max-width: 300px;
+        height: auto;
+      }
+      h1 {
+        font-size: 2em;
+        margin: 30px 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="browser-bar">
+    <div class="browser-buttons-left">
+      <div class="browser-button red"></div>
+      <div class="browser-button yellow"></div>
+      <div class="browser-button green"></div>
+    </div>
+    <div class="browser-buttons-right">
+      <div class="browser-button grey"></div>
+      <div class="browser-button grey"></div>
+    </div>
+  </div>
+
+  <h1 id="title">ВЫБОР</h1>
+
+  <div class="card-container">
+    <div class="card anilibria" id="anilibria-card">
+      <div class="logo-container">
+        <img class="logo-img" src="https://i.pinimg.com/originals/07/12/40/071240b268b860f6267478b7bc0dd4d2.jpg" alt="Crunchyroll Logo">
+      </div>
+      <h2 class="card-title">Crunchyroll</h2>
+      <button class="choose-button" id="anilibria-btn">Выбрать</button>
+    </div>
+
+    <div class="card netflix" id="jutsu-card">
+      <div class="logo-container">
+        <img  class="logo-img" src="https://avatars.mds.yandex.net/i?id=9357b4d29b81e92b6a03a54a51b5495a22c3e5b6-5363089-images-thumbs&n=13" alt="Netflix Logo">
+      </div>
+      <h2 class="card-title">Netflix</h2>
+      <button class="choose-button" id="jutsu-btn">Выбрать</button>
+    </div>
+  </div>
+
+  <script>
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) || '';
+    }
+    const animeTitle = getQueryParam('anime');
+    const animeLink = getQueryParam('animeLink');
+    const lang = getQueryParam('lang');
+
+    const translations = {
+      en: {
+        title: 'CHOOSE',
+        anilibria: 'CRUNCHYROLL',
+        jutsu: 'NETFLIX',
+        choose: 'Watch'
+      },
+      ru: {
+        title: 'ВЫБОР',
+        anilibria: 'КРАНЧИРОЛЛ',
+        jutsu: 'НЕТФЛИКС',
+        choose: 'Смотреть'
+      }
+    };
+
+    if (lang === 'ru') {
+      document.getElementById('title').textContent = translations.ru.title;
+      document.querySelector('.anilibria .card-title').textContent = translations.ru.anilibria;
+      document.querySelector('.netflix .card-title').textContent = translations.ru.jutsu;
+      document.getElementById('anilibria-btn').textContent = translations.ru.choose;
+      document.getElementById('jutsu-btn').textContent = translations.ru.choose;
+    } else {
+      document.getElementById('title').textContent = translations.en.title;
+      document.querySelector('.anilibria .card-title').textContent = translations.en.anilibria;
+      document.querySelector('.netflix .card-title').textContent = translations.en.jutsu;
+      document.getElementById('anilibria-btn').textContent = translations.en.choose;
+      document.getElementById('jutsu-btn').textContent = translations.en.choose;
+    }
+
+    document.getElementById('anilibria-card').onclick = function() {
+      window.open(`https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+
+    document.getElementById('jutsu-card').onclick = function() {
+      window.open(`https://www.netflix.com/search?q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+  </script>
+
+</body>
+</html>

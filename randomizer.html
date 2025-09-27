@@ -634,17 +634,24 @@
         if (watchBtnInner) {
           watchBtnInner.addEventListener('click', function(e) {
             e.stopPropagation();
-            const params = new URLSearchParams({
-              title: title,
-              desc: desc,
-              img: img,
-              episodes: episodes || '',
-              score: score || '',
-              year: year || ''
-            });
-            window.location.href = `card.html?${params.toString()}`;
+            if (currentLang === 'en') {
+              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
+            } else {
+              const animeLink = `https://anilibria.wiki/release/${slugify(origTitle)}.html`;
+              window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=ru`;
+            }
           });
         }
+
+        // Add a click listener to the card itself to navigate to the detailed view
+        animeCard.addEventListener('click', function(e) {
+          // Do not navigate if the watch button was clicked
+          if (e.target.classList.contains('watch-btn-inner')) return;
+          const params = new URLSearchParams({
+            title, desc, img, episodes: episodes || '', score: score || '', year: year || ''
+          });
+          window.location.href = `card.html?${params.toString()}`;
+        });
 
       } catch (e) {
         console.error("Error loading anime:", e);

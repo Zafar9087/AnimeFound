@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - AnimeFound</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+      color: #e0e6f7;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      background: rgba(10, 15, 26, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(77, 166, 255, 0.1);
+    }
+    .top-bar a {
+      text-decoration: none;
+    }
+    .top-bar h1 {
+      margin: 0;
+      color: #4da6ff;
+    }
+    .profile-container {
+      max-width: 1200px;
+      margin: 100px auto 40px;
+      padding: 20px;
+    }
+    .profile-header {
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #4da6ff;
+      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
+    }
+    .profile-name {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
+    }
+    .anime-list-section {
+      margin-bottom: 40px;
+    }
+    .anime-list-section h2 {
+      font-size: 2em;
+      color: #4da6ff;
+      border-bottom: 2px solid rgba(77, 166, 255, 0.3);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .anime-box {
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      color: #eee;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .anime-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
+    }
+    .anime-img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .anime-title {
+      font-size: 1em;
+      font-weight: bold;
+      color: #fff;
+      padding: 12px;
+      text-align: center;
+      flex-grow: 1;
+    }
+    .empty-list-message {
+        color: #a9b8d9;
+        font-size: 1.1em;
+        text-align: center;
+        padding: 40px;
+        background: rgba(35, 42, 69, 0.4);
+        border-radius: 18px;
+    }
+    @media (max-width: 600px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        .profile-name {
+            font-size: 2em;
+        }
+        .anime-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html"><h1>AnimeFound</h1></a>
+  </div>
+
+  <div class="profile-container">
+    <div class="profile-header">
+      <img id="profilePic" src="" alt="Profile Picture" class="profile-pic">
+      <div id="profileName" class="profile-name"></div>
+    </div>
+
+    <div class="anime-list-section">
+      <h2>Favorites</h2>
+      <div id="favoritesGrid" class="anime-grid"></div>
+    </div>
+
+    <div class="anime-list-section">
+      <h2>Plan to Watch</h2>
+      <div id="planToWatchGrid" class="anime-grid"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = JSON.parse(localStorage.getItem('googleUser'));
+
+      if (!user) {
+        // If no user is logged in, redirect to the main page
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Display user info
+      document.getElementById('profilePic').src = user.picture;
+      document.getElementById('profileName').textContent = user.name;
+
+      // Load anime lists from localStorage
+      const userLists = JSON.parse(localStorage.getItem(user.sub)) || { favorites: [], planToWatch: [] };
+
+      const favoritesGrid = document.getElementById('favoritesGrid');
+      const planToWatchGrid = document.getElementById('planToWatchGrid');
+
+      function createAnimeCard(anime) {
+        const card = document.createElement('div');
+        card.className = 'anime-box';
+        card.innerHTML = `
+          <img src="${anime.img}" alt="${anime.title}" class="anime-img">
+          <div class="anime-title">${anime.title}</div>
+        `;
+        return card;
+      }
+
+      function populateGrid(gridElement, animeList, listName) {
+          if (animeList && animeList.length > 0) {
+              animeList.forEach(anime => {
+                  const card = createAnimeCard(anime);
+                  gridElement.appendChild(card);
+              });
+          } else {
+              gridElement.innerHTML = `<p class="empty-list-message">Your "${listName}" list is empty.</p>`;
+          }
+      }
+
+      populateGrid(favoritesGrid, userLists.favorites, 'Favorites');
+      populateGrid(planToWatchGrid, userLists.planToWatch, 'Plan to Watch');
+    });
+  </script>
+
+</body>
+</html>

@@ -101,6 +101,26 @@
       background: rgba(77, 166, 255, 0.3);
       color: #fff;
     }
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 12px;
+      align-self: flex-start;
+    }
+    .list-btn {
+      background: rgba(77, 166, 255, 0.15);
+      border: 1px solid rgba(77, 166, 255, 0.3);
+      color: #e0e6f7;
+      border-radius: 12px;
+      font-size: 0.9em;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+    .list-btn:hover {
+      background: rgba(77, 166, 255, 0.3);
+    }
     .watch-btn {
       background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
       color: #fff;
@@ -112,7 +132,6 @@
       font-weight: 700;
       box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
       transition: all 0.3s ease;
-      margin-top: 12px;
       align-self: flex-start;
       letter-spacing: 0.5px;
     }
@@ -152,6 +171,10 @@
         align-self: stretch;
         text-align: center;
       }
+      .action-buttons {
+        align-self: stretch;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -168,7 +191,11 @@
         <span class="badge" id="animeEpisodes"></span>
         <span class="badge" id="animeScore"></span>
       </div>
-      <button class="watch-btn" id="watchBtn">Смотреть аниме</button>
+      <div class="action-buttons">
+        <button class="watch-btn" id="watchBtn">Смотреть аниме</button>
+        <button class="list-btn" id="favoriteBtn" style="display: none;">❤️ Favorite</button>
+        <button class="list-btn" id="planBtn" style="display: none;">+ Plan to Watch</button>
+      </div>
     </div>
   </div>
   <script>
@@ -208,33 +235,75 @@
       scoreBadge.style.display = 'none';
     }
 
+    // Logic for adding to lists
+    const user = JSON.parse(localStorage.getItem('googleUser'));
+    if (user) {
+      const favoriteBtn = document.getElementById('favoriteBtn');
+      const planBtn = document.getElementById('planBtn');
+      favoriteBtn.style.display = 'block';
+      planBtn.style.display = 'block';
+
+      const animeData = { title, img };
+
+      function addToList(listName) {
+        // Get current lists for the user, or initialize
+        const userLists = JSON.parse(localStorage.getItem(user.sub)) || { favorites: [], planToWatch: [] };
+        
+        // Check if anime is already in the list to avoid duplicates
+        const list = userLists[listName];
+        if (!list.some(item => item.title === animeData.title)) {
+            list.push(animeData);
+            localStorage.setItem(user.sub, JSON.stringify(userLists));
+            alert(`Added "${animeData.title}" to ${listName}!`);
+        } else {
+            alert(`"${animeData.title}" is already in your ${listName} list.`);
+        }
+      }
+
+      favoriteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addToList('favorites');
+      });
+
+      planBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addToList('planToWatch');
+      });
+
+    } else {
+        // Hide buttons if user is not logged in
+        const favoriteBtn = document.getElementById('favoriteBtn');
+        const planBtn = document.getElementById('planBtn');
+        favoriteBtn.style.display = 'none';
+        planBtn.style.display = 'none';
+    }
+
     // Кнопка "Смотреть аниме"
     document.getElementById('watchBtn').addEventListener('click', function(e) {
       e.stopPropagation();
-      const lang = document.documentElement.lang || 'ru';
-      
-      if (lang === 'en') {
-        window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
-      } else {
-        // Для русского — создаем ссылку на Anilibria
+      const isRussian = /[а-яА-ЯЁё]/.test(desc);
+      if (isRussian) {
         const russianChars = {
             'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
             'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
             'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
             'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
         };
-
         function slugify(str) {
             return str.toLowerCase().split('').map(char => russianChars[char] || char)
             .join('')
-            .replace(/[^a-z0-9\s-]/gi, '') // remove unsupported chars
+            .replace(/[^a-z0-9\s-]/gi, '')
             .trim()
-            .replace(/\s+/g, '-') // collapse whitespace and replace by -
-            .replace(/-+/g, '-'); // collapse dashes
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
         }
-        
+        // We need the original title for the slug, which isn't passed to card.html.
+        // We will use the Russian title as a fallback for search.
         const animeLink = `https://anilibria.wiki/release/${slugify(title)}.html`;
-        window.open(animeLink, '_blank');
+        window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=ru`;
+      } else {
+        // English
+        window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
       }
     });
   </script>

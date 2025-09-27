@@ -293,10 +293,11 @@
         <input type="text" id="searchInput" placeholder="Search anime..." />
       </div>
       <div class="top-bar-actions" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
-        <button class="top-bar-btn" id="moreBtn">More</button>
+        <button class="top-bar-btn" id="moreBtn" style="display: none;">More</button>
+        <a href="profile.html" class="top-bar-btn" id="profileBtn" style="display: none;">Profile</a>
         <div id="more-buttons-dropdown" class="more-dropdown">
           <div id="g_id_onload"
-              data-client_id="169151760587-vkicieu6ehum6e1kvatc3i4qpplnt6hj.apps.googleusercontent.com"
+              data-client_id="169151760587-vkicieu6ehum6e1kvatc3i4qpplnt6hj.apps.googleusercontent.com" 
               data-callback="handleCredentialResponse">
           </div>
           <div class="g_id_signin"
@@ -523,12 +524,15 @@
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
 
             if (currentLang === 'en') {
-              window.location.href = `choose.html?anime=${encodeURIComponent(title)}`;
+              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
             } else {
               window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=${currentLang}`;
             }
           });
           box.addEventListener('click', function(e) {
+            // Do not navigate if the watch button was clicked
+            if (e.target.classList.contains('watch-btn')) return;
+
             // Не срабатывает при клике на кнопку "Смотреть аниме"
             if (e.target.classList.contains('watch-btn')) return;
 
@@ -560,6 +564,69 @@
       }
     }
 
+    function reAttachEventListeners() {
+      const container = document.getElementById("animeContainer");
+      const boxes = container.querySelectorAll('.anime-box');
+
+      boxes.forEach(box => {
+        // The data is stored in the HTML, we need to retrieve it.
+        // This is a bit fragile, a better way would be to use data-* attributes.
+        const title = box.querySelector('.anime-title').textContent;
+        const desc = box.querySelector('.anime-desc').textContent;
+        const img = box.querySelector('.anime-img').src;
+        
+        let episodes = '';
+        let score = '';
+        let year = '';
+        
+        const badges = box.querySelectorAll('.badge');
+        badges.forEach(badge => {
+          if (badge.textContent.includes('eps')) {
+            episodes = badge.textContent.replace(' eps', '').trim();
+          } else if (badge.textContent.includes('⭐')) {
+            score = badge.textContent.replace('⭐', '').trim();
+          } else if (!isNaN(badge.textContent)) {
+            year = badge.textContent.trim();
+          }
+        });
+
+        // Re-attach listener for the watch button
+        box.querySelector('.watch-btn').addEventListener('click', function(e) {
+          e.stopPropagation();
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+
+          if (currentLang === 'en') {
+            window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
+          } else {
+            // We can't reconstruct the anilibria link here easily, so we'll just pass the title
+            window.location.href = `choose.html?anime=${encodeURIComponent(title)}&lang=${currentLang}`;
+          }
+        });
+
+        // Re-attach listener for the card itself
+        box.addEventListener('click', function(e) {
+          if (e.target.classList.contains('watch-btn')) return;
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+          const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
+          window.location.href = `card.html?${params.toString()}`;
+        });
+      });
+    }
+
     function loadInitial() {
       const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
 
@@ -573,6 +640,9 @@
         
         updateLanguageUI();
         
+        // Re-attach event listeners to the restored HTML
+        reAttachEventListeners();
+
         // Restore scroll position after a short delay
         setTimeout(() => {
           window.scrollTo(0, savedState.scrollPos);
@@ -619,6 +689,17 @@
       return JSON.parse(jsonPayload);
     }
 
+    function updateLoginState() {
+      const user = JSON.parse(localStorage.getItem('googleUser'));
+      if (user) {
+        document.getElementById('moreBtn').style.display = 'none';
+        document.getElementById('profileBtn').style.display = 'inline-block';
+      } else {
+        document.getElementById('moreBtn').style.display = 'inline-block';
+        document.getElementById('profileBtn').style.display = 'none';
+      }
+    }
+
     function handleCredentialResponse(response) {
       console.log("Encoded JWT ID token: " + response.credential);
       const responsePayload = parseJwt(response.credential);
@@ -643,6 +724,9 @@
         document.getElementById('google-signin-btn-container').style.display = 'block';
       });
     }
+
+    // Check login state on page load
+    updateLoginState();
   </script>
   
 </body>

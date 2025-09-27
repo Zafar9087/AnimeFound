@@ -6,6 +6,8 @@
   <title>My Profile - AnimeFound</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
+  <script>window.yaContextCb=window.yaContextCb||[]</script>
+  <script src="https://yandex.ru/ads/system/context.js" async></script>
   <style>
     body {
       background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
@@ -67,6 +69,40 @@
       color: #fff;
       text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
     }
+    .profile-stats {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+    }
+    .rank-display {
+      font-size: 1.2em;
+      color: #a9b8d9;
+    }
+    .rank-name {
+      font-size: 2em;
+      font-weight: 700;
+      color: #4da6ff;
+      margin-bottom: 5px;
+    }
+    .xp-bar-container {
+      width: 100%;
+      height: 10px;
+      background: rgba(10, 15, 26, 0.5);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .xp-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4da6ff 0%, #2ecc40 100%);
+      border-radius: 5px;
+      transition: width 0.5s ease-in-out;
+    }
+    .xp-text {
+      font-size: 0.9em;
+      color: #a9b8d9;
+      margin-top: 5px;
+    }
     .anime-list-section {
       margin-bottom: 40px;
     }
@@ -89,6 +125,7 @@
       border: 1px solid rgba(77, 166, 255, 0.2);
       border-radius: 18px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -98,6 +135,32 @@
     .anime-box:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
+    }
+    .anime-box a {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+    .remove-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 95, 86, 0.8);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .anime-box:hover .remove-btn {
+        opacity: 1;
     }
     .anime-img {
       width: 100%;
@@ -120,6 +183,22 @@
         background: rgba(35, 42, 69, 0.4);
         border-radius: 18px;
     }
+    .sign-out-btn {
+        background: rgba(255, 95, 86, 0.8);
+        border: 1px solid rgba(255, 95, 86, 1);
+        color: #fff;
+        border-radius: 12px;
+        font-size: 0.9em;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        margin-left: auto;
+    }
+    .sign-out-btn:hover {
+        background: rgba(255, 95, 86, 1);
+        transform: translateY(-2px);
+    }
     @media (max-width: 600px) {
         .profile-header {
             flex-direction: column;
@@ -132,6 +211,54 @@
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         }
     }
+
+    #rank-help-btn {
+      background: #4da6ff;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1; 
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.4); 
+    }
+
+    .modal-content {
+      background-color: #1e293b;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 10px;
+    }
+
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close-btn:hover,
+    .close-btn:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -143,7 +270,40 @@
   <div class="profile-container">
     <div class="profile-header">
       <img id="profilePic" src="" alt="Profile Picture" class="profile-pic">
-      <div id="profileName" class="profile-name"></div>
+      <div class="profile-stats">
+        <div id="profileName" class="profile-name"></div>
+        <div class="rank-display">
+          Rank: <span id="rankName" class="rank-name">Начинающий анимешник</span>
+          <button id="rank-help-btn">?</button>
+        </div>
+        <div class="xp-bar-container">
+            <div id="xpBar" class="xp-bar" style="width: 0%;"></div>
+        </div>
+        <div id="xpText" class="xp-text">0 / 100 XP</div>
+      </div>
+      <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
+    </div>
+
+    <div id="rank-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Как заработать ранг</h2>
+        <p>Вы можете зарабатывать XP и повышать свой ранг, выполняя различные действия:</p>
+        <ul>
+          <li><strong>Добавление аниме в список:</strong> +5 XP</li>
+          <li><strong>Отметка аниме как "Просмотрено":</strong> +10 XP</li>
+          <li><strong>Оценка аниме:</strong> +2 XP</li>
+          <li><strong>Написание отзыва:</strong> +20 XP</li>
+        </ul>
+        <p>Ranks:</p>
+        <ol>
+          <li>Начинающий анимешник (Beginner Otaku): 0-99 XP</li>
+          <li>Опытный зритель (Experienced Viewer): 100-299 XP</li>
+          <li>Мастер сюжета (Master of the Plot): 300-699 XP</li>
+          <li>Легенда аниме (Anime Legend): 700-1499 XP</li>
+          <li>Император аниме (Anime Emperor): 1500+ XP</li>
+        </ol>
+      </div>
     </div>
 
     <div class="anime-list-section">
@@ -152,8 +312,18 @@
     </div>
 
     <div class="anime-list-section">
+      <h2>Currently Watching</h2>
+      <div id="watchingGrid" class="anime-grid"></div>
+    </div>
+
+    <div class="anime-list-section">
       <h2>Plan to Watch</h2>
       <div id="planToWatchGrid" class="anime-grid"></div>
+    </div>
+
+    <div class="anime-list-section">
+      <h2>Watched</h2>
+      <div id="watchedGrid" class="anime-grid"></div>
     </div>
   </div>
 
@@ -172,34 +342,146 @@
       document.getElementById('profileName').textContent = user.name;
 
       // Load anime lists from localStorage
-      const userLists = JSON.parse(localStorage.getItem(user.sub)) || { favorites: [], planToWatch: [] };
+      let userProfile = JSON.parse(localStorage.getItem(user.sub)) || {
+          xp: 0,
+          favorites: [],
+          planToWatch: [],
+          watching: [],
+          watched: []
+      };
 
       const favoritesGrid = document.getElementById('favoritesGrid');
       const planToWatchGrid = document.getElementById('planToWatchGrid');
+      const watchingGrid = document.getElementById('watchingGrid');
+      const watchedGrid = document.getElementById('watchedGrid');
 
-      function createAnimeCard(anime) {
+      function createAnimeCard(anime, listName) {
         const card = document.createElement('div');
         card.className = 'anime-box';
+
+        const params = new URLSearchParams({
+            title: anime.title,
+            desc: anime.desc,
+            img: anime.img,
+            episodes: anime.episodes || '',
+            score: anime.score || '',
+            year: anime.year || ''
+        });
+
         card.innerHTML = `
-          <img src="${anime.img}" alt="${anime.title}" class="anime-img">
-          <div class="anime-title">${anime.title}</div>
+          <button class="remove-btn" title="Remove from list">X</button>
+          <a href="card.html?${params.toString()}">
+            <img src="${anime.img}" alt="${anime.title}" class="anime-img">
+            <div class="anime-title">${anime.title}</div>
+          </a>
         `;
+
+        card.querySelector('.remove-btn').addEventListener('click', () => {
+            removeAnimeFromList(anime.title, listName);
+        });
+
         return card;
       }
 
+      function populateGrids() {
+          populateGrid(favoritesGrid, userProfile.favorites, 'favorites');
+          populateGrid(watchingGrid, userProfile.watching, 'watching');
+          populateGrid(planToWatchGrid, userProfile.planToWatch, 'planToWatch');
+          populateGrid(watchedGrid, userProfile.watched, 'watched');
+      }
+
       function populateGrid(gridElement, animeList, listName) {
+          gridElement.innerHTML = ''; // Clear grid before populating
           if (animeList && animeList.length > 0) {
-              animeList.forEach(anime => {
-                  const card = createAnimeCard(anime);
+              animeList.forEach((anime, index) => {
+                  const card = createAnimeCard(anime, listName);
                   gridElement.appendChild(card);
+
+                  // Insert an ad card after the 4th item in the "Favorites" grid
+                  if (listName === 'favorites' && index === 3) {
+                      const adCard = document.createElement('div');
+                      adCard.className = 'anime-box'; // Use the same class for styling
+                      adCard.innerHTML = `<div id="yandex_rtb_R-A-123456-3" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"></div>`;
+                      gridElement.appendChild(adCard);
+
+                      // Initialize this specific ad block
+                      window.yaContextCb.push(()=>{
+                        Ya.Context.AdvManager.render({
+                          blockId: "R-A-123456-3", // Replace with your actual Block ID
+                          renderTo: "yandex_rtb_R-A-123456-3"
+                        })
+                      });
+                  }
               });
           } else {
-              gridElement.innerHTML = `<p class="empty-list-message">Your "${listName}" list is empty.</p>`;
+              const friendlyName = listName.replace(/([A-Z])/g, ' $1').toLowerCase();
+              gridElement.innerHTML = `<p class="empty-list-message">Your "${friendlyName}" list is empty.</p>`;
           }
       }
 
-      populateGrid(favoritesGrid, userLists.favorites, 'Favorites');
-      populateGrid(planToWatchGrid, userLists.planToWatch, 'Plan to Watch');
+      function removeAnimeFromList(animeTitle, listName) {
+        userProfile[listName] = userProfile[listName].filter(item => item.title !== animeTitle);
+        localStorage.setItem(user.sub, JSON.stringify(userProfile));
+        populateGrids(); // Re-render all grids
+      }
+
+      function updateRank() {
+        const ranks = [
+            { name: 'Начинающий анимешник', minXp: 0 },
+            { name: 'Опытный зритель', minXp: 100 },
+            { name: 'Мастер сюжета', minXp: 300 },
+            { name: 'Легенда аниме', minXp: 700 },
+            { name: 'Император аниме', minXp: 1500 }
+        ];
+
+        const currentXp = userProfile.xp;
+        let currentRank = ranks[0];
+        let nextRank = ranks[1];
+
+        for (let i = 0; i < ranks.length; i++) {
+            if (currentXp >= ranks[i].minXp) {
+                currentRank = ranks[i];
+                nextRank = ranks[i + 1] || { name: 'MAX', minXp: currentRank.minXp };
+            }
+        }
+
+        const xpInCurrentRank = currentXp - currentRank.minXp;
+        const xpForNextRank = nextRank.minXp - currentRank.minXp;
+        const percentage = (xpForNextRank > 0) ? (xpInCurrentRank / xpForNextRank) * 100 : 100;
+
+        document.getElementById('rankName').textContent = currentRank.name;
+        document.getElementById('xpBar').style.width = `${percentage}%`;
+        document.getElementById('xpText').textContent = `${currentXp} / ${nextRank.minXp} XP`;
+      }
+
+      document.getElementById('signOutBtn').addEventListener('click', () => {
+          localStorage.removeItem('googleUser');
+          // Optionally, disable Google's one-tap sign-in for the next visit
+          google.accounts.id.disableAutoSelect();
+          window.location.href = 'index.html';
+      });
+
+      // Initial Population
+      populateGrids();
+      updateRank();
+
+      const modal = document.getElementById("rank-modal");
+      const btn = document.getElementById("rank-help-btn");
+      const span = document.getElementsByClassName("close-btn")[0];
+
+      btn.onclick = function() {
+        modal.style.display = "block";
+      }
+
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
     });
   </script>
 

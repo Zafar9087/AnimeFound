@@ -307,7 +307,7 @@
           </div>
           <a href="profile.html" class="top-bar-btn" id="profileBtn" style="display: none; margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Profile</a>
           <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
-          <a href="/Anime game/Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Anime</a>
+          <a href="Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Anime</a>
           <div style="display: flex; gap: 5px;">
             <button class="top-bar-btn" id="langBtnRu" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Russ</button>
             <button class="top-bar-btn" id="langBtnEn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Eng</button>
@@ -368,9 +368,9 @@
       document.getElementById('randomizerBtn').textContent = translations[currentLang].randomizerBtn;
       document.getElementById('guessAnimeBtn').textContent = translations[currentLang].guessAnime;
       if (currentLang === 'ru') {
-        document.getElementById('guessAnimeBtn').href = '/Anime game/Anime Found.html';
+        document.getElementById('guessAnimeBtn').href = 'Anime Found.html';
       } else {
-        document.getElementById('guessAnimeBtn').href = '/Anime game/Anime Found_eng.html';
+        document.getElementById('guessAnimeBtn').href = 'Anime Found_eng.html';
       }
       document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
     }

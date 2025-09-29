@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Выбор сервиса</title>
+  <title>Choose Service</title>
   <style>
     body {
       margin: 0;
@@ -130,8 +130,9 @@
       margin-bottom: auto;
     }
 
-    .anilibria .card-title { color: #4a90e2; }
+    .crunchyroll .card-title { color: #f47521; }
     .netflix .card-title { color: #e50914; }
+    .anime-game .card-title { color: #4a90e2; }
 
     .choose-button {
       width: 100%;
@@ -184,23 +185,30 @@
     </div>
   </div>
 
-  <h1 id="title">ВЫБОР</h1>
+  <h1>CHOOSE</h1>
 
   <div class="card-container">
-    <div class="card anilibria" id="anilibria-card">
+    <div class="card crunchyroll" id="crunchyroll-card">
       <div class="logo-container">
         <img class="logo-img" src="https://i.pinimg.com/originals/07/12/40/071240b268b860f6267478b7bc0dd4d2.jpg" alt="Crunchyroll Logo">
       </div>
       <h2 class="card-title">Crunchyroll</h2>
-      <button class="choose-button" id="anilibria-btn">Выбрать</button>
+      <button class="choose-button">Watch</button>
     </div>
 
-    <div class="card netflix" id="jutsu-card">
+    <div class="card netflix" id="netflix-card">
       <div class="logo-container">
         <img  class="logo-img" src="https://avatars.mds.yandex.net/i?id=9357b4d29b81e92b6a03a54a51b5495a22c3e5b6-5363089-images-thumbs&n=13" alt="Netflix Logo">
       </div>
       <h2 class="card-title">Netflix</h2>
-      <button class="choose-button" id="jutsu-btn">Выбрать</button>
+      <button class="choose-button">Watch</button>
+    </div>
+    <div class="card anime-game" id="anime-game-card">
+      <div class="logo-container">
+        <img class="logo-img" src="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png" alt="Anime Game Logo">
+      </div>
+      <h2 class="card-title">Guess Anime</h2>
+      <button class="choose-button">Play</button>
     </div>
   </div>
 
@@ -210,44 +218,17 @@
       return url.searchParams.get(name) || '';
     }
     const animeTitle = getQueryParam('anime');
-    const animeLink = getQueryParam('animeLink');
-    const lang = getQueryParam('lang');
 
-    const translations = {
-      en: {
-        title: 'CHOOSE',
-        anilibria: 'CRUNCHYROLL',
-        jutsu: 'NETFLIX',
-        choose: 'Watch'
-      },
-      ru: {
-        title: 'ВЫБОР',
-        anilibria: 'КРАНЧИРОЛЛ',
-        jutsu: 'НЕТФЛИКС',
-        choose: 'Смотреть'
-      }
-    };
-
-    if (lang === 'ru') {
-      document.getElementById('title').textContent = translations.ru.title;
-      document.querySelector('.anilibria .card-title').textContent = translations.ru.anilibria;
-      document.querySelector('.netflix .card-title').textContent = translations.ru.jutsu;
-      document.getElementById('anilibria-btn').textContent = translations.ru.choose;
-      document.getElementById('jutsu-btn').textContent = translations.ru.choose;
-    } else {
-      document.getElementById('title').textContent = translations.en.title;
-      document.querySelector('.anilibria .card-title').textContent = translations.en.anilibria;
-      document.querySelector('.netflix .card-title').textContent = translations.en.jutsu;
-      document.getElementById('anilibria-btn').textContent = translations.en.choose;
-      document.getElementById('jutsu-btn').textContent = translations.en.choose;
-    }
-
-    document.getElementById('anilibria-card').onclick = function() {
+    document.getElementById('crunchyroll-card').onclick = function() {
       window.open(`https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(animeTitle)}`, '_blank');
     };
 
-    document.getElementById('jutsu-card').onclick = function() {
+    document.getElementById('netflix-card').onclick = function() {
       window.open(`https://www.netflix.com/search?q=${encodeURIComponent(animeTitle)}`, '_blank');
+    };
+
+    document.getElementById('anime-game-card').onclick = function() {
+      window.location.href = 'Anime game/Anime Found_eng.html';
     };
   </script>
 

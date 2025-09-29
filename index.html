@@ -41,8 +41,6 @@
 <!-- Apple Touch Icon -->
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
- 
-
 
   <title>AnimeFound</title>
   <style>
@@ -269,21 +267,15 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       padding: 10px;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 10px;
       border-radius: 12px;
       border: 1px solid rgba(77, 166, 255, 0.1);
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-      pointer-events: none; /* Невидимый блок не должен перехватывать клики */
     }
     .more-dropdown.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+      display: flex;
     }
   </style>
 </head>
@@ -314,8 +306,12 @@
             </div>
           </div>
           <a href="profile.html" class="top-bar-btn" id="profileBtn" style="display: none; margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Profile</a>
-          <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0;">🎲 Рандом</a>
-          <button class="top-bar-btn" id="langBtn" style="margin: 0;">English</button>
+          <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
+          <a href="Anime game/Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Anime</a>
+          <div style="display: flex; gap: 5px;">
+            <button class="top-bar-btn" id="langBtnRu" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Russ</button>
+            <button class="top-bar-btn" id="langBtnEn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Eng</button>
+          </div>
         </div>
       </div>
     </div>
@@ -330,8 +326,16 @@
   <button class="load-more" id="loadMoreBtn">Load More</button>
 
   <script>
-      // Language selector logic
-    const langBtn = document.getElementById('langBtn');    
+    const moreBtn = document.getElementById('moreBtn');
+    const moreDropdown = document.getElementById('more-buttons-dropdown');
+
+    moreBtn.addEventListener('click', () => {
+      moreDropdown.classList.toggle('visible');
+    });
+
+    // Language selector logic
+    const langBtnRu = document.getElementById('langBtnRu');
+    const langBtnEn = document.getElementById('langBtnEn');
     let currentLang = 'en';
     const translations = {
       en: {
@@ -342,7 +346,8 @@
         trailer: 'Watch Trailer',
         noTrailer: 'No Trailer',
         siteTitle: 'AnimeFound',
-        randomizerBtn: '🎲 Random'
+        randomizerBtn: '🎲 Random',
+        guessAnime: 'Guess Anime'
       },
       ru: {
         searchPlaceholder: 'Поиск аниме...',
@@ -352,7 +357,8 @@
         trailer: 'Смотреть трейлер',
         noTrailer: 'Нет трейлера',
         siteTitle: 'АнимеПоиск',
-        randomizerBtn: '🎲 Рандом'
+        randomizerBtn: '🎲 Рандом',
+        guessAnime: 'Угадай аниме'
       }
     };
     function updateLanguageUI() {
@@ -360,24 +366,30 @@
       document.getElementById('noResults').textContent = translations[currentLang].noResults;
       document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
       document.getElementById('randomizerBtn').textContent = translations[currentLang].randomizerBtn;
+      document.getElementById('guessAnimeBtn').textContent = translations[currentLang].guessAnime;
+      if (currentLang === 'ru') {
+        document.getElementById('guessAnimeBtn').href = 'Anime game/Anime Found.html';
+      } else {
+        document.getElementById('guessAnimeBtn').href = 'Anime game/Anime Found_eng.html';
+      }
       document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
-      document.getElementById('langBtn').textContent = currentLang === 'en' ? 'Русский' : 'English';
     }
 
-      langBtn.addEventListener('click', () => {
-        if (currentLang === 'en') {
-          langBtn.textContent = 'Русский';
-          currentLang = 'ru';
-          document.body.setAttribute('lang', 'ru');
-        } else {
-          langBtn.textContent = 'English';
-          currentLang = 'en';
-          document.body.setAttribute('lang', 'en');
-        }
-        updateLanguageUI();
-        loadAnime(true); // reload anime cards with new language
-      });
+    langBtnRu.addEventListener('click', () => {
+      currentLang = 'ru';
+      document.body.setAttribute('lang', 'ru');
       updateLanguageUI();
+      loadAnime(true); // reload anime cards with new language
+    });
+
+    langBtnEn.addEventListener('click', () => {
+      currentLang = 'en';
+      document.body.setAttribute('lang', 'en');
+      updateLanguageUI();
+      loadAnime(true); // reload anime cards with new language
+    });
+
+    updateLanguageUI();
     let currentPage = 1;
     const limit = 24;
     let searchMode = false;
@@ -697,17 +709,6 @@
       currentPage = 1;
       searchMode = searchQuery.length > 0;
       await loadAnime(true);
-    });
-
-    document.getElementById('moreBtn').addEventListener('click', function() {
-      const dropdown = document.getElementById('more-buttons-dropdown');
-      dropdown.classList.toggle('visible');
-    });
-
-    document.getElementById('more-buttons-dropdown').addEventListener('click', function(event) {
-      if (event.target.tagName === 'A' || event.target.tagName === 'BUTTON') {
-        this.classList.remove('visible');
-      }
     });
 
     function parseJwt (token) {

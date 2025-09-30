@@ -76,11 +76,11 @@
       flex-grow: 1;
     }
     .rank-display {
-      font-size: 1.2em;
+      font-size: 1.4em;
       color: #a9b8d9;
     }
     .rank-name {
-      font-size: 2em;
+      font-size: 2.2em;
       font-weight: 700;
       color: #4da6ff;
       margin-bottom: 5px;
@@ -259,6 +259,17 @@
       text-decoration: none;
       cursor: pointer;
     }
+
+    .daily-reward-btn {
+        background: #2ecc40;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -273,8 +284,9 @@
       <div class="profile-stats">
         <div id="profileName" class="profile-name"></div>
         <div class="rank-display">
-          Rank: <span id="rankName" class="rank-name">Начинающий анимешник</span>
+          Rank: <span id="rankName" class="rank-name"></span>
           <button id="rank-help-btn">?</button>
+          <button id="dailyRewardBtn" class="daily-reward-btn">Daily Reward</button>
         </div>
         <div class="xp-bar-container">
             <div id="xpBar" class="xp-bar" style="width: 0%;"></div>
@@ -287,11 +299,11 @@
     <div id="rank-modal" class="modal">
       <div class="modal-content">
         <span class="close-btn">&times;</span>
-        <h2>Как заработать ранг</h2>
-        <p>Вы можете зарабатывать XP и повышать свой ранг, играя в игру "Угадай аниме".</p>
-        <p>За каждое аниме, которое вы отметили как "просмотренное", вы получаете 1 XP.</p>
+        <h2 id="rank-modal-title">Как заработать ранг</h2>
+        <p id="rank-modal-p1">Вы можете зарабатывать XP и повышать свой ранг, играя в игру "Угадай аниме".</p>
+        <p id="rank-modal-p2">За каждое аниме, которое вы отметили как "просмотренное", вы получаете 1 XP.</p>
         <p>Ranks:</p>
-        <ol>
+        <ol id="rank-list">
           <li>Начинающий анимешник (Beginner Otaku): 0-99 XP</li>
           <li>Опытный зритель (Experienced Viewer): 100-299 XP</li>
           <li>Мастер сюжета (Master of the Plot): 300-699 XP</li>
@@ -327,24 +339,89 @@
       const user = JSON.parse(localStorage.getItem('googleUser'));
 
       if (!user) {
-        // If no user is logged in, redirect to the main page
         window.location.href = 'index.html';
         return;
       }
 
-      // Display user info
       document.getElementById('profilePic').src = user.picture;
       document.getElementById('profileName').textContent = user.name;
 
-      // Load anime lists from localStorage
       let userProfile = JSON.parse(localStorage.getItem(user.sub)) || {
           xp: 0,
           favorites: [],
           planToWatch: [],
           watching: [],
-          watched: []
+          watched: [],
+          lastReward: null
       };
 
+      const isEng = window.location.pathname.includes('eng');
+
+      const ranks = {
+          ru: [
+              { name: 'Начинающий анимешник', minXp: 0 },
+              { name: 'Опытный зритель', minXp: 100 },
+              { name: 'Мастер сюжета', minXp: 300 },
+              { name: 'Легенда аниме', minXp: 700 },
+              { name: 'Император аниме', minXp: 1500 }
+          ],
+          en: [
+              { name: 'Beginner Otaku', minXp: 0 },
+              { name: 'Experienced Viewer', minXp: 100 },
+              { name: 'Master of the Plot', minXp: 300 },
+              { name: 'Anime Legend', minXp: 700 },
+              { name: 'Anime Emperor', minXp: 1500 }
+          ]
+      };
+
+      function updateRank() {
+        const lang = isEng ? 'en' : 'ru';
+        const currentRanks = ranks[lang];
+        
+        const watchedXp = userProfile.watched.length;
+        userProfile.xp = watchedXp;
+
+        const currentXp = userProfile.xp;
+        let currentRank = currentRanks[0];
+        let nextRank = currentRanks[1];
+
+        for (let i = 0; i < currentRanks.length; i++) {
+            if (currentXp >= currentRanks[i].minXp) {
+                currentRank = currentRanks[i];
+                nextRank = currentRanks[i + 1] || { name: 'MAX', minXp: currentRank.minXp };
+            }
+        }
+
+        const xpInCurrentRank = currentXp - currentRank.minXp;
+        const xpForNextRank = nextRank.minXp - currentRank.minXp;
+        const percentage = (xpForNextRank > 0) ? (xpInCurrentRank / xpForNextRank) * 100 : 100;
+
+        document.getElementById('rankName').textContent = currentRank.name;
+        document.getElementById('xpBar').style.width = `${percentage}%`;
+        document.getElementById('xpText').textContent = `${currentXp} / ${nextRank.minXp} XP`;
+        
+        localStorage.setItem(user.sub, JSON.stringify(userProfile));
+      }
+
+      function claimDailyReward() {
+          const now = new Date();
+          const lastReward = userProfile.lastReward ? new Date(userProfile.lastReward) : null;
+          
+          if (lastReward && now.toDateString() === lastReward.toDateString()) {
+              alert(isEng ? 'You have already claimed your daily reward.' : 'Вы уже получили свою ежедневную награду.');
+              return;
+          }
+
+          const reward = Math.floor(Math.random() * 11) + 5; // 5 to 15 XP
+          userProfile.xp += reward;
+          userProfile.lastReward = now.toISOString();
+          localStorage.setItem(user.sub, JSON.stringify(userProfile));
+          updateRank();
+          alert((isEng ? 'You received ' : 'Вы получили ') + reward + ' XP!');
+      }
+
+      document.getElementById('dailyRewardBtn').addEventListener('click', claimDailyReward);
+      
       const favoritesGrid = document.getElementById('favoritesGrid');
       const planToWatchGrid = document.getElementById('planToWatchGrid');
       const watchingGrid = document.getElementById('watchingGrid');
@@ -386,23 +463,21 @@
       }
 
       function populateGrid(gridElement, animeList, listName) {
-          gridElement.innerHTML = ''; // Clear grid before populating
+          gridElement.innerHTML = '';
           if (animeList && animeList.length > 0) {
               animeList.forEach((anime, index) => {
                   const card = createAnimeCard(anime, listName);
                   gridElement.appendChild(card);
 
-                  // Insert an ad card after the 4th item in the "Favorites" grid
                   if (listName === 'favorites' && index === 3) {
                       const adCard = document.createElement('div');
-                      adCard.className = 'anime-box'; // Use the same class for styling
+                      adCard.className = 'anime-box';
                       adCard.innerHTML = `<div id="yandex_rtb_R-A-123456-3" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"></div>`;
                       gridElement.appendChild(adCard);
 
-                      // Initialize this specific ad block
-                      window.yaContextCb.push(()=>{
+                      window.yaContextCb.push(()=> {
                         Ya.Context.AdvManager.render({
-                          blockId: "R-A-123456-3", // Replace with your actual Block ID
+                          blockId: "R-A-123456-3",
                           renderTo: "yandex_rtb_R-A-123456-3"
                         })
                       });
@@ -417,54 +492,34 @@
       function removeAnimeFromList(animeTitle, listName) {
         userProfile[listName] = userProfile[listName].filter(item => item.title !== animeTitle);
         localStorage.setItem(user.sub, JSON.stringify(userProfile));
-        populateGrids(); // Re-render all grids
-      }
-
-      function updateRank() {
-        const ranks = [
-            { name: 'Начинающий анимешник', minXp: 0 },
-            { name: 'Опытный зритель', minXp: 100 },
-            { name: 'Мастер сюжета', minXp: 300 },
-            { name: 'Легенда аниме', minXp: 700 },
-            { name: 'Император аниме', minXp: 1500 }
-        ];
-
-        const currentXp = userProfile.xp;
-        let currentRank = ranks[0];
-        let nextRank = ranks[1];
-
-        for (let i = 0; i < ranks.length; i++) {
-            if (currentXp >= ranks[i].minXp) {
-                currentRank = ranks[i];
-                nextRank = ranks[i + 1] || { name: 'MAX', minXp: currentRank.minXp };
-            }
-        }
-
-        const xpInCurrentRank = currentXp - currentRank.minXp;
-        const xpForNextRank = nextRank.minXp - currentRank.minXp;
-        const percentage = (xpForNextRank > 0) ? (xpInCurrentRank / xpForNextRank) * 100 : 100;
-
-        document.getElementById('rankName').textContent = currentRank.name;
-        document.getElementById('xpBar').style.width = `${percentage}%`;
-        document.getElementById('xpText').textContent = `${currentXp} / ${nextRank.minXp} XP`;
+        populateGrids();
+        updateRank();
       }
 
       document.getElementById('signOutBtn').addEventListener('click', () => {
           localStorage.removeItem('googleUser');
-          // Optionally, disable Google's one-tap sign-in for the next visit
           google.accounts.id.disableAutoSelect();
           window.location.href = 'index.html';
       });
-
-      // Initial Population
-      populateGrids();
-      updateRank();
 
       const modal = document.getElementById("rank-modal");
       const btn = document.getElementById("rank-help-btn");
       const span = document.getElementsByClassName("close-btn")[0];
 
       btn.onclick = function() {
+        const lang = isEng ? 'en' : 'ru';
+        document.getElementById('rank-modal-title').textContent = isEng ? 'How to Earn Ranks' : 'Как заработать ранг';
+        document.getElementById('rank-modal-p1').textContent = isEng ? 'You can earn XP and increase your rank by interacting with the site.' : 'Вы можете зарабатывать XP и повышать свой ранг, взаимодействуя с сайтом.';
+        document.getElementById('rank-modal-p2').textContent = isEng ? 'You get 1 XP for each anime you mark as "watched". You can also get daily rewards.' : 'За каждое аниме, которое вы отметили как "просмотренное", вы получаете 1 XP. Вы также можете получать ежедневные награды.';
+        
+        const rankList = document.getElementById('rank-list');
+        rankList.innerHTML = '';
+        ranks[lang].forEach(rank => {
+            const li = document.createElement('li');
+            li.textContent = `${rank.name}: ${rank.minXp}+ XP`;
+            rankList.appendChild(li);
+        });
+
         modal.style.display = "block";
       }
 
@@ -477,6 +532,9 @@
           modal.style.display = "none";
         }
       }
+      
+      populateGrids();
+      updateRank();
     });
   </script>
 

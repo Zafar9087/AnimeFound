@@ -94,7 +94,7 @@
     }
     .xp-bar {
       height: 100%;
-      background: linear-gradient(90deg, #4da6ff 0%, #2ecc40 100%);
+      background: #4da6ff;
       border-radius: 5px;
       transition: width 0.5s ease-in-out;
     }
@@ -259,17 +259,6 @@
       text-decoration: none;
       cursor: pointer;
     }
-
-    .daily-reward-btn {
-        background: #2ecc40;
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        padding: 10px 15px;
-        cursor: pointer;
-        font-weight: bold;
-        margin-left: 10px;
-    }
   </style>
 </head>
 <body>
@@ -286,7 +275,6 @@
         <div class="rank-display">
           Rank: <span id="rankName" class="rank-name"></span>
           <button id="rank-help-btn">?</button>
-          <button id="dailyRewardBtn" class="daily-reward-btn">Daily Reward</button>
         </div>
         <div class="xp-bar-container">
             <div id="xpBar" class="xp-bar" style="width: 0%;"></div>
@@ -299,17 +287,10 @@
     <div id="rank-modal" class="modal">
       <div class="modal-content">
         <span class="close-btn">&times;</span>
-        <h2 id="rank-modal-title">Как заработать ранг</h2>
-        <p id="rank-modal-p1">Вы можете зарабатывать XP и повышать свой ранг, играя в игру "Угадай аниме".</p>
-        <p id="rank-modal-p2">За каждое аниме, которое вы отметили как "просмотренное", вы получаете 1 XP.</p>
+        <h2 id="rank-modal-title"></h2>
+        <ul id="rank-modal-list"></ul>
         <p>Ranks:</p>
-        <ol id="rank-list">
-          <li>Начинающий анимешник (Beginner Otaku): 0-99 XP</li>
-          <li>Опытный зритель (Experienced Viewer): 100-299 XP</li>
-          <li>Мастер сюжета (Master of the Plot): 300-699 XP</li>
-          <li>Легенда аниме (Anime Legend): 700-1499 XP</li>
-          <li>Император аниме (Anime Emperor): 1500+ XP</li>
-        </ol>
+        <ol id="rank-list"></ol>
       </div>
     </div>
 
@@ -351,8 +332,7 @@
           favorites: [],
           planToWatch: [],
           watching: [],
-          watched: [],
-          lastReward: null
+          watched: []
       };
 
       const isEng = window.location.pathname.includes('eng');
@@ -378,8 +358,11 @@
         const lang = isEng ? 'en' : 'ru';
         const currentRanks = ranks[lang];
         
+        const favoritesXp = userProfile.favorites.length * 2;
         const watchedXp = userProfile.watched.length;
-        userProfile.xp = watchedXp;
+        const watchingXp = userProfile.watching.length;
+        const planToWatchXp = userProfile.planToWatch.length;
+        userProfile.xp = favoritesXp + watchedXp + watchingXp + planToWatchXp;
 
         const currentXp = userProfile.xp;
         let currentRank = currentRanks[0];
@@ -402,25 +385,6 @@
         
         localStorage.setItem(user.sub, JSON.stringify(userProfile));
       }
-
-      function claimDailyReward() {
-          const now = new Date();
-          const lastReward = userProfile.lastReward ? new Date(userProfile.lastReward) : null;
-          
-          if (lastReward && now.toDateString() === lastReward.toDateString()) {
-              alert(isEng ? 'You have already claimed your daily reward.' : 'Вы уже получили свою ежедневную награду.');
-              return;
-          }
-
-          const reward = Math.floor(Math.random() * 11) + 5; // 5 to 15 XP
-          userProfile.xp += reward;
-          userProfile.lastReward = now.toISOString();
-          localStorage.setItem(user.sub, JSON.stringify(userProfile));
-          updateRank();
-          alert((isEng ? 'You received ' : 'Вы получили ') + reward + ' XP!');
-      }
-
-      document.getElementById('dailyRewardBtn').addEventListener('click', claimDailyReward);
       
       const favoritesGrid = document.getElementById('favoritesGrid');
       const planToWatchGrid = document.getElementById('planToWatchGrid');
@@ -509,9 +473,26 @@
       btn.onclick = function() {
         const lang = isEng ? 'en' : 'ru';
         document.getElementById('rank-modal-title').textContent = isEng ? 'How to Earn Ranks' : 'Как заработать ранг';
-        document.getElementById('rank-modal-p1').textContent = isEng ? 'You can earn XP and increase your rank by interacting with the site.' : 'Вы можете зарабатывать XP и повышать свой ранг, взаимодействуя с сайтом.';
-        document.getElementById('rank-modal-p2').textContent = isEng ? 'You get 1 XP for each anime you mark as "watched". You can also get daily rewards.' : 'За каждое аниме, которое вы отметили как "просмотренное", вы получаете 1 XP. Вы также можете получать ежедневные награды.';
         
+        const rankModalList = document.getElementById('rank-modal-list');
+        rankModalList.innerHTML = '';
+        const expRules = isEng ? [
+            '2 XP for each anime in Favorites',
+            '1 XP for each anime in Watched',
+            '1 XP for each anime in Watching',
+            '1 XP for each anime in Plan to Watch'
+        ] : [
+            '2 XP за каждое аниме в Избранном',
+            '1 XP за каждое аниме в Просмотрено',
+            '1 XP за каждое аниме в Смотрю',
+            '1 XP за каждое аниме в Планирую'
+        ];
+        expRules.forEach(rule => {
+            const li = document.createElement('li');
+            li.textContent = rule;
+            rankModalList.appendChild(li);
+        });
+
         const rankList = document.getElementById('rank-list');
         rankList.innerHTML = '';
         ranks[lang].forEach(rank => {

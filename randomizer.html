@@ -22,7 +22,7 @@
       left: 0;
       width: 100vw;
       height: 60px;
-      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+      background: rgba(17, 24, 39, 0.6);
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       display: flex;
       justify-content: space-between;
@@ -50,7 +50,7 @@
       box-sizing: border-box;
     }
     .settings-panel {
-      background: rgba(35, 42, 69, 0.6); /* Glassmorphism */
+      background: rgba(17, 24, 39, 0.6); /* Glassmorphism */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
@@ -87,7 +87,7 @@
     .input-group {
       display: flex;
       align-items: center;
-      background: rgba(35, 42, 69, 0.8);
+      background: rgba(10, 15, 26, 0.5);
       border: 1px solid rgba(77, 166, 255, 0.1);
       border-radius: 12px;
       padding: 0 4px 0 12px;
@@ -122,6 +122,10 @@
       height: 30px;
       cursor: pointer;
       flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+    #yearBtn:hover {
+      transform: scale(1.1);
     }
     .lang-btn, .random-btn {
       font-family: 'Inter', Arial, sans-serif;
@@ -164,7 +168,7 @@
       padding: 0;
     }
     .anime-card {
-      background: rgba(35, 42, 69, 0.6); /* Dark glassmorphism */
+      background: rgba(17, 24, 39, 0.6); /* Dark glassmorphism */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
@@ -272,7 +276,7 @@
       width: 80%; /* Make it wider */
     }
     #genreSettings {
-      background: rgba(35, 42, 69, 0.8);
+      background: rgba(10, 15, 26, 0.5);
       border-radius: 12px;
       padding: 10px;
       margin-top: 5px;

@@ -26,7 +26,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 32px;
-      background: rgba(10, 15, 26, 0.6);
+      background: rgba(17, 24, 39, 0.6);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(77, 166, 255, 0.1);
@@ -44,7 +44,7 @@
       padding: 20px;
     }
     .profile-header {
-      background: rgba(35, 42, 69, 0.6);
+      background: rgba(17, 24, 39, 0.6);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
@@ -94,7 +94,7 @@
     }
     .xp-bar {
       height: 100%;
-      background: #4da6ff;
+      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
       border-radius: 5px;
       transition: width 0.5s ease-in-out;
     }
@@ -119,7 +119,7 @@
       gap: 20px;
     }
     .anime-box {
-      background: rgba(35, 42, 69, 0.6);
+      background: rgba(17, 24, 39, 0.6);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
@@ -180,7 +180,7 @@
         font-size: 1.1em;
         text-align: center;
         padding: 40px;
-        background: rgba(35, 42, 69, 0.4);
+        background: rgba(17, 24, 39, 0.4);
         border-radius: 18px;
     }
     .sign-out-btn {
@@ -229,21 +229,31 @@
       position: fixed; 
       z-index: 1; 
       left: 0;
-      top: 0;
+      top: 0; 
       width: 100%;
       height: 100%;
       overflow: auto; 
-      background-color: rgba(0,0,0,0.4); 
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     .modal-content {
-      background-color: #1e293b;
+      background: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(77, 166, 255, 0.2);
       margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
+      padding: 30px;
       width: 80%;
       max-width: 500px;
-      border-radius: 10px;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      color: #e0e6f7;
+    }
+    .modal-content h2 {
+      color: #4da6ff;
+      margin-top: 0;
     }
 
     .close-btn {
@@ -255,7 +265,7 @@
 
     .close-btn:hover,
     .close-btn:focus {
-      color: black;
+      color: #fff;
       text-decoration: none;
       cursor: pointer;
     }
@@ -286,10 +296,10 @@
 
     <div id="rank-modal" class="modal">
       <div class="modal-content">
-        <span class="close-btn">&times;</span>
+        <span class="close-btn" id="closeModalBtn">&times;</span>
         <h2 id="rank-modal-title"></h2>
         <ul id="rank-modal-list"></ul>
-        <p>Ranks:</p>
+        <p style="font-weight: bold; color: #4da6ff;">Ranks:</p>
         <ol id="rank-list"></ol>
       </div>
     </div>
@@ -340,14 +350,14 @@
       const ranks = {
           ru: [
               { name: 'Начинающий анимешник', minXp: 0 },
-              { name: 'Опытный зритель', minXp: 100 },
-              { name: 'Мастер сюжета', minXp: 300 },
-              { name: 'Легенда аниме', minXp: 700 },
-              { name: 'Император аниме', minXp: 1500 }
+              { name: 'Опытный зритель', minXp: 50 },
+              { name: 'Мастер сюжета', minXp: 150 },
+              { name: 'Легенда аниме', minXp: 400 },
+              { name: 'Император аниме', minXp: 1000 }
           ],
           en: [
               { name: 'Beginner Otaku', minXp: 0 },
-              { name: 'Experienced Viewer', minXp: 100 },
+              { name: 'Experienced Viewer', minXp: 50 },
               { name: 'Master of the Plot', minXp: 300 },
               { name: 'Anime Legend', minXp: 700 },
               { name: 'Anime Emperor', minXp: 1500 }
@@ -358,11 +368,11 @@
         const lang = isEng ? 'en' : 'ru';
         const currentRanks = ranks[lang];
         
-        const favoritesXp = userProfile.favorites.length * 2;
-        const watchedXp = userProfile.watched.length;
-        const watchingXp = userProfile.watching.length;
-        const planToWatchXp = userProfile.planToWatch.length;
-        userProfile.xp = favoritesXp + watchedXp + watchingXp + planToWatchXp;
+        const favoritesXp = (userProfile.favorites?.length || 0) * 10;
+        const watchedXp = (userProfile.watched?.length || 0) * 5;
+        const watchingXp = (userProfile.watching?.length || 0) * 5;
+        const planToWatchXp = (userProfile.planToWatch?.length || 0) * 2;
+        userProfile.xp = favoritesXp + watchedXp + watchingXp + planToWatchXp + (userProfile.gameXp || 0);
 
         const currentXp = userProfile.xp;
         let currentRank = currentRanks[0];
@@ -468,7 +478,7 @@
 
       const modal = document.getElementById("rank-modal");
       const btn = document.getElementById("rank-help-btn");
-      const span = document.getElementsByClassName("close-btn")[0];
+      const span = document.getElementById("closeModalBtn");
 
       btn.onclick = function() {
         const lang = isEng ? 'en' : 'ru';
@@ -478,14 +488,16 @@
         rankModalList.innerHTML = '';
         const expRules = isEng ? [
             '2 XP for each anime in Favorites',
-            '1 XP for each anime in Watched',
-            '1 XP for each anime in Watching',
-            '1 XP for each anime in Plan to Watch'
+            '5 XP for each anime in Watched',
+            '5 XP for each anime in Watching',
+            '2 XP for each anime in Plan to Watch',
+            'XP from "Guess the Anime" game'
         ] : [
-            '2 XP за каждое аниме в Избранном',
-            '1 XP за каждое аниме в Просмотрено',
-            '1 XP за каждое аниме в Смотрю',
-            '1 XP за каждое аниме в Планирую'
+            '10 XP за каждое аниме в "Избранном"',
+            '5 XP за каждое аниме в "Просмотрено"',
+            '5 XP за каждое аниме в "Смотрю"',
+            '2 XP за каждое аниме в "Планирую посмотреть"',
+            'XP за игру "Угадай аниме"'
         ];
         expRules.forEach(rule => {
             const li = document.createElement('li');

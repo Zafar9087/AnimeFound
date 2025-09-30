@@ -44,6 +44,12 @@
 
   <title>AnimeFound</title>
   <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+      color: #e0e6f7;
+    }
       .top-bar { /* Updated to glassmorphism */
         position: fixed;
         top: 0;
@@ -59,6 +65,11 @@
         -webkit-backdrop-filter: blur(12px);
         border-bottom: 1px solid rgba(77, 166, 255, 0.1);
       }
+      .top-bar a {
+        text-decoration: none;
+        color: #4da6ff;
+        font-weight: 700;
+      }
       .top-bar-btn {
         background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
         color: #fff;
@@ -66,32 +77,17 @@
         border-radius: 20px;
         font-size: 1em;
         padding: 10px 20px;
-        cursor: pointer;
         font-weight: bold;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        transition: background 0.2s, transform 0.2s;
+        transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
-        margin-left: 30px;
-      }
-      .top-bar-btn1 {
-        background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
-        color: #fff;
-        border: none;
-        border-radius: 20px;
-        font-size: 1em;
-        padding: 10px 20px;
         cursor: pointer;
-        font-weight: bold;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        transition: background 0.2s, transform 0.2s;
-        text-decoration: none;
-        display: inline-block;
-        margin-right: 400px;
       }
       .top-bar-btn:hover {
         background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
-        transform: scale(1.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(77, 166, 255, 0.3);
       }
       .watch-btn {
         background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
@@ -111,12 +107,6 @@
         background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
         transform: scale(1.05);
       }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
-      color: #e0e6f7;
-    }
     .search { /* Simplified and integrated into top-bar */
       margin-left: 32px;
       max-width: 400px;
@@ -145,7 +135,7 @@
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       padding: 0 20px 40px;
-      max-width: 1400px;
+      max-width: 1600px;
       margin: auto;
     }
     .anime-box {
@@ -153,7 +143,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
-      border-radius: 24px;
+      border-radius: 18px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       transition: transform 0.25s, box-shadow 0.25s;
       overflow: hidden;
@@ -162,7 +152,7 @@
       color: #eee;
     }
     .anime-box:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px);
       box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
     }
     .anime-img {
@@ -179,7 +169,7 @@
     .anime-title {
       font-size: 1.1em;
       font-weight: bold;
-      color: #4da6ff;
+      color: #fff;
       text-align: center;
     }
     .badges {
@@ -252,16 +242,25 @@
       .anime-img {
         height: 180px;
       }
-      .search {
-        display: none;
+      .top-bar {
+        flex-wrap: wrap;
+        padding: 12px 16px;
       }
-      .top-bar-actions {
-        display: flex;
+      .top-bar-main-content {
+        order: 1;
+        flex-basis: 100%;
+        justify-content: space-between;
+      }
+      .search { /* Make search visible and full-width on mobile */
+        flex-basis: 100%;
+        order: 3;
+        margin: 10px 0 0 0;
+        max-width: none;
       }
     }
     .more-dropdown {
       position: absolute;
-      top: calc(100% + 5px); /* Позиция под родительским элементом + отступ */
+      top: calc(100% + 10px);
       right: 0;
       background: rgba(10, 15, 26, 0.8);
       backdrop-filter: blur(10px);
@@ -283,12 +282,12 @@
   
 
   <div class="top-bar">
-    <a href="intro.html" style="text-decoration:none; flex-shrink: 0;"><h1 style="margin:0;color:#4da6ff;">AnimeFound</h1></a>
-    <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 15px;">
-      <div class="search" style="margin: 0;">
+    <a href="intro.html"><h1>AnimeFound</h1></a>
+    <div class="top-bar-main-content" style="flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <div class="search">
         <input type="text" id="searchInput" placeholder="Search anime..." />
       </div>
-      <div class="top-bar-actions" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
+      <div class="more-btn-container" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
         <button class="top-bar-btn" id="moreBtn">More</button>
         <div id="more-buttons-dropdown" class="more-dropdown">
           <div id="google-signin-container">
@@ -307,10 +306,10 @@
           </div>
           <a href="profile.html" class="top-bar-btn" id="profileBtn" style="display: none; margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Profile</a>
           <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
-          <a href="Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Anime</a>
+          <a href="Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Game</a>
           <div style="display: flex; gap: 5px;">
-            <button class="top-bar-btn" id="langBtnRu" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Russ</button>
-            <button class="top-bar-btn" id="langBtnEn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Eng</button>
+            <button class="top-bar-btn" id="langBtnRu" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">RU</button>
+            <button class="top-bar-btn" id="langBtnEn" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">EN</button>
           </div>
         </div>
       </div>
@@ -344,7 +343,7 @@
         loadMore: 'Load More',
         watchAnime: 'Watch Anime',
         trailer: 'Watch Trailer',
-        noTrailer: 'No Trailer',
+        moreBtn: 'More',
         siteTitle: 'AnimeFound',
         randomizerBtn: '🎲 Random',
         guessAnime: 'Guess Anime'
@@ -354,14 +353,14 @@
         noResults: 'Ничего не найдено.',
         loadMore: 'Показать ещё',
         watchAnime: 'Смотреть аниме',
-        trailer: 'Смотреть трейлер',
-        noTrailer: 'Нет трейлера',
-        siteTitle: 'АнимеПоиск',
+        moreBtn: 'Ещё',
+        siteTitle: 'AnimeFound',
         randomizerBtn: '🎲 Рандом',
         guessAnime: 'Угадай аниме'
       }
     };
     function updateLanguageUI() {
+      document.getElementById('moreBtn').textContent = translations[currentLang].moreBtn;
       document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
       document.getElementById('noResults').textContent = translations[currentLang].noResults;
       document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
@@ -372,7 +371,7 @@
       } else {
         document.getElementById('guessAnimeBtn').href = 'Anime Found_eng.html';
       }
-      document.querySelector('.top-bar h1').textContent = translations[currentLang].siteTitle;
+      document.querySelector('.top-bar h1').textContent = 'AnimeFound';
     }
 
     langBtnRu.addEventListener('click', () => {
@@ -471,7 +470,7 @@
           const allNames = [anime.russian, anime.name, anime.title].map(x => (x || '').toLowerCase());
           if (bannedTitles.some(ban => allNames.some(n => n.includes(ban)))) {
             return;
-          }
+          } 
           const box = document.createElement("div");
           box.className = "anime-box";
           box.style.cursor = "pointer";
@@ -554,9 +553,6 @@
           });
           box.addEventListener('click', function(e) {
             // Do not navigate if the watch button was clicked
-            if (e.target.classList.contains('watch-btn')) return;
-
-            // Не срабатывает при клике на кнопку "Смотреть аниме"
             if (e.target.classList.contains('watch-btn')) return;
 
             // Save state to sessionStorage

@@ -25,7 +25,7 @@
     .anime-card-balanced {
       display: flex;
       align-items: stretch;
-      background: rgba(35, 42, 69, 0.6);
+      background: rgba(17, 24, 39, 0.6);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
@@ -123,6 +123,7 @@
     .list-btn:hover {
       background: rgba(77, 166, 255, 0.3);
     }
+    .list-btn.active { background: #4da6ff; color: #fff; }
     .watch-btn {
       background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
       color: #fff;
@@ -250,6 +251,15 @@
       const planBtn = document.getElementById('planBtn');
       const watchedBtn = document.getElementById('watchedBtn');
 
+      const buttons = {
+        favorites: favoriteBtn,
+        watching: watchingBtn,
+        planToWatch: planBtn,
+        watched: watchedBtn
+      };
+
+      let userProfile = JSON.parse(localStorage.getItem(user.sub)) || { xp: 0, favorites: [], planToWatch: [], watching: [], watched: [] };
+
       favoriteBtn.style.display = 'block';
       watchingBtn.style.display = 'block';
       planBtn.style.display = 'block';
@@ -257,9 +267,17 @@
 
       const animeData = { title, img, desc, episodes, score, year };
 
+      function updateButtonStates() {
+        for (const listName in buttons) {
+            if (userProfile[listName] && userProfile[listName].some(item => item.title === animeData.title)) {
+                buttons[listName].classList.add('active');
+            } else {
+                buttons[listName].classList.remove('active');
+            }
+        }
+      }
+
       function addToList(listName, xpGain) {
-        // Get current lists for the user, or initialize
-        const userProfile = JSON.parse(localStorage.getItem(user.sub)) || { xp: 0, favorites: [], planToWatch: [], watching: [], watched: [] };
         
         // Check if anime is already in the list to avoid duplicates
         const list = userProfile[listName];
@@ -269,9 +287,11 @@
                 userProfile.xp += xpGain;
             }
             localStorage.setItem(user.sub, JSON.stringify(userProfile));
-            alert(`Added "${animeData.title}" to your "${listName}" list! You got ${xpGain} XP!`);
+            alert(`Added "${animeData.title}" to your "${listName}" list!`);
         } else {
-            alert(`"${animeData.title}" is already in your ${listName} list.`);
+            // If it's already there, remove it
+            userProfile[listName] = list.filter(item => item.title !== animeData.title);
+            localStorage.setItem(user.sub, JSON.stringify(userProfile));
         }
       }
 
@@ -294,6 +314,8 @@
         e.stopPropagation();
         addToList('watched', 5);
       });
+
+      updateButtonStates();
 
     } else {
         // Hide buttons if user is not logged in

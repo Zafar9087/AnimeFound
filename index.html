@@ -71,18 +71,19 @@
         font-weight: 700;
       }
       .top-bar-btn {
-        background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
-        color: #fff;
-        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #e0e6f7;
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 20px;
         font-size: 1em;
         padding: 10px 20px;
         font-weight: bold;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
         cursor: pointer;
+        backdrop-filter: blur(5px);
       }
       .top-bar-btn:hover {
         background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);

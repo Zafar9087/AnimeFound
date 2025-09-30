@@ -213,15 +213,24 @@
     }
 
     #rank-help-btn {
-      background: #4da6ff;
-      color: #fff;
-      border: none;
+      background: rgba(77, 166, 255, 0.15);
+      color: #e0e6f7;
+      border: 1px solid rgba(77, 166, 255, 0.3);
       border-radius: 50%;
       width: 24px;
       height: 24px;
       cursor: pointer;
       font-weight: bold;
       margin-left: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    #rank-help-btn:hover {
+      background: rgba(77, 166, 255, 0.3);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(77, 166, 255, 0.5);
     }
 
     .modal {

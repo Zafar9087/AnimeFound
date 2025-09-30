@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
-  <script>window.yaContextCb=window.yaContextCb||[]</script>
-  <script src="https://yandex.ru/ads/system/context.js" async></script>
   <title>Anime Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
   <style>
@@ -203,8 +201,6 @@
       </div>
     </div>
   </div>
-  <!-- Yandex RTB Ad Block -->
-  <div id="yandex_rtb_R-A-123456-2" style="margin-top: 20px; text-align: center;"></div>
 
   <script>
     // Получаем параметры из URL
@@ -361,13 +357,6 @@
       }
     });
 
-    // Yandex Ads Initialization
-    window.yaContextCb.push(()=>{
-      Ya.Context.AdvManager.render({
-        blockId: "R-A-123456-2", // Replace with your actual Block ID
-        renderTo: "yandex_rtb_R-A-123456-2"
-      })
-    })
   </script>
 </body>
 </html>

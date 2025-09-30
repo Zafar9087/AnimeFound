@@ -6,8 +6,6 @@
   <title>My Profile - AnimeFound</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
-  <script>window.yaContextCb=window.yaContextCb||[]</script>
-  <script src="https://yandex.ru/ads/system/context.js" async></script>
   <style>
     body {
       background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
@@ -451,20 +449,6 @@
               animeList.forEach((anime, index) => {
                   const card = createAnimeCard(anime, listName);
                   gridElement.appendChild(card);
-
-                  if (listName === 'favorites' && index === 3) {
-                      const adCard = document.createElement('div');
-                      adCard.className = 'anime-box';
-                      adCard.innerHTML = `<div id="yandex_rtb_R-A-123456-3" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"></div>`;
-                      gridElement.appendChild(adCard);
-
-                      window.yaContextCb.push(()=> {
-                        Ya.Context.AdvManager.render({
-                          blockId: "R-A-123456-3",
-                          renderTo: "yandex_rtb_R-A-123456-3"
-                        })
-                      });
-                  }
               });
           } else {
               const friendlyName = listName.replace(/([A-Z])/g, ' $1').toLowerCase();

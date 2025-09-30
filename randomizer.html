@@ -168,47 +168,49 @@
       padding: 0;
     }
     .anime-card {
-      background: rgba(17, 24, 39, 0.6); /* Dark glassmorphism */
+      background: rgba(25, 34, 53, 0.6);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(77, 166, 255, 0.2);
-      border-radius: 24px; /* More rounded */
+      border-radius: 24px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       width: 100%;
       max-width: 380px;
       overflow: hidden;
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 15px;
-      transition: box-shadow 0.3s, transform 0.3s; /* Smoother transition */
-      color: #e0e6f7; /* Light text color */
+      transition: box-shadow 0.3s, transform 0.3s;
+      color: #e0e6f7;
     }
     .anime-card:hover {
       box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
       transform: translateY(-5px);
     }
-    .anime-card-img-inner { /* New class for the image inside the card */
+    .anime-card-header {
       width: 100%;
-      height: 180px; /* Smaller height */
-      object-fit: cover;
-      border-radius: 18px; /* Rounded corners for image */
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease-out;
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
     }
-    .anime-card-img-inner:hover {
-      transform: scale(1.03);
+    .anime-card-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(25, 34, 53, 1) 20%, transparent 100%);
     }
-    .anime-card-content-inner { /* New class for the content wrapper */
+    .anime-card-body {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
-    }
-    .anime-card > * + * {
-      margin-top: 12px; /* Replaces gap for better browser support */
-      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      margin-top: -50px;
+      position: relative;
+      z-index: 2;
     }
     .anime-title {
       font-size: 1.4em; /* Larger title */
@@ -217,6 +219,7 @@
       text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
       letter-spacing: 1px;
       margin-bottom: 0;
+      text-align: center;
     }
     .anime-desc {
       font-size: 0.9em;
@@ -226,7 +229,7 @@
       padding-left: 16px;
       max-height: 100px; /* Limit height */
       overflow-y: auto;
-      text-align: left; /* Align left */
+      text-align: left;
       width: 100%;
     }
     .badges {
@@ -261,7 +264,7 @@
     .kinopoisk-link:hover {
       color: #1c75d8;
     }
-    .watch-btn-inner { /* New watch button style */
+    .watch-btn-inner {
       background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
       color: #fff;
       border: none;
@@ -272,8 +275,13 @@
       font-weight: 700;
       box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
       transition: all 0.3s ease;
-      margin-top: 10px; /* Smaller margin */
-      width: 80%; /* Make it wider */
+      margin-top: 10px;
+      width: 100%;
+    }
+    .watch-btn-inner:hover {
+      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(77, 166, 255, 0.3);
     }
     #genreSettings {
       background: rgba(10, 15, 26, 0.5);
@@ -316,10 +324,6 @@
         max-width: none;
         padding: 15px; /* Even smaller padding on mobile */
         border-radius: 18px;
-      }
-      .anime-card-img-inner {
-        height: 220px;
-        border-radius: 12px;
       }
       .anime-title {
         font-size: 1.5em;
@@ -623,10 +627,10 @@
         if (country) badges.push(`<span class="badge">${country}</span>`);
 
         animeCard.innerHTML = `
-          <img src="${img}" alt="${title}" class="anime-card-img-inner">
-          <div class="anime-card-content-inner">
+          <div class="anime-card-header" style="background-image: url('${img}')"></div>
+          <div class="anime-card-body">
             <div class="anime-title">${title}</div>
-            <div style="color:#c0c8e7;font-size:0.92em;text-align:center;margin-bottom:6px;">${origTitle}</div>
+            <div style="color:#a9b8d9;font-size:0.9em;text-align:center;opacity:0.8;">${origTitle}</div>
             <div class="badges">${badges.join('')}</div>
             <div class="anime-desc">${desc}</div>
             ${kinopoisk ? `<a href="${kinopoisk}" target="_blank" class="kinopoisk-link">${translations[currentLang].kinopoisk}</a>` : ''}

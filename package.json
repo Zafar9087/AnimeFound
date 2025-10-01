@@ -1,0 +1,26 @@
+{
+  "name": "anime-illustration",
+  "version": "1.0.0",
+  "description": "A web application for tracking anime and user progress.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "anime",
+    "tracker",
+    "xp"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "googleapis": "^108.0.0",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "sqlite3": "^5.1.2"
+  }
+}

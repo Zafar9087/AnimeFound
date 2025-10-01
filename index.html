@@ -255,6 +255,10 @@
         margin: 10px 0 0 0;
         max-width: none;
       }
+      .more-dropdown {
+        right: 16px; /* Align with padding */
+        left: auto;
+      }
     }
     .more-dropdown {
       position: absolute;
@@ -288,21 +292,10 @@
       <div class="more-btn-container" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
         <button class="top-bar-btn" id="moreBtn">More</button>
         <div id="more-buttons-dropdown" class="more-dropdown">
-          <div id="google-signin-container">
-            <div id="g_id_onload"
-                data-client_id="169151760587-vkicieu6ehum6e1kvatc3i4qpplnt6hj.apps.googleusercontent.com" 
-                data-callback="handleCredentialResponse">
-            </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-size="large"
-                data-theme="outline"
-                data-text="sign_in_with"
-                data-shape="rectangular"
-                data-logo_alignment="left">
-            </div>
-          </div>
-          <a href="profile.html" class="top-bar-btn" id="profileBtn" style="display: none; margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Profile</a>
+          
+          <!-- New placeholder for login/profile status -->
+          <div id="login-profile-section"></div>
+
           <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
           <a href="Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Game</a>
           <div style="display: flex; gap: 5px;">
@@ -480,6 +473,24 @@
           const box = document.createElement("div");
           box.className = "anime-box";
           box.style.cursor = "pointer";
+
+          // --- INTEGRATION START ---
+          const animeId = anime.mal_id ? anime.mal_id.toString() : anime.id.toString();
+          box.dataset.animeId = animeId;
+
+          let actionsHTML = '';
+          if (user) {
+              const isFavorited = userAnimeList[animeId] && userAnimeList[animeId].favorited;
+              const isWatched = userAnimeList[animeId] && userAnimeList[animeId].watched;
+              actionsHTML = `
+                <div class="user-actions">
+                    <i class="fas fa-star action-btn ${isFavorited ? 'active' : ''}" data-status="favorited" title="Add to Favorites"></i>
+                    <i class="fas fa-check-circle action-btn ${isWatched ? 'active' : ''}" data-status="watched" title="Mark as Watched"></i>
+                </div>
+              `;
+          }
+          // --- INTEGRATION END ---
+
           let title, desc, img, episodes, score, year;
           if (currentLang === 'ru') {
             // Shikimori fields
@@ -508,7 +519,6 @@
           // Watch Anime button links
           let animeLink = '';
           if (currentLang === 'ru') {
-            // Используем оригинальное название для slug
             const russianChars = {
                 'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
                 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
@@ -518,18 +528,15 @@
             function slugify(str) {
                 return str.toLowerCase().split('').map(char => russianChars[char] || char)
                 .join('')
-                .replace(/[^a-z0-9\s-]/gi, '') // remove unsupported chars
-                .trim()
-                .replace(/\s+/g, '-') // collapse whitespace and replace by -
-                .replace(/-+/g, '-'); // collapse dashes
+                .replace(/[^a-z0-9\s-]/gi, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
             }
-            // Use the Russian title for the slug, as it's more reliable for Anilibria
             animeLink = `https://anilibria.wiki/release/${slugify(title)}.html`;
           } else {
             animeLink = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
           }
 
           box.innerHTML = `
+            ${actionsHTML}
             <img class="anime-img" src="${img}" alt="${title}">
             <div class="anime-content">
               <div class="anime-title">${title}</div>
@@ -540,17 +547,11 @@
           `;
           box.querySelector('.watch-btn').addEventListener('click', function(e) {
             e.stopPropagation();
-
-            // Save state to sessionStorage
             const state = {
-              searchQuery: document.getElementById('searchInput').value,
-              currentLang: currentLang,
-              scrollPos: window.scrollY,
-              animeHTML: document.getElementById('animeContainer').innerHTML,
-              currentPage: currentPage
+              searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
+              animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-
             if (currentLang === 'en') {
               window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
             } else {
@@ -558,29 +559,48 @@
             }
           });
           box.addEventListener('click', function(e) {
-            // Do not navigate if the watch button was clicked
-            if (e.target.classList.contains('watch-btn')) return;
-
-            // Save state to sessionStorage
+            if (e.target.classList.contains('watch-btn') || e.target.closest('.user-actions')) return;
             const state = {
-              searchQuery: document.getElementById('searchInput').value,
-              currentLang: currentLang,
-              scrollPos: window.scrollY,
-              animeHTML: document.getElementById('animeContainer').innerHTML,
-              currentPage: currentPage
+              searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
+              animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-
-            const params = new URLSearchParams({
-              title,
-              desc,
-              img,
-              episodes: episodes || '',
-              score: score || '',
-              year: year || ''
-            });
+            const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
             window.location.href = `card.html?${params.toString()}`;
           });
+
+          // --- INTEGRATION START: Add event listeners for new buttons ---
+          if (user) {
+            box.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const card = e.target.closest('.anime-box');
+                    const clickedAnimeId = card.dataset.animeId;
+                    const status = e.target.dataset.status;
+                    const isActive = e.target.classList.contains('active');
+                    e.target.classList.toggle('active'); // Optimistic UI update
+                    try {
+                        const res = await fetch('/api/user/animelist', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                anime_id: clickedAnimeId, 
+                                status: isActive ? 'none' : status,
+                                old_status: status
+                            }),
+                        });
+                        if (!res.ok) { e.target.classList.toggle('active'); }
+                        else { // Update local list
+                           if(!userAnimeList[clickedAnimeId]) userAnimeList[clickedAnimeId] = {};
+                           if(isActive) { delete userAnimeList[clickedAnimeId][status]; }
+                           else { userAnimeList[clickedAnimeId][status] = true; }
+                        }
+                    } catch (err) { e.target.classList.toggle('active'); }
+                });
+            });
+          }
+          // --- INTEGRATION END ---
+
           container.appendChild(box);
         });
 
@@ -694,36 +714,48 @@
       await loadAnime(true);
     });
 
-    function parseJwt (token) {
-      var base64Url = token.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    }
+    let user = null;
+    let userAnimeList = {}; // Object to store user's anime statuses for quick lookup
 
-    function updateLoginState() {
-      const user = JSON.parse(localStorage.getItem('googleUser'));
-      if (user) {
-        document.getElementById('google-signin-container').style.display = 'none';
-        document.getElementById('profileBtn').style.display = 'block';
-      } else {
-        document.getElementById('google-signin-container').style.display = 'block';
-        document.getElementById('profileBtn').style.display = 'none';
+    // Fetches user data and their anime list from the server
+    async function fetchUserAndList() {
+      try {
+        const userRes = await fetch('/api/user');
+        if (userRes.ok) {
+          user = await userRes.json();
+          const listRes = await fetch('/api/user/animelist');
+          if (listRes.ok) {
+            const list = await listRes.json();
+            list.forEach(item => {
+              if (!userAnimeList[item.anime_id]) userAnimeList[item.anime_id] = {};
+              userAnimeList[item.anime_id][item.status] = true;
+            });
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching user data:", e);
+      } finally {
+        // Update the UI and load anime regardless of login status
+        updateLoginUI();
+        loadInitial(); // This is your original function to load anime
       }
     }
 
-    function handleCredentialResponse(response) {
-      console.log("Encoded JWT ID token: " + response.credential);
-      const responsePayload = parseJwt(response.credential);
-      localStorage.setItem('googleUser', JSON.stringify(responsePayload));
-      console.log('Signed in as ' + responsePayload.name);
-      updateLoginState();
+    // Updates the top-bar UI based on login status
+    function updateLoginUI() {
+      const container = document.getElementById('login-profile-section');
+      if (user) {
+        container.innerHTML = `
+          <a href="/profile.html" class="top-bar-btn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">${user.name}</a>
+          <a href="/auth/logout" class="top-bar-btn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Logout</a>
+        `;
+      } else {
+        container.innerHTML = '<a href="/auth/google" class="top-bar-btn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Login with Google</a>';
+      }
     }
 
-    // Check login state on page load
-    updateLoginState();
+    // Start the process
+    fetchUserAndList();
 
   </script>
   

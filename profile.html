@@ -1,528 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile - AnimeFound</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
-  <style>
-    body {
-      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
-      color: #e0e6f7;
-      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 200;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 32px;
-      background: rgba(17, 24, 39, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(77, 166, 255, 0.1);
-    }
-    .top-bar a {
-      text-decoration: none;
-    }
-    .top-bar h1 {
-      margin: 0;
-      color: #4da6ff;
-    }
-    .profile-container {
-      max-width: 1200px;
-      margin: 100px auto 40px;
-      padding: 20px;
-    }
-    .profile-header {
-      background: rgba(17, 24, 39, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(77, 166, 255, 0.2);
-      border-radius: 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      padding: 30px;
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      margin-bottom: 40px;
-    }
-    .profile-pic {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 3px solid #4da6ff;
-      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
-    }
-    .profile-name {
-      font-size: 2.5em;
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
-    }
-    .profile-stats {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-grow: 1;
-    }
-    .rank-display {
-      font-size: 1.4em;
-      color: #a9b8d9;
-    }
-    .rank-name {
-      font-size: 2.2em;
-      font-weight: 700;
-      color: #4da6ff;
-      margin-bottom: 5px;
-    }
-    .xp-bar-container {
-      width: 100%;
-      height: 10px;
-      background: rgba(10, 15, 26, 0.5);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .xp-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
-      border-radius: 5px;
-      transition: width 0.5s ease-in-out;
-    }
-    .xp-text {
-      font-size: 0.9em;
-      color: #a9b8d9;
-      margin-top: 5px;
-    }
-    .anime-list-section {
-      margin-bottom: 40px;
-    }
-    .anime-list-section h2 {
-      font-size: 2em;
-      color: #4da6ff;
-      border-bottom: 2px solid rgba(77, 166, 255, 0.3);
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    .anime-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-    }
-    .anime-box {
-      background: rgba(17, 24, 39, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(77, 166, 255, 0.2);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      color: #eee;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .anime-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
-    }
-    .anime-box a {
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-    }
-    .remove-btn {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: rgba(255, 95, 86, 0.8);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        font-weight: bold;
-        z-index: 10;
-        opacity: 0;
-        transition: opacity 0.2s;
-    }
-    .anime-box:hover .remove-btn {
-        opacity: 1;
-    }
-    .anime-img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
-    .anime-title {
-      font-size: 1em;
-      font-weight: bold;
-      color: #fff;
-      padding: 12px;
-      text-align: center;
-      flex-grow: 1;
-    }
-    .empty-list-message {
-        color: #a9b8d9;
-        font-size: 1.1em;
-        text-align: center;
-        padding: 40px;
-        background: rgba(17, 24, 39, 0.4);
-        border-radius: 18px;
-    }
-    .sign-out-btn {
-        background: rgba(255, 95, 86, 0.8);
-        border: 1px solid rgba(255, 95, 86, 1);
-        color: #fff;
-        border-radius: 12px;
-        font-size: 0.9em;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        margin-left: auto;
-    }
-    .sign-out-btn:hover {
-        background: rgba(255, 95, 86, 1);
-        transform: translateY(-2px);
-    }
-    @media (max-width: 600px) {
-        .profile-header {
-            flex-direction: column;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - Anime Found</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('Bleu.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             text-align: center;
         }
-        .profile-name {
-            font-size: 2em;
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
         }
-        .anime-grid {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ff4500;
         }
-    }
-
-    #rank-help-btn {
-      background: rgba(77, 166, 255, 0.15);
-      color: #e0e6f7;
-      border: 1px solid rgba(77, 166, 255, 0.3);
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-left: 10px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    #rank-help-btn:hover {
-      background: rgba(77, 166, 255, 0.3);
-      color: #fff;
-      box-shadow: 0 0 10px rgba(77, 166, 255, 0.5);
-    }
-
-    .modal {
-      display: none; 
-      position: fixed; 
-      z-index: 1; 
-      left: 0;
-      top: 0; 
-      width: 100%;
-      height: 100%;
-      overflow: auto; 
-      background-color: rgba(0,0,0,0.6);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-    }
-
-    .modal-content {
-      background: rgba(17, 24, 39, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(77, 166, 255, 0.2);
-      margin: 15% auto;
-      padding: 30px;
-      width: 80%;
-      max-width: 500px;
-      border-radius: 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      color: #e0e6f7;
-    }
-    .modal-content h2 {
-      color: #4da6ff;
-      margin-top: 0;
-    }
-
-    .close-btn {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .close-btn:hover,
-    .close-btn:focus {
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-  </style>
+        p {
+            font-size: 1.0em;
+            margin-bottom: 10px;
+        }
+        #user-rank {
+            font-weight: bold;
+            color: #ffc107;
+        }
+        .btn {
+            background-color: #ff4500;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 20px 10px 0;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #e03e00;
+        }
+        #loading, #auth-error {
+            font-size: 1.5em;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="top-bar">
-    <a href="index.html"><h1>AnimeFound</h1></a>
-  </div>
-
-  <div class="profile-container">
-    <div class="profile-header">
-      <img id="profilePic" src="" alt="Profile Picture" class="profile-pic">
-      <div class="profile-stats">
-        <div id="profileName" class="profile-name"></div>
-        <div class="rank-display">
-          Rank: <span id="rankName" class="rank-name"></span>
-          <button id="rank-help-btn">?</button>
+    <div class="container">
+        <div id="loading">
+            <p>Loading profile...</p>
         </div>
-        <div class="xp-bar-container">
-            <div id="xpBar" class="xp-bar" style="width: 0%;"></div>
+        <div id="user-info" style="display: none;">
+            <h1 id="user-name"></h1>
+            <p>Your current rank:</p>
+            <p><i class="fas fa-star"></i> Rank: <span id="user-rank"></span></p>
+            <a href="/" class="btn">Home</a>
+            <a href="/auth/logout" class="btn">Logout</a>
         </div>
-        <div id="xpText" class="xp-text">0 / 100 XP</div>
-      </div>
-      <button id="signOutBtn" class="sign-out-btn">Sign Out</button>
+        <div id="auth-error" style="display: none;">
+            <h1>Access Denied</h1>
+            <p>You need to be logged in to view this page.</p>
+            <a href="/" class="btn">Go to Homepage</a>
+        </div>
     </div>
 
-    <div id="rank-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn" id="closeModalBtn">&times;</span>
-        <h2 id="rank-modal-title"></h2>
-        <ul id="rank-modal-list"></ul>
-        <p style="font-weight: bold; color: #4da6ff;">Ranks:</p>
-        <ol id="rank-list"></ol>
-      </div>
-    </div>
+    <script>
+        fetch('/api/user')
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Not authenticated');
+                }
+                return res.json();
+            })
+            .then(user => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('user-info').style.display = 'block';
 
-    <div class="anime-list-section">
-      <h2>Favorites</h2>
-      <div id="favoritesGrid" class="anime-grid"></div>
-    </div>
-
-    <div class="anime-list-section">
-      <h2>Currently Watching</h2>
-      <div id="watchingGrid" class="anime-grid"></div>
-    </div>
-
-    <div class="anime-list-section">
-      <h2>Plan to Watch</h2>
-      <div id="planToWatchGrid" class="anime-grid"></div>
-    </div>
-
-    <div class="anime-list-section">
-      <h2>Watched</h2>
-      <div id="watchedGrid" class="anime-grid"></div>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const user = JSON.parse(localStorage.getItem('googleUser'));
-
-      if (!user) {
-        window.location.href = 'index.html';
-        return;
-      }
-
-      document.getElementById('profilePic').src = user.picture;
-      document.getElementById('profileName').textContent = user.name;
-
-      let userProfile = JSON.parse(localStorage.getItem(user.sub)) || {
-          xp: 0,
-          favorites: [],
-          planToWatch: [],
-          watching: [],
-          watched: []
-      };
-
-      const isEng = window.location.pathname.includes('eng');
-
-      const ranks = {
-          ru: [
-              { name: 'Начинающий анимешник', minXp: 0 },
-              { name: 'Опытный зритель', minXp: 50 },
-              { name: 'Мастер сюжета', minXp: 150 },
-              { name: 'Легенда аниме', minXp: 400 },
-              { name: 'Император аниме', minXp: 1000 }
-          ],
-          en: [
-              { name: 'Beginner Otaku', minXp: 0 },
-              { name: 'Experienced Viewer', minXp: 50 },
-              { name: 'Master of the Plot', minXp: 300 },
-              { name: 'Anime Legend', minXp: 700 },
-              { name: 'Anime Emperor', minXp: 1500 }
-          ]
-      };
-
-      function updateRank() {
-        const lang = isEng ? 'en' : 'ru';
-        const currentRanks = ranks[lang];
-        
-        const favoritesXp = (userProfile.favorites?.length || 0) * 10;
-        const watchedXp = (userProfile.watched?.length || 0) * 5;
-        const watchingXp = (userProfile.watching?.length || 0) * 5;
-        const planToWatchXp = (userProfile.planToWatch?.length || 0) * 2;
-        userProfile.xp = favoritesXp + watchedXp + watchingXp + planToWatchXp + (userProfile.gameXp || 0);
-
-        const currentXp = userProfile.xp;
-        let currentRank = currentRanks[0];
-        let nextRank = currentRanks[1];
-
-        for (let i = 0; i < currentRanks.length; i++) {
-            if (currentXp >= currentRanks[i].minXp) {
-                currentRank = currentRanks[i];
-                nextRank = currentRanks[i + 1] || { name: 'MAX', minXp: currentRank.minXp };
-            }
-        }
-
-        const xpInCurrentRank = currentXp - currentRank.minXp;
-        const xpForNextRank = nextRank.minXp - currentRank.minXp;
-        const percentage = (xpForNextRank > 0) ? (xpInCurrentRank / xpForNextRank) * 100 : 100;
-
-        document.getElementById('rankName').textContent = currentRank.name;
-        document.getElementById('xpBar').style.width = `${percentage}%`;
-        document.getElementById('xpText').textContent = `${currentXp} / ${nextRank.minXp} XP`;
-        
-        localStorage.setItem(user.sub, JSON.stringify(userProfile));
-      }
-      
-      const favoritesGrid = document.getElementById('favoritesGrid');
-      const planToWatchGrid = document.getElementById('planToWatchGrid');
-      const watchingGrid = document.getElementById('watchingGrid');
-      const watchedGrid = document.getElementById('watchedGrid');
-
-      function createAnimeCard(anime, listName) {
-        const card = document.createElement('div');
-        card.className = 'anime-box';
-
-        const params = new URLSearchParams({
-            title: anime.title,
-            desc: anime.desc,
-            img: anime.img,
-            episodes: anime.episodes || '',
-            score: anime.score || '',
-            year: anime.year || ''
-        });
-
-        card.innerHTML = `
-          <button class="remove-btn" title="Remove from list">X</button>
-          <a href="card.html?${params.toString()}">
-            <img src="${anime.img}" alt="${anime.title}" class="anime-img">
-            <div class="anime-title">${anime.title}</div>
-          </a>
-        `;
-
-        card.querySelector('.remove-btn').addEventListener('click', () => {
-            removeAnimeFromList(anime.title, listName);
-        });
-
-        return card;
-      }
-
-      function populateGrids() {
-          populateGrid(favoritesGrid, userProfile.favorites, 'favorites');
-          populateGrid(watchingGrid, userProfile.watching, 'watching');
-          populateGrid(planToWatchGrid, userProfile.planToWatch, 'planToWatch');
-          populateGrid(watchedGrid, userProfile.watched, 'watched');
-      }
-
-      function populateGrid(gridElement, animeList, listName) {
-          gridElement.innerHTML = '';
-          if (animeList && animeList.length > 0) {
-              animeList.forEach((anime, index) => {
-                  const card = createAnimeCard(anime, listName);
-                  gridElement.appendChild(card);
-              });
-          } else {
-              const friendlyName = listName.replace(/([A-Z])/g, ' $1').toLowerCase();
-              gridElement.innerHTML = `<p class="empty-list-message">Your "${friendlyName}" list is empty.</p>`;
-          }
-      }
-
-      function removeAnimeFromList(animeTitle, listName) {
-        userProfile[listName] = userProfile[listName].filter(item => item.title !== animeTitle);
-        localStorage.setItem(user.sub, JSON.stringify(userProfile));
-        populateGrids();
-        updateRank();
-      }
-
-      document.getElementById('signOutBtn').addEventListener('click', () => {
-          localStorage.removeItem('googleUser');
-          google.accounts.id.disableAutoSelect();
-          window.location.href = 'index.html';
-      });
-
-      const modal = document.getElementById("rank-modal");
-      const btn = document.getElementById("rank-help-btn");
-      const span = document.getElementById("closeModalBtn");
-
-      btn.onclick = function() {
-        const lang = isEng ? 'en' : 'ru';
-        document.getElementById('rank-modal-title').textContent = isEng ? 'How to Earn Ranks' : 'Как заработать ранг';
-        
-        const rankModalList = document.getElementById('rank-modal-list');
-        rankModalList.innerHTML = '';
-        const expRules = isEng ? [
-            '2 XP for each anime in Favorites',
-            '5 XP for each anime in Watched',
-            '5 XP for each anime in Watching',
-            '2 XP for each anime in Plan to Watch',
-            'XP from "Guess the Anime" game'
-        ] : [
-            '10 XP за каждое аниме в "Избранном"',
-            '5 XP за каждое аниме в "Просмотрено"',
-            '5 XP за каждое аниме в "Смотрю"',
-            '2 XP за каждое аниме в "Планирую посмотреть"',
-            'XP за игру "Угадай аниме"'
-        ];
-        expRules.forEach(rule => {
-            const li = document.createElement('li');
-            li.textContent = rule;
-            rankModalList.appendChild(li);
-        });
-
-        const rankList = document.getElementById('rank-list');
-        rankList.innerHTML = '';
-        ranks[lang].forEach(rank => {
-            const li = document.createElement('li');
-            li.textContent = `${rank.name}: ${rank.minXp}+ XP`;
-            rankList.appendChild(li);
-        });
-
-        modal.style.display = "block";
-      }
-
-      span.onclick = function() {
-        modal.style.display = "none";
-      }
-
-      window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      }
-      
-      populateGrids();
-      updateRank();
-    });
-  </script>
+                document.getElementById('user-name').textContent = `Welcome, ${user.name}`;
+                document.getElementById('user-rank').textContent = user.xp;
+            })
+            .catch(err => {
+                console.error('Failed to fetch user data:', err);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('auth-error').style.display = 'block';
+            });
+    </script>
 
 </body>
 </html>

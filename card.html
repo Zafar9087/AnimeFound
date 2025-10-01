@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
   <title>Anime Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
   <style>
@@ -94,37 +94,40 @@
       font-size: 0.95em;
       border-radius: 30px;
       font-weight: 500;
-      letter-spacing: 0.5px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .badge:hover {
-      background: rgba(77, 166, 255, 0.3);
-      color: #fff;
     }
     .action-buttons {
       display: flex;
-      gap: 10px;
-      margin-top: 12px;
-      align-self: flex-start;
+      gap: 15px; /* Increased gap */
+      margin-top: 20px;
+      align-items: center;
     }
     .list-btn {
       background: rgba(77, 166, 255, 0.15);
       border: 1px solid rgba(77, 166, 255, 0.3);
       color: #e0e6f7;
-      border-radius: 12px;
-      font-size: 0.9em;
-      padding: 12px 18px;
+      border-radius: 50%; /* Circle shape */
+      font-size: 1.5em; /* Larger icon size */
+      width: 50px;
+      height: 50px;
       cursor: pointer;
-      font-weight: 700;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .list-btn:hover {
       background: rgba(77, 166, 255, 0.3);
+      transform: translateY(-2px);
     }
-    .list-btn.active { background: #4da6ff; color: #fff; }
+    .list-btn.active {
+      background: #4da6ff;
+      color: #fff;
+      border-color: #4da6ff;
+    }
     .watch-btn {
       background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
       color: #fff;
+      text-decoration: none;
       border: none;
       border-radius: 12px;
       font-size: 1.1em;
@@ -133,49 +136,32 @@
       font-weight: 700;
       box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
       transition: all 0.3s ease;
-      align-self: flex-start;
       letter-spacing: 0.5px;
+      text-align: center;
     }
     .watch-btn:hover {
-      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
       transform: translateY(-3px) scale(1.03);
       box-shadow: 0 6px 20px rgba(77, 166, 255, 0.4);
     }
+    .user-actions.hidden {
+      display: none;
+    }
     @media (max-width: 900px) {
-      body {
-        padding: 0;
-      }
+      body { padding: 0; }
       .anime-card-balanced {
         flex-direction: column;
-        width: 98vw;
+        width: 100%;
         height: auto;
-        min-height: 0;
+        min-height: 100vh;
         border-radius: 0;
         box-shadow: none;
         border: none;
       }
-      .anime-card-img {
-        width: 100%;
-        height: 300px;
-      }
-      .anime-card-content {
-        padding: 24px;
-      }
-      .anime-card-title {
-        font-size: 1.8em;
-      }
-      .anime-card-desc {
-        font-size: 1em;
-        max-height: 150px;
-      }
-      .watch-btn {
-        align-self: stretch;
-        text-align: center;
-      }
-      .action-buttons {
-        align-self: stretch;
-        text-align: center;
-      }
+      .anime-card-img { width: 100%; height: 300px; }
+      .anime-card-content { padding: 24px; }
+      .anime-card-title { font-size: 1.8em; }
+      .anime-card-desc { font-size: 1em; max-height: 150px; }
+      .action-buttons { justify-content: center; }
     }
   </style>
 </head>
@@ -193,170 +179,107 @@
         <span class="badge" id="animeScore"></span>
       </div>
       <div class="action-buttons">
-        <button class="watch-btn" id="watchBtn">Смотреть аниме</button>
-        <button class="list-btn" id="favoriteBtn" style="display: none;">❤️ Favorite</button>
-        <button class="list-btn" id="watchingBtn" style="display: none;">▶️ Watching</button>
-        <button class="list-btn" id="planBtn" style="display: none;">+ Plan to Watch</button>
-        <button class="list-btn" id="watchedBtn" style="display: none;">✅ Watched</button>
+        <a class="watch-btn" id="watchBtn" href="#" target="_blank">Смотреть аниме</a>
+        <div id="userActions" class="user-actions hidden">
+            <button class="list-btn" id="favoriteBtn" data-status="favorited" title="В избранное">❤️</button>
+            <button class="list-btn" id="watchingBtn" data-status="watching" title="Смотрю">▶️</button>
+            <button class="list-btn" id="planBtn" data-status="plan-to-watch" title="Запланировать">➕</button>
+            <button class="list-btn" id="watchedBtn" data-status="watched" title="Просмотрено">✅</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Получаем параметры из URL
-    const params = new URLSearchParams(window.location.search);
-    const title = params.get('title') || 'Название не найдено';
-    const desc = params.get('desc') || 'Описание отсутствует.';
-    const img = params.get('img') || '';
-    const year = params.get('year');
-    const episodes = params.get('episodes');
-    const score = params.get('score');
+    document.addEventListener('DOMContentLoaded', async () => {
+      // --- 1. Get Anime Info from URL ---
+      const params = new URLSearchParams(window.location.search);
+      const animeId = params.get('id'); // IMPORTANT: We need a unique ID
+      const title = params.get('title') || 'Название не найдено';
+      const desc = params.get('desc') || 'Описание отсутствует.';
+      const img = params.get('img') || '';
+      const year = params.get('year');
+      const episodes = params.get('episodes');
+      const score = params.get('score');
 
-    document.getElementById('animeTitle').textContent = title;
-    document.getElementById('animeDesc').textContent = desc;
-    document.getElementById('animeImg').src = img;
-    document.getElementById('animeImg').alt = title;
+      // --- 2. Populate Card with Anime Info ---
+      document.getElementById('animeTitle').textContent = title;
+      document.getElementById('animeDesc').textContent = desc;
+      document.getElementById('animeImg').src = img;
+      document.getElementById('animeImg').alt = title;
 
-    const yearBadge = document.getElementById('animeYear');
-    const episodesBadge = document.getElementById('animeEpisodes');
-    const scoreBadge = document.getElementById('animeScore');
+      const yearBadge = document.getElementById('animeYear');
+      const episodesBadge = document.getElementById('animeEpisodes');
+      const scoreBadge = document.getElementById('animeScore');
 
-    if (year) {
-      yearBadge.textContent = year;
-    } else {
-      yearBadge.style.display = 'none';
-    }
+      if (year) yearBadge.textContent = year; else yearBadge.style.display = 'none';
+      if (episodes) episodesBadge.textContent = `${episodes} эп.`; else episodesBadge.style.display = 'none';
+      if (score) scoreBadge.textContent = `⭐ ${score}`; else scoreBadge.style.display = 'none';
+      
+      // Setup watch button link
+      const watchBtn = document.getElementById('watchBtn');
+      watchBtn.href = `https://yandex.ru/search/?text=${encodeURIComponent(title + ' смотреть аниме')}`;
 
-    if (episodes) {
-      episodesBadge.textContent = `${episodes} эп.`;
-    } else {
-      episodesBadge.style.display = 'none';
-    }
 
-    if (score) {
-      scoreBadge.textContent = `⭐ ${score}`;
-    } else {
-      scoreBadge.style.display = 'none';
-    }
-
-    // Logic for adding to lists
-    const user = JSON.parse(localStorage.getItem('googleUser'));
-    if (user) {
-      const favoriteBtn = document.getElementById('favoriteBtn');
-      const watchingBtn = document.getElementById('watchingBtn');
-      const planBtn = document.getElementById('planBtn');
-      const watchedBtn = document.getElementById('watchedBtn');
-
-      const buttons = {
-        favorites: favoriteBtn,
-        watching: watchingBtn,
-        planToWatch: planBtn,
-        watched: watchedBtn
-      };
-
-      let userProfile = JSON.parse(localStorage.getItem(user.sub)) || { xp: 0, favorites: [], planToWatch: [], watching: [], watched: [] };
-
-      favoriteBtn.style.display = 'block';
-      watchingBtn.style.display = 'block';
-      planBtn.style.display = 'block';
-      watchedBtn.style.display = 'block';
-
-      const animeData = { title, img, desc, episodes, score, year };
-
-      function updateButtonStates() {
-        for (const listName in buttons) {
-            if (userProfile[listName] && userProfile[listName].some(item => item.title === animeData.title)) {
-                buttons[listName].classList.add('active');
-            } else {
-                buttons[listName].classList.remove('active');
-            }
+      // --- 3. Handle User Authentication and Progress ---
+      let user = null;
+      try {
+        const userRes = await fetch('/api/user');
+        if (userRes.ok) {
+          user = await userRes.json();
         }
+      } catch (e) {
+        console.error("Error fetching user:", e);
       }
 
-      function addToList(listName, xpGain) {
+      if (user && animeId) {
+        document.getElementById('userActions').classList.remove('hidden');
         
-        // Check if anime is already in the list to avoid duplicates
-        const list = userProfile[listName];
-        if (!list.some(item => item.title === animeData.title)) {
-            list.push(animeData);
-            if (xpGain) {
-                userProfile.xp += xpGain;
+        // Also mark as "watching" when the main watch button is clicked
+        watchBtn.addEventListener('click', () => {
+            updateAnimeStatus(animeId, 'watching');
+        });
+
+        // Fetch user's list and update button states
+        const listRes = await fetch('/api/user/animelist');
+        const userAnimeList = await listRes.json();
+        const statusForThisAnime = userAnimeList.filter(item => item.anime_id === animeId);
+
+        const buttons = document.querySelectorAll('.list-btn');
+        buttons.forEach(btn => {
+            const status = btn.dataset.status;
+            if (statusForThisAnime.some(item => item.status === status)) {
+                btn.classList.add('active');
             }
-            localStorage.setItem(user.sub, JSON.stringify(userProfile));
-            alert(`Added "${animeData.title}" to your "${listName}" list!`);
-        } else {
-            // If it's already there, remove it
-            userProfile[listName] = list.filter(item => item.title !== animeData.title);
-            localStorage.setItem(user.sub, JSON.stringify(userProfile));
-        }
-      }
 
-      favoriteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addToList('favorites', 10);
-      });
-
-      watchingBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addToList('watching', 10);
-      });
-
-      planBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addToList('planToWatch', 5);
-      });
-
-      watchedBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        addToList('watched', 5);
-      });
-
-      updateButtonStates();
-
-    } else {
-        // Hide buttons if user is not logged in
-        const favoriteBtn = document.getElementById('favoriteBtn');
-        const watchingBtn = document.getElementById('watchingBtn');
-        const planBtn = document.getElementById('planBtn');
-        const watchedBtn = document.getElementById('watchedBtn');
-        favoriteBtn.style.display = 'none';
-        watchingBtn.style.display = 'none';
-        planBtn.style.display = 'none';
-        watchedBtn.style.display = 'none';
-    }
-
-    // Кнопка "Смотреть аниме"
-    document.getElementById('watchBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      if(user){
-        addToList('watching', 10);
-      }
-      const isRussian = /[а-яА-ЯЁё]/.test(desc);
-      if (isRussian) {
-        const russianChars = {
-            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
-            'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
-            'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
-            'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
-        };
-        function slugify(str) {
-            return str.toLowerCase().split('').map(char => russianChars[char] || char)
-            .join('')
-            .replace(/[^a-z0-9\s-]/gi, '')
-            .trim()
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
-        }
-        // We need the original title for the slug, which isn't passed to card.html.
-        // We will use the Russian title as a fallback for search.
-        const animeLink = `https://anilibria.wiki/release/${slugify(title)}.html`;
-        window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=ru`;
-      } else {
-        // English
-        window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
+            btn.addEventListener('click', async () => {
+                const currentStatus = btn.classList.contains('active') ? 'none' : status;
+                await updateAnimeStatus(animeId, currentStatus, status);
+                btn.classList.toggle('active');
+            });
+        });
       }
     });
 
+    async function updateAnimeStatus(animeId, newStatus, oldStatus = null) {
+        try {
+            const res = await fetch('/api/user/animelist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    anime_id: animeId,
+                    status: newStatus,
+                    old_status: oldStatus // Required by backend for 'none' status
+                }),
+            });
+            if (!res.ok) {
+                console.error("Failed to update status");
+                // Optional: revert UI change on failure
+            }
+        } catch (err) {
+            console.error("Error updating status:", err);
+        }
+    }
   </script>
 </body>
 </html>

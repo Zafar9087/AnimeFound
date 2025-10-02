@@ -1,63 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Profile - Anime Found</title>
+    <title>Профиль - AnimeFound</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('Bleu.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
-            text-align: center;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+            color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
-        .container {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            max-width: 900px;
-            margin: 20px auto;
+
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
         }
-        h1, h2 {
-            color: #ff4500;
+
+        body::before {
+            width: 300px;
+            height: 300px;
+            background: rgba(77, 166, 255, 0.3);
+            top: 10%;
+            left: 15%;
         }
-        #user-rank {
+
+        body::after {
+            width: 250px;
+            height: 250px;
+            background: rgba(0, 255, 255, 0.2);
+            bottom: 10%;
+            right: 15%;
+        }
+
+        .profile-card {
+            width: 800px;
+            background: rgba(10, 15, 26, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(77, 166, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .avatar-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4da6ff, #1c75d8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(77, 166, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder {
+            font-size: 60px;
+            color: rgba(224, 230, 247, 0.8);
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-name {
+            font-size: 2.5em;
             font-weight: bold;
-            color: #ffc107;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin: 0;
         }
-        .btn {
-            background-color: #ff4500;
-            color: white;
+
+        .profile-rank {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .rank-label {
+            color: #8a9ac1;
+        }
+
+        .rank-value {
+            color: #e0e6f7;
+            font-weight: bold;
+        }
+
+        .xp-bar-container {
+            margin-top: 20px;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(77, 166, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            width: 40%; /* 120 / 300 */
+            height: 100%;
+            background: linear-gradient(90deg, #4da6ff, #1c75d8);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(77, 166, 255, 0.7);
+        }
+
+        .xp-text {
+            text-align: right;
+            font-size: 0.9em;
+            color: #8a9ac1;
+            margin-top: 5px;
+        }
+
+        .profile-tabs {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            border-bottom: 1px solid rgba(77, 166, 255, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .tab-btn {
             padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 10px;
-            transition: background-color 0.3s;
-            display: inline-block;
+            font-size: 1em;
+            font-weight: bold;
+            color: #8a9ac1;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .btn:hover {
-            background-color: #e03e00;
+
+        .tab-btn:hover {
+            background: rgba(77, 166, 255, 0.1);
+            color: #e0e6f7;
         }
+
+        .tab-btn.active {
+            background: rgba(77, 166, 255, 0.2);
+            color: #fff;
+            border-color: rgba(77, 166, 255, 0.4);
+            box-shadow: 0 0 15px rgba(77, 166, 255, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+            padding-top: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .anime-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 20px;
-            margin-top: 20px;
-            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
+        
+        /* Custom scrollbar for the list */
+        .anime-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .anime-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .anime-list::-webkit-scrollbar-thumb {
+            background: rgba(77, 166, 255, 0.3);
+            border-radius: 4px;
+        }
+        .anime-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(77, 166, 255, 0.5);
+        }
+
         .anime-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: rgba(35, 42, 69, 0.6);
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.2s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: #e0e6f7;
+            border: 1px solid rgba(77, 166, 255, 0.2);
         }
         .anime-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         .anime-card img {
             width: 100%;
@@ -66,88 +216,144 @@
         }
         .anime-card-title {
             padding: 10px;
-            font-size: 0.9em;
             font-weight: bold;
+            text-align: center;
+            font-size: 0.9em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="loading">
-            <p>Loading profile...</p>
-        </div>
-        <div id="user-info" style="display: none;">
-            <h1 id="user-name"></h1>
-            <p>Your current rank (XP): <span id="user-rank"></span></p>
-            <a href="/" class="btn">Home</a>
-            <a href="/auth/logout" class="btn">Logout</a>
-        </div>
-        <div id="auth-error" style="display: none;">
-            <h1>Access Denied</h1>
-            <p>You need to be logged in to view this page.</p>
-            <a href="/" class="btn">Go to Homepage</a>
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar-container">
+                <i class="fas fa-user avatar-placeholder"></i>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">BlueFrost</h1>
+                <div class="profile-rank">
+                    <span class="rank-label"><i class="fas fa-star"></i> Ранг:</span>
+                    <span class="rank-value">Новичок</span>
+                </div>
+                <div class="xp-bar-container">
+                    <div class="xp-bar">
+                        <div class="xp-bar-fill"></div>
+                    </div>
+                    <div class="xp-text">120 / 300 XP</div>
+                </div>
+            </div>
         </div>
 
-        <div id="anime-lists" style="display: none;">
-            <h2><i class="fas fa-star"></i> Favorites</h2>
+        <div class="profile-tabs">
+            <button class="tab-btn" data-tab="favorites">Любимое</button>
+            <button class="tab-btn active" data-tab="watching">Смотрю</button>
+            <button class="tab-btn" data-tab="watched">Прочитанное</button>
+            <button class="tab-btn" data-tab="achievements">Достижения</button>
+            <button class="tab-btn" data-tab="settings">Настройки профиля</button>
+        </div>
+
+        <div id="favorites" class="tab-content">
             <div id="favorites-list" class="anime-list"></div>
-            <h2><i class="fas fa-check-circle"></i> Watched Anime</h2>
+        </div>
+        <div id="watching" class="tab-content active">
+             <div id="watching-list" class="anime-list"></div>
+        </div>
+        <div id="watched" class="tab-content">
             <div id="watched-list" class="anime-list"></div>
+        </div>
+        <div id="achievements" class="tab-content">
+            <p>Раздел достижений в разработке.</p>
+        </div>
+        <div id="settings" class="tab-content">
+            <p>Раздел настроек в разработке.</p>
         </div>
     </div>
 
     <script>
-        async function fetchProfile() {
-            try {
-                const userRes = await fetch('/api/user');
-                if (!userRes.ok) throw new Error('Not authenticated');
-                const user = await userRes.json();
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
 
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('user-info').style.display = 'block';
-                document.getElementById('anime-lists').style.display = 'block';
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
 
-                document.getElementById('user-name').textContent = `Welcome, ${user.name}`;
-                document.getElementById('user-rank').textContent = user.xp;
+                    const target = document.getElementById(tab.dataset.tab);
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    target.classList.add('active');
+                });
+            });
+            
+            // Mock user data for display
+            const user = {
+                name: 'BlueFrost',
+                xp: 120,
+                xp_max: 300,
+                rank: 'Новичок'
+            };
 
-                const listRes = await fetch('/api/user/animelist');
-                if (!listRes.ok) throw new Error('Failed to fetch anime list');
-                const animeList = await listRes.json();
+            document.querySelector('.profile-name').textContent = user.name;
+            document.querySelector('.rank-value').textContent = user.rank;
+            const xpFill = document.querySelector('.xp-bar-fill');
+            const xpText = document.querySelector('.xp-text');
+            const xpPercentage = (user.xp / user.xp_max) * 100;
+            xpFill.style.width = `${xpPercentage}%`;
+            xpText.textContent = `${user.xp} / ${user.xp_max} XP`;
 
-                const favoritesContainer = document.getElementById('favorites-list');
-                const watchedContainer = document.getElementById('watched-list');
 
-                for (const item of animeList) {
-                    // Fetch details for each anime from Jikan API
-                    const animeRes = await fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`);
-                    if (animeRes.ok) {
-                        const { data: anime } = await animeRes.json();
-                        const card = document.createElement('div');
-                        card.className = 'anime-card';
-                        card.innerHTML = `
-                            <a href="card.html?id=${anime.mal_id}">
-                                <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
-                                <div class="anime-card-title">${anime.title}</div>
-                            </a>
-                        `;
+            // Fetch and display anime lists
+            async function fetchAnimeLists() {
+                try {
+                    const listRes = await fetch('/api/user/animelist');
+                    if (!listRes.ok) {
+                        console.error('Could not fetch anime list. Maybe not logged in?');
+                        return;
+                    };
+                    const animeList = await listRes.json();
 
-                        if (item.status === 'favorited') {
-                            favoritesContainer.appendChild(card);
-                        } else if (item.status === 'watched') {
-                            watchedContainer.appendChild(card);
+                    const favoritesContainer = document.getElementById('favorites-list');
+                    const watchedContainer = document.getElementById('watched-list');
+                    // In a real scenario, you might have a 'watching' status
+                    const watchingContainer = document.getElementById('watching-list');
+
+
+                    for (const item of animeList) {
+                        try {
+                            const animeRes = await fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`);
+                            if (animeRes.ok) {
+                                const { data: anime } = await animeRes.json();
+                                const card = document.createElement('a');
+                                card.href = `card.html?id=${anime.mal_id}`;
+                                card.className = 'anime-card';
+                                card.innerHTML = `
+                                    <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
+                                    <div class="anime-card-title">${anime.title}</div>
+                                `;
+
+                                if (item.status === 'favorited') {
+                                    favoritesContainer.appendChild(card);
+                                } else if (item.status === 'watched') {
+                                    // For now, let's put watched items in both 'watched' and 'watching' for demonstration
+                                    watchedContainer.appendChild(card.cloneNode(true));
+                                    watchingContainer.appendChild(card);
+                                }
+                            }
+                        } catch (e) {
+                            console.error(`Failed to fetch anime with ID ${item.anime_id}`, e);
                         }
                     }
+                } catch (err) {
+                    console.error('Error fetching anime lists:', err);
                 }
-
-            } catch (err) {
-                console.error('Failed to fetch profile data:', err);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('auth-error').style.display = 'block';
             }
-        }
 
-        fetchProfile();
+            fetchAnimeLists();
+        });
     </script>
 
 </body>

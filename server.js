@@ -48,7 +48,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `http://localhost:${port}/auth/google/callback`
+    callbackURL: `${process.env.BASE_URL}/auth/google/callback`
   },
   (accessToken, refreshToken, profile, done) => {
     db.get('SELECT * FROM users WHERE id = ?', [profile.id], (err, user) => {
@@ -80,6 +80,11 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    console.error('FATAL ERROR: GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables are not set.');
+    process.exit(1);
+}
+
 // --- Routes ---
 
 // Serve static files from the root directory
@@ -93,7 +98,7 @@ app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication, redirect to profile.
-    res.redirect('/profile.html');
+    res.redirect('/');
   });
 
 app.get('/auth/logout', (req, res, next) => {
@@ -158,9 +163,7 @@ app.post('/api/user/animelist', (req, res) => {
 
 
 // Main Pages
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

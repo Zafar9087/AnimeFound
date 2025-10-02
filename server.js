@@ -48,7 +48,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${process.env.BASE_URL}/auth/google/callback`
+    callbackURL: `http://localhost:3000/auth/google/callback`
   },
   (accessToken, refreshToken, profile, done) => {
     db.get('SELECT * FROM users WHERE id = ?', [profile.id], (err, user) => {
@@ -163,13 +163,20 @@ app.post('/api/user/animelist', (req, res) => {
 
 
 // Main Pages
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/anime-found', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Anime Found.html'));
+});
+
+app.get('/anime-found-eng', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Anime Found_eng.html'));
+});
 
 
-if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-    console.log('Please ensure you have filled in the .env file with your Google credentials.');
-  });
-}
-
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+  console.log('Please ensure you have filled in the .env file with your Google credentials.');
+});

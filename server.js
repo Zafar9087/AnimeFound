@@ -165,7 +165,4 @@ app.post('/api/user/animelist', (req, res) => {
 // Main Pages
 
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-  console.log('Please ensure you have filled in the .env file with your Google credentials.');
-});
+module.exports = app;

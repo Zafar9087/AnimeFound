@@ -297,7 +297,7 @@
           <div id="login-profile-section"></div>
 
           <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
-          <a href="Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Game</a>
+          <a href="/anime-found" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Game</a>
           <div style="display: flex; gap: 5px;">
             <button class="top-bar-btn" id="langBtnRu" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">RU</button>
             <button class="top-bar-btn" id="langBtnEn" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">EN</button>
@@ -696,7 +696,7 @@
         sessionStorage.removeItem('animeFoundState');
       } else {
         // Load fresh data if no state is saved
-        loadAnime(true);
+        fetchUserAndList();
       }
     }
 
@@ -734,10 +734,12 @@
         }
       } catch (e) {
         console.error("Error fetching user data:", e);
+        // Even if there's an error, we should still try to load the anime
       } finally {
-        // Update the UI and load anime regardless of login status
+        // Update the UI with user info (or lack thereof)
         updateLoginUI();
-        loadInitial(); // This is your original function to load anime
+        // Now that user data is fetched (or failed), load the initial anime list
+        loadInitial();
       }
     }
 

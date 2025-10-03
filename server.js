@@ -8,11 +8,15 @@ const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 
-// Detect if running on Vercel
+// Detect environment and set base URL
 const isVercel = process.env.VERCEL === '1';
-const host = isVercel 
-  ? `https://${process.env.VERCEL_URL || 'your-project.vercel.app'}` 
-  : `http://localhost:${process.env.PORT || 3000}`;
+const isReplit = process.env.REPLIT_DEV_DOMAIN;
+
+// Priority: BASE_URL env var > Replit dev domain > Vercel URL > localhost
+const host = process.env.BASE_URL 
+  || (isReplit ? `https://${process.env.REPLIT_DEV_DOMAIN}` : null)
+  || (isVercel ? `https://${process.env.VERCEL_URL}` : null)
+  || `http://localhost:${process.env.PORT || 5000}`;
 
 app.use(express.json());
 
@@ -99,10 +103,10 @@ app.get('/chooseeng',(req,res)=>res.sendFile(path.join(__dirname,'chooseeng.html
 app.get('/randomizer',(req,res)=>res.sendFile(path.join(__dirname,'randomizer.html')));
 app.get('/intro',(req,res)=>res.sendFile(path.join(__dirname,'intro.html')));
 
-// For local development
+// Start server (works for Replit and local development)
 if (!isVercel) {
-  const port = process.env.PORT || 3000;
-  app.listen(port, ()=>console.log(`✅ Server running on http://localhost:${port}`));
+  const port = process.env.PORT || 5000;
+  app.listen(port, '0.0.0.0', ()=>console.log(`✅ Server running on port ${port}`));
 }
 
 // Export for Vercel

@@ -97,7 +97,7 @@
     }
     .action-buttons {
       display: flex;
-      gap: 15px; /* Increased gap */
+      gap: 15px;
       margin-top: 20px;
       align-items: center;
     }
@@ -105,8 +105,8 @@
       background: rgba(77, 166, 255, 0.15);
       border: 1px solid rgba(77, 166, 255, 0.3);
       color: #e0e6f7;
-      border-radius: 50%; /* Circle shape */
-      font-size: 1.5em; /* Larger icon size */
+      border-radius: 50%;
+      font-size: 1.5em;
       width: 50px;
       height: 50px;
       cursor: pointer;
@@ -194,7 +194,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       // --- 1. Get Anime Info from URL ---
       const params = new URLSearchParams(window.location.search);
-      const animeId = params.get('id'); // IMPORTANT: We need a unique ID
+      const animeId = params.get('id');
       const title = params.get('title') || 'Название не найдено';
       const desc = params.get('desc') || 'Описание отсутствует.';
       const img = params.get('img') || '';
@@ -216,9 +216,9 @@
       if (episodes) episodesBadge.textContent = `${episodes} эп.`; else episodesBadge.style.display = 'none';
       if (score) scoreBadge.textContent = `⭐ ${score}`; else scoreBadge.style.display = 'none';
       
-      // Setup watch button link
+      // Setup watch button link to new anime watch page
       const watchBtn = document.getElementById('watchBtn');
-      watchBtn.href = `https://yandex.ru/search/?text=${encodeURIComponent(title + ' смотреть аниме')}`;
+      watchBtn.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId || ''}`;
 
 
       // --- 3. Handle User Authentication and Progress ---
@@ -269,12 +269,11 @@
                 body: JSON.stringify({
                     anime_id: animeId,
                     status: newStatus,
-                    old_status: oldStatus // Required by backend for 'none' status
+                    old_status: oldStatus
                 }),
             });
             if (!res.ok) {
                 console.error("Failed to update status");
-                // Optional: revert UI change on failure
             }
         } catch (err) {
             console.error("Error updating status:", err);

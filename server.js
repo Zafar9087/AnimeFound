@@ -43,33 +43,45 @@ passport.deserializeUser((id, done) => {
   db.get('SELECT * FROM users WHERE id = ?', [id], (err, user) => done(err, user));
 });
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: `${host}/auth/google/callback`
-}, (accessToken, refreshToken, profile, done) => {
-  db.get('SELECT * FROM users WHERE id = ?', [profile.id], (err, user) => {
-    if (user) {
-      db.run('UPDATE users SET name=?, email=? WHERE id=?',
-        [profile.displayName, profile.emails[0].value, profile.id],
-        () => db.get('SELECT * FROM users WHERE id=?', [profile.id], (e,u)=>done(e,u)));
-    } else {
-      const newUser = { id: profile.id, name: profile.displayName, email: profile.emails[0].value, xp: 0 };
-      db.run('INSERT INTO users (id,name,email,xp) VALUES (?,?,?,?)',
-        [newUser.id,newUser.name,newUser.email,newUser.xp],
-        ()=>done(null,newUser));
-    }
-  });
-}));
+const hasGoogleCredentials = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET;
+
+if (hasGoogleCredentials) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${host}/auth/google/callback`
+  }, (accessToken, refreshToken, profile, done) => {
+    db.get('SELECT * FROM users WHERE id = ?', [profile.id], (err, user) => {
+      if (user) {
+        db.run('UPDATE users SET name=?, email=? WHERE id=?',
+          [profile.displayName, profile.emails[0].value, profile.id],
+          () => db.get('SELECT * FROM users WHERE id=?', [profile.id], (e,u)=>done(e,u)));
+      } else {
+        const newUser = { id: profile.id, name: profile.displayName, email: profile.emails[0].value, xp: 0 };
+        db.run('INSERT INTO users (id,name,email,xp) VALUES (?,?,?,?)',
+          [newUser.id,newUser.name,newUser.email,newUser.xp],
+          ()=>done(null,newUser));
+      }
+    });
+  }));
+  console.log('✅ Google OAuth configured successfully');
+} else {
+  console.warn('⚠️  Google OAuth not configured - Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET');
+}
 
 // --- Routes ---
 app.use(express.static(__dirname));
 
 // Auth
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req,res)=>res.redirect('/profile'));
+if (hasGoogleCredentials) {
+  app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
+  app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req,res)=>res.redirect('/profile'));
+} else {
+  app.get('/auth/google', (req,res)=>res.status(503).json({error:'Google OAuth not configured. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.'}));
+  app.get('/auth/google/callback', (req,res)=>res.redirect('/'));
+}
 app.get('/auth/logout', (req,res,next)=>req.logout(()=>res.redirect('/')));
 
 // API
@@ -102,6 +114,7 @@ app.get('/choose',(req,res)=>res.sendFile(path.join(__dirname,'choose.html')));
 app.get('/chooseeng',(req,res)=>res.sendFile(path.join(__dirname,'chooseeng.html')));
 app.get('/randomizer',(req,res)=>res.sendFile(path.join(__dirname,'randomizer.html')));
 app.get('/intro',(req,res)=>res.sendFile(path.join(__dirname,'intro.html')));
+app.get('/anime-watch',(req,res)=>res.sendFile(path.join(__dirname,'anime-watch.html')));
 
 // Start server (works for Replit and local development)
 if (!isVercel) {

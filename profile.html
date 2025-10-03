@@ -20,14 +20,12 @@
             overflow: hidden;
             position: relative;
         }
-
         body::before, body::after {
             content: '';
             position: absolute;
             border-radius: 50%;
             filter: blur(100px);
         }
-
         body::before {
             width: 300px;
             height: 300px;
@@ -35,7 +33,6 @@
             top: 10%;
             left: 15%;
         }
-
         body::after {
             width: 250px;
             height: 250px;
@@ -43,7 +40,6 @@
             bottom: 10%;
             right: 15%;
         }
-
         .profile-card {
             width: 800px;
             background: rgba(10, 15, 26, 0.6);
@@ -55,13 +51,11 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             z-index: 1;
         }
-
         .profile-header {
             display: flex;
             align-items: center;
             gap: 30px;
         }
-
         .avatar-container {
             width: 120px;
             height: 120px;
@@ -73,16 +67,13 @@
             box-shadow: 0 0 25px rgba(77, 166, 255, 0.5);
             flex-shrink: 0;
         }
-
         .avatar-placeholder {
             font-size: 60px;
             color: rgba(224, 230, 247, 0.8);
         }
-
         .profile-info {
             flex-grow: 1;
         }
-
         .profile-name {
             font-size: 2.5em;
             font-weight: bold;
@@ -90,25 +81,20 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             margin: 0;
         }
-
         .profile-rank {
             font-size: 1.2em;
             margin-top: 10px;
         }
-
         .rank-label {
             color: #8a9ac1;
         }
-
         .rank-value {
             color: #e0e6f7;
             font-weight: bold;
         }
-
         .xp-bar-container {
             margin-top: 20px;
         }
-
         .xp-bar {
             width: 100%;
             height: 12px;
@@ -116,22 +102,19 @@
             border-radius: 6px;
             overflow: hidden;
         }
-
         .xp-bar-fill {
-            width: 40%; /* 120 / 300 */
+            width: 40%;
             height: 100%;
             background: linear-gradient(90deg, #4da6ff, #1c75d8);
             border-radius: 6px;
             box-shadow: 0 0 10px rgba(77, 166, 255, 0.7);
         }
-
         .xp-text {
             text-align: right;
             font-size: 0.9em;
             color: #8a9ac1;
             margin-top: 5px;
         }
-
         .profile-tabs {
             display: flex;
             gap: 15px;
@@ -139,7 +122,6 @@
             border-bottom: 1px solid rgba(77, 166, 255, 0.2);
             padding-bottom: 15px;
         }
-
         .tab-btn {
             padding: 10px 20px;
             font-size: 1em;
@@ -151,12 +133,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .tab-btn:hover {
             background: rgba(77, 166, 255, 0.1);
             color: #e0e6f7;
         }
-
         .tab-btn.active {
             background: rgba(77, 166, 255, 0.2);
             color: #fff;
@@ -168,11 +148,9 @@
             display: none;
             padding-top: 20px;
         }
-
         .tab-content.active {
             display: block;
         }
-
         .anime-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -182,7 +160,6 @@
             padding-right: 10px;
         }
         
-        /* Custom scrollbar for the list */
         .anime-list::-webkit-scrollbar {
             width: 8px;
         }
@@ -197,7 +174,6 @@
         .anime-list::-webkit-scrollbar-thumb:hover {
             background: rgba(77, 166, 255, 0.5);
         }
-
         .anime-card {
             background: rgba(35, 42, 69, 0.6);
             border-radius: 12px;
@@ -225,11 +201,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
   </style>
 </head>
 <body>
-
   <div class="profile-card">
     <div class="profile-header">
       <div class="avatar-container">
@@ -249,25 +223,45 @@
         </div>
       </div>
     </div>
-
     <div class="profile-tabs">
       <button class="tab-btn" data-tab="favorites">Любимое</button>
-      <button class="tab-btn active" data-tab="watched">Просмотренное</button>
+      <button class="tab-btn active" data-tab="watching">Смотрю</button>
+      <button class="tab-btn" data-tab="watched">Просмотренное</button>
       <button class="tab-btn" data-tab="achievements">Достижения</button>
       <button class="tab-btn" data-tab="settings">Настройки</button>
     </div>
-
     <div id="favorites" class="tab-content">
       <div id="favorites-list" class="anime-list"></div>
     </div>
-    <div id="watched" class="tab-content active">
+    <div id="watching" class="tab-content active">
+      <div id="watching-list" class="anime-list"></div>
+    </div>
+    <div id="watched" class="tab-content">
       <div id="watched-list" class="anime-list"></div>
     </div>
     <div id="achievements" class="tab-content"><p>Раздел достижений в разработке.</p></div>
     <div id="settings" class="tab-content"><p>Раздел настроек в разработке.</p></div>
   </div>
-
   <script>
+    // Rank calculation system based on XP
+    function calculateRank(xp) {
+      const ranks = [
+        { name: 'Новичок', minXP: 0, maxXP: 300 },
+        { name: 'Фанат', minXP: 300, maxXP: 800 },
+        { name: 'Знаток', minXP: 800, maxXP: 1500 },
+        { name: 'Эксперт', minXP: 1500, maxXP: 3000 },
+        { name: 'Мастер', minXP: 3000, maxXP: 5000 },
+        { name: 'Легенда', minXP: 5000, maxXP: 10000 },
+        { name: 'Гранд-Мастер', minXP: 10000, maxXP: Infinity }
+      ];
+      
+      for (let rank of ranks) {
+        if (xp >= rank.minXP && xp < rank.maxXP) {
+          return rank;
+        }
+      }
+      return ranks[0];
+    }
     document.addEventListener('DOMContentLoaded', () => {
       // Fetch and display user data
       fetch('/api/user')
@@ -277,12 +271,18 @@
             const rankEl = document.querySelector('.rank-value');
             const xpFill = document.querySelector('.xp-bar-fill');
             const xpText = document.querySelector('.xp-text');
-
             if (user) {
-                nameEl.textContent = user.name;
-                rankEl.textContent = "Новичок"; // Rank is static for now
-                xpFill.style.width = (user.xp / 300 * 100) + "%";
-                xpText.textContent = `${user.xp} / 300 XP`;
+                const userXP = user.xp || 0;
+                const rank = calculateRank(userXP);
+                const xpInRank = userXP - rank.minXP;
+                const xpNeededForRank = rank.maxXP === Infinity ? rank.minXP : rank.maxXP - rank.minXP;
+                const progressPercent = rank.maxXP === Infinity ? 100 : (xpInRank / xpNeededForRank * 100);
+                nameEl.textContent = user.name || 'User';
+                rankEl.textContent = rank.name;
+                xpFill.style.width = progressPercent + "%";
+                xpText.textContent = rank.maxXP === Infinity 
+                  ? `${userXP} XP (Max Rank!)` 
+                  : `${userXP} / ${rank.maxXP} XP`;
             } else {
                 nameEl.textContent = "Guest";
                 rankEl.textContent = "Новичок";
@@ -292,7 +292,6 @@
         }).catch(() => {
             document.querySelector('.profile-name').textContent = "Guest";
         });
-
       // Handle tabs
       const tabs = document.querySelectorAll('.tab-btn');
       const tabContents = document.querySelectorAll('.tab-content');
@@ -304,16 +303,20 @@
           document.getElementById(tab.dataset.tab).classList.add('active');
         });
       });
-
       // Fetch and display user's anime list
       fetch('/api/user/animelist')
         .then(res => res.ok ? res.json() : [])
         .then(animeList => {
             const favContainer = document.getElementById('favorites-list');
+            const watchingContainer = document.getElementById('watching-list');
             const watchedContainer = document.getElementById('watched-list');
-            favContainer.innerHTML = ''; // Clear existing
-            watchedContainer.innerHTML = ''; // Clear existing
-
+            
+            favContainer.innerHTML = '';
+            watchingContainer.innerHTML = '';
+            watchedContainer.innerHTML = '';
+            if (animeList.length === 0) {
+                watchingContainer.innerHTML = '<p style="color: #8a9ac1; text-align: center;">Добавьте аниме в список для просмотра!</p>';
+            }
             animeList.forEach(item => {
                 fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`)
                     .then(res => res.ok ? res.json() : null)
@@ -328,12 +331,16 @@
                         
                         if (item.status === 'favorited') {
                             favContainer.appendChild(card);
+                        } else if (item.status === 'watching') {
+                            watchingContainer.appendChild(card);
                         } else if (item.status === 'watched') {
                             watchedContainer.appendChild(card);
                         }
-                    });
+                    })
+                    .catch(err => console.error('Error fetching anime:', err));
             });
-        });
+        })
+        .catch(err => console.error('Error fetching anime list:', err));
     });
   </script>
 </body>

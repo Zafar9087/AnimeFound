@@ -5,13 +5,10 @@ const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const sqlite3 = require('sqlite3').verbose();
-
 const app = express();
-const port = 3000;
-const host = process.env.HOST || `http://localhost:${port}`;
-
+const port = process.env.PORT || 5000;
+const host = process.env.REPL_SLUG ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : `http://localhost:${port}`;
 app.use(express.json());
-
 // --- Database Setup ---
 const db = new sqlite3.Database('./database.sqlite', (err) => {
   if (err) console.error('DB error', err.message);
@@ -20,7 +17,6 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
     db.run(`CREATE TABLE IF NOT EXISTS user_anime (user_id TEXT, anime_id TEXT, status TEXT, PRIMARY KEY (user_id, anime_id, status))`);
   }
 });
-ы
 // --- Session + Passport ---
 app.use(session({
   secret: process.env.SESSION_SECRET || "secret",
@@ -29,12 +25,10 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser((id, done) => {
   db.get('SELECT * FROM users WHERE id = ?', [id], (err, user) => done(err, user));
 });
-
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -53,17 +47,14 @@ passport.use(new GoogleStrategy({
     }
   });
 }));
-
 // --- Routes ---
 app.use(express.static(__dirname));
-
 // Auth
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req,res)=>res.redirect('/profile'));
 app.get('/auth/logout', (req,res,next)=>req.logout(()=>res.redirect('/')));
-
 // API
 app.get('/api/user', (req,res)=> req.isAuthenticated() ? res.json(req.user) : res.status(401).json({error:"User not authenticated"}));
 app.get('/api/user/animelist',(req,res)=>{
@@ -82,11 +73,10 @@ app.post('/api/user/animelist',(req,res)=>{
     db.run('INSERT OR REPLACE INTO user_anime (user_id,anime_id,status) VALUES (?,?,?)',[req.user.id,anime_id,status],()=>res.json({success:true,anime_id,status}));
   }
 });
-
 // Pages
 app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'index.html')));
 app.get('/profile',(req,res)=>res.sendFile(path.join(__dirname,'profile.html')));
-app.get('/profile.html',(req,res)=>res.redirect('/profile')); // 🔥 Редирект старой ссылки
+app.get('/profile.html',(req,res)=>res.redirect('/profile'));
 app.get('/anime-found',(req,res)=>res.sendFile(path.join(__dirname,'Anime Found.html')));
 app.get('/anime-found-eng',(req,res)=>res.sendFile(path.join(__dirname,'Anime Found_eng.html')));
 app.get('/card',(req,res)=>res.sendFile(path.join(__dirname,'card.html')));
@@ -94,5 +84,32 @@ app.get('/choose',(req,res)=>res.sendFile(path.join(__dirname,'choose.html')));
 app.get('/chooseeng',(req,res)=>res.sendFile(path.join(__dirname,'chooseeng.html')));
 app.get('/randomizer',(req,res)=>res.sendFile(path.join(__dirname,'randomizer.html')));
 app.get('/intro',(req,res)=>res.sendFile(path.join(__dirname,'intro.html')));
-
-app.listen(port,()=>console.log(`✅ Server: http://localhost:${port}`));
+app.listen(port, '0.0.0.0', ()=>console.log(`✅ Server running on ${host}`));
+📄 package.json (Complete file)
+{
+  "name": "anime-illustration",
+  "version": "1.0.0",
+  "description": "A web application for tracking anime and user progress.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "anime",
+    "tracker",
+    "xp"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "googleapis": "^108.0.0",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "sqlite3": "^5.1.2"
+  }
+}

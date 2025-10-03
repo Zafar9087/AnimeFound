@@ -1,12 +1,14 @@
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль - AnimeFound</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль - AnimeFound</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+            body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
@@ -224,137 +226,115 @@
             text-overflow: ellipsis;
         }
 
-    </style>
+  </style>
 </head>
 <body>
 
-    <div class="profile-card">
-        <div class="profile-header">
-            <div class="avatar-container">
-                <i class="fas fa-user avatar-placeholder"></i>
-            </div>
-            <div class="profile-info">
-                <h1 class="profile-name">BlueFrost</h1>
-                <div class="profile-rank">
-                    <span class="rank-label"><i class="fas fa-star"></i> Ранг:</span>
-                    <span class="rank-value">Новичок</span>
-                </div>
-                <div class="xp-bar-container">
-                    <div class="xp-bar">
-                        <div class="xp-bar-fill"></div>
-                    </div>
-                    <div class="xp-text">120 / 300 XP</div>
-                </div>
-            </div>
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-container">
+        <i class="fas fa-user avatar-placeholder"></i>
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name">Guest</h1>
+        <div class="profile-rank">
+          <span class="rank-label"><i class="fas fa-star"></i> Ранг:</span>
+          <span class="rank-value">Новичок</span>
         </div>
-
-        <div class="profile-tabs">
-            <button class="tab-btn" data-tab="favorites">Любимое</button>
-            <button class="tab-btn active" data-tab="watching">Смотрю</button>
-            <button class="tab-btn" data-tab="watched">Прочитанное</button>
-            <button class="tab-btn" data-tab="achievements">Достижения</button>
-            <button class="tab-btn" data-tab="settings">Настройки профиля</button>
+        <div class="xp-bar-container">
+          <div class="xp-bar">
+            <div class="xp-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="xp-text">0 / 300 XP</div>
         </div>
-
-        <div id="favorites" class="tab-content">
-            <div id="favorites-list" class="anime-list"></div>
-        </div>
-        <div id="watching" class="tab-content active">
-             <div id="watching-list" class="anime-list"></div>
-        </div>
-        <div id="watched" class="tab-content">
-            <div id="watched-list" class="anime-list"></div>
-        </div>
-        <div id="achievements" class="tab-content">
-            <p>Раздел достижений в разработке.</p>
-        </div>
-        <div id="settings" class="tab-content">
-            <p>Раздел настроек в разработке.</p>
-        </div>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
+    <div class="profile-tabs">
+      <button class="tab-btn" data-tab="favorites">Любимое</button>
+      <button class="tab-btn active" data-tab="watched">Просмотренное</button>
+      <button class="tab-btn" data-tab="achievements">Достижения</button>
+      <button class="tab-btn" data-tab="settings">Настройки</button>
+    </div>
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
+    <div id="favorites" class="tab-content">
+      <div id="favorites-list" class="anime-list"></div>
+    </div>
+    <div id="watched" class="tab-content active">
+      <div id="watched-list" class="anime-list"></div>
+    </div>
+    <div id="achievements" class="tab-content"><p>Раздел достижений в разработке.</p></div>
+    <div id="settings" class="tab-content"><p>Раздел настроек в разработке.</p></div>
+  </div>
 
-                    const target = document.getElementById(tab.dataset.tab);
-                    tabContents.forEach(tc => tc.classList.remove('active'));
-                    target.classList.add('active');
-                });
-            });
-            
-            // Mock user data for display
-            const user = {
-                name: 'BlueFrost',
-                xp: 120,
-                xp_max: 300,
-                rank: 'Новичок'
-            };
-
-            document.querySelector('.profile-name').textContent = user.name;
-            document.querySelector('.rank-value').textContent = user.rank;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fetch and display user data
+      fetch('/api/user')
+        .then(res => res.ok ? res.json() : null)
+        .then(user => {
+            const nameEl = document.querySelector('.profile-name');
+            const rankEl = document.querySelector('.rank-value');
             const xpFill = document.querySelector('.xp-bar-fill');
             const xpText = document.querySelector('.xp-text');
-            const xpPercentage = (user.xp / user.xp_max) * 100;
-            xpFill.style.width = `${xpPercentage}%`;
-            xpText.textContent = `${user.xp} / ${user.xp_max} XP`;
 
-
-            // Fetch and display anime lists
-            async function fetchAnimeLists() {
-                try {
-                    const listRes = await fetch('/api/user/animelist');
-                    if (!listRes.ok) {
-                        console.error('Could not fetch anime list. Maybe not logged in?');
-                        return;
-                    };
-                    const animeList = await listRes.json();
-
-                    const favoritesContainer = document.getElementById('favorites-list');
-                    const watchedContainer = document.getElementById('watched-list');
-                    // In a real scenario, you might have a 'watching' status
-                    const watchingContainer = document.getElementById('watching-list');
-
-
-                    for (const item of animeList) {
-                        try {
-                            const animeRes = await fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`);
-                            if (animeRes.ok) {
-                                const { data: anime } = await animeRes.json();
-                                const card = document.createElement('a');
-                                card.href = `card.html?id=${anime.mal_id}`;
-                                card.className = 'anime-card';
-                                card.innerHTML = `
-                                    <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
-                                    <div class="anime-card-title">${anime.title}</div>
-                                `;
-
-                                if (item.status === 'favorited') {
-                                    favoritesContainer.appendChild(card);
-                                } else if (item.status === 'watched') {
-                                    // For now, let's put watched items in both 'watched' and 'watching' for demonstration
-                                    watchedContainer.appendChild(card.cloneNode(true));
-                                    watchingContainer.appendChild(card);
-                                }
-                            }
-                        } catch (e) {
-                            console.error(`Failed to fetch anime with ID ${item.anime_id}`, e);
-                        }
-                    }
-                } catch (err) {
-                    console.error('Error fetching anime lists:', err);
-                }
+            if (user) {
+                nameEl.textContent = user.name;
+                rankEl.textContent = "Новичок"; // Rank is static for now
+                xpFill.style.width = (user.xp / 300 * 100) + "%";
+                xpText.textContent = `${user.xp} / 300 XP`;
+            } else {
+                nameEl.textContent = "Guest";
+                rankEl.textContent = "Новичок";
+                xpFill.style.width = "0%";
+                xpText.textContent = "0 / 300 XP";
             }
-
-            fetchAnimeLists();
+        }).catch(() => {
+            document.querySelector('.profile-name').textContent = "Guest";
         });
-    </script>
 
+      // Handle tabs
+      const tabs = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          tabContents.forEach(c => c.classList.remove('active'));
+          document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+      });
+
+      // Fetch and display user's anime list
+      fetch('/api/user/animelist')
+        .then(res => res.ok ? res.json() : [])
+        .then(animeList => {
+            const favContainer = document.getElementById('favorites-list');
+            const watchedContainer = document.getElementById('watched-list');
+            favContainer.innerHTML = ''; // Clear existing
+            watchedContainer.innerHTML = ''; // Clear existing
+
+            animeList.forEach(item => {
+                fetch(`https://api.jikan.moe/v4/anime/${item.anime_id}`)
+                    .then(res => res.ok ? res.json() : null)
+                    .then(animeData => {
+                        if (!animeData || !animeData.data) return;
+                        const anime = animeData.data;
+                        const card = document.createElement('a');
+                        card.href = `card.html?id=${anime.mal_id}`;
+                        card.className = 'anime-card';
+                        card.innerHTML = `<img src="${anime.images.jpg.image_url}" alt="${anime.title}" loading="lazy">
+                                        <div class="anime-card-title">${anime.title}</div>`;
+                        
+                        if (item.status === 'favorited') {
+                            favContainer.appendChild(card);
+                        } else if (item.status === 'watched') {
+                            watchedContainer.appendChild(card);
+                        }
+                    });
+            });
+        });
+    });
+  </script>
 </body>
 </html>

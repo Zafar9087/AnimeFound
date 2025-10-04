@@ -552,11 +552,16 @@
               animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            if (currentLang === 'ru') {
-              window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId}`;
-            } else {
-              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
-            }
+// NEW CODE:
+box.querySelector('.watch-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const state = {
+    searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
+    animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
+  };
+  sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+  window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId}`;
+});
           });
           box.addEventListener('click', function(e) {
             if (e.target.classList.contains('watch-btn') || e.target.closest('.user-actions')) return;
@@ -565,9 +570,8 @@
               animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '', lang: currentLang });
+            const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
             window.open(`card.html?${params.toString()}`, '_blank');
-          });
 
           // --- INTEGRATION START: Add event listeners for new buttons ---
           if (user) {
@@ -613,77 +617,77 @@
       const container = document.getElementById("animeContainer");
       const boxes = container.querySelectorAll('.anime-box');
 
-        boxes.forEach(box => {
-          // The data is stored in the HTML, we need to retrieve it.
-          // This is a bit fragile, a better way would be to use data-* attributes.
-          const title = box.querySelector('.anime-title').textContent;
-          const desc = box.querySelector('.anime-desc').textContent;
-          const img = box.querySelector('.anime-img').src;
-          
-          let episodes = '';
-          let score = '';
-          let year = '';
-          
-          const badges = box.querySelectorAll('.badge');
-          badges.forEach(badge => {
-            if (badge.textContent.includes('eps')) {
-              episodes = badge.textContent.replace(' eps', '').trim();
-            } else if (badge.textContent.includes('⭐')) {
-              score = badge.textContent.replace('⭐', '').trim();
-            } else if (!isNaN(badge.textContent)) {
-              year = badge.textContent.trim();
-            }
-          });
-
-          // Re-attach listener for the watch button
-          box.querySelector('.watch-btn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const state = {
-              searchQuery: document.getElementById('searchInput').value,
-              currentLang: currentLang,
-              scrollPos: window.scrollY,
-              animeHTML: document.getElementById('animeContainer').innerHTML,
-              currentPage: currentPage
-            };
-            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-
-            if (currentLang === 'en') {
-              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
-            } else {
-              // We can't reconstruct the anilibria link here easily, so we'll just pass the title
-              window.location.href = `choose.html?anime=${encodeURIComponent(title)}&lang=${currentLang}`;
-            }
-          });
-
-          // Re-attach listener for the card itself
-          box.addEventListener('click', function(e) {
-            if (e.target.classList.contains('watch-btn')) return;
-            const state = {
-              searchQuery: document.getElementById('searchInput').value,
-              currentLang: currentLang,
-              scrollPos: window.scrollY,
-              animeHTML: document.getElementById('animeContainer').innerHTML,
-              currentPage: currentPage
-            };
-            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
-            window.open(`card.html?${params.toString()}`, '_blank');
+      boxes.forEach(box => {
+        // The data is stored in the HTML, we need to retrieve it.
+        // This is a bit fragile, a better way would be to use data-* attributes.
+        const title = box.querySelector('.anime-title').textContent;
+        const desc = box.querySelector('.anime-desc').textContent;
+        const img = box.querySelector('.anime-img').src;
+        
+        let episodes = '';
+        let score = '';
+        let year = '';
+        
+        const badges = box.querySelectorAll('.badge');
+        badges.forEach(badge => {
+          if (badge.textContent.includes('eps')) {
+            episodes = badge.textContent.replace(' eps', '').trim();
+          } else if (badge.textContent.includes('⭐')) {
+            score = badge.textContent.replace('⭐', '').trim();
+          } else if (!isNaN(badge.textContent)) {
+            year = badge.textContent.trim();
+          }
         });
-      }
 
-      function loadInitial() {
-        const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
+        // Re-attach listener for the watch button
+        box.querySelector('.watch-btn').addEventListener('click', function(e) {
+          e.stopPropagation();
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
 
-        if (savedState) {
-          document.getElementById('searchInput').value = savedState.searchQuery;
-          searchQuery = savedState.searchQuery;
-          searchMode = searchQuery.length > 0;
-          currentLang = savedState.currentLang;
-          document.getElementById('animeContainer').innerHTML = savedState.animeHTML;
-          currentPage = savedState.currentPage;
-          
-          updateLanguageUI();
-          
+          if (currentLang === 'en') {
+            window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
+          } else {
+            // We can't reconstruct the anilibria link here easily, so we'll just pass the title
+            window.location.href = `choose.html?anime=${encodeURIComponent(title)}&lang=${currentLang}`;
+          }
+        });
+
+        // Re-attach listener for the card itself
+        box.addEventListener('click', function(e) {
+          if (e.target.classList.contains('watch-btn')) return;
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+          const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
+          window.open(`card.html?${params.toString()}`, '_blank');
+      });
+    }
+
+    function loadInitial() {
+      const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
+
+      if (savedState) {
+        document.getElementById('searchInput').value = savedState.searchQuery;
+        searchQuery = savedState.searchQuery;
+        searchMode = searchQuery.length > 0;
+        currentLang = savedState.currentLang;
+        document.getElementById('animeContainer').innerHTML = savedState.animeHTML;
+        currentPage = savedState.currentPage;
+        
+        updateLanguageUI();
+        
         // Re-attach event listeners to the restored HTML
         reAttachEventListeners();
 

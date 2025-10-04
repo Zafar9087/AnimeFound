@@ -201,6 +201,28 @@
       height: 100%;
       border: none;
     }
+    .video-source {
+      text-align: center;
+      padding: 20px;
+      background: rgba(77, 166, 255, 0.08);
+      border-radius: 16px;
+      border: 1px solid rgba(77, 166, 255, 0.15);
+    }
+    .video-source p {
+      font-size: 1.05em;
+      color: #b0b8d0;
+    }
+    .video-source a {
+      color: #4da6ff;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+    }
+    .video-source a:hover {
+      color: #6bb6ff;
+      border-bottom-color: #6bb6ff;
+    }
     
     .action-buttons {
       display: flex;
@@ -313,6 +335,9 @@
       <h2 class="section-title">Смотреть онлайн</h2>
       <div class="video-container" id="videoContainer">
       </div>
+      <div class="video-source">
+        <p>Видео предоставлено каналом <a href="https://rutube.ru/u/animach/" target="_blank">Анимач — аниме онлайн</a> на Rutube</p>
+      </div>
     </div>
   </div>
 
@@ -343,23 +368,24 @@
       
       if (videoId) {
         videoContainer.innerHTML = `
-          <iframe
-            width="720"
-            height="405"
-            src="https://rutube.ru/play/embed/${videoId}"
-            style="border: none;"
-            allow="clipboard-write; autoplay"
+          <iframe 
+            src="https://rutube.ru/play/embed/${videoId}" 
+            frameBorder="0" 
+            allow="clipboard-write; autoplay" 
+            webkitAllowFullScreen 
+            mozallowfullscreen 
             allowFullScreen>
           </iframe>
         `;
       } else {
+        const searchQuery = encodeURIComponent(title + ' аниме');
         videoContainer.innerHTML = `
-          <iframe
-            width="720"
-            height="405"
-            src="https://rutube.ru/play/embed/0150dbc3f995dd030f03c08dc2fbd726"
-            style="border: none;"
-            allow="clipboard-write; autoplay"
+          <iframe 
+            src="https://rutube.ru/search/video/?query=${searchQuery}" 
+            frameBorder="0" 
+            allow="clipboard-write; autoplay" 
+            webkitAllowFullScreen 
+            mozallowfullscreen 
             allowFullScreen>
           </iframe>
         `;

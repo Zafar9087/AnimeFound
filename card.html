@@ -1,4 +1,773 @@
-<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="FcbPAZlXbYeFQRD5kB0ZvrcG4Xsa9QyQuX6rwmmHHCA" />
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
+  <!-- SEO -->
+  <meta name="title" content="AnimeFound - Найди своё аниме">
+  <meta name="description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском. Находи любое аниме легко!">
+
+  <!-- Open Graph (для Facebook, Telegram, VK) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://your-site.com/">
+  <meta property="og:title" content="AnimeFound - Найди своё аниме">
+  <meta property="og:description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском.">
+  <meta property="og:image" content="https://your-site.com/preview.png">
+
+  <!-- Twitter Card (для Twitter/X) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://your-site.com/">
+  <meta name="twitter:title" content="AnimeFound - Найди своё аниме">
+  <meta name="twitter:description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском.">
+  <meta name="twitter:image" content="https://your-site.com/preview.png">
+
+  <!-- Favicon -->
+   <!-- Стандартный favicon для старых браузеров и Яндекса -->
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- Современный вариант (SVG) -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- PNG для универсальности -->
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+
+<!-- Apple Touch Icon -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+  <title>AnimeFound</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
+      color: #e0e6f7;
+    }
+      .top-bar { /* Updated to glassmorphism */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 200;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 32px;
+        background: rgba(10, 15, 26, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(77, 166, 255, 0.1);
+      }
+      .top-bar a {
+        text-decoration: none;
+        color: #4da6ff;
+        font-weight: 700;
+      }
+      .top-bar-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e0e6f7;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        font-size: 1em;
+        padding: 10px 20px;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        backdrop-filter: blur(5px);
+      }
+      .top-bar-btn:hover {
+        background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(77, 166, 255, 0.3);
+      }
+      .watch-btn {
+        background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.1em;
+        padding: 12px 32px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        transition: background 0.2s, transform 0.2s;
+        margin: 0 auto 24px auto;
+        display: block;
+      }
+      .watch-btn:hover {
+        background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
+        transform: scale(1.05);
+      }
+    .search { /* Simplified and integrated into top-bar */
+      margin-left: 32px;
+      max-width: 400px;
+      width: 100%;
+    }
+    #searchInput {
+      padding: 10px 18px;
+      width: 100%;
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 12px;
+      font-size: 1em;
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fff;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    #searchInput::placeholder {
+      color: #8a9ac1;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 20px 40px;
+      max-width: 1600px;
+      margin: auto;
+    }
+    .anime-box {
+      background: rgba(35, 42, 69, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(77, 166, 255, 0.2);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      color: #eee;
+    }
+    .anime-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
+    }
+    .anime-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .anime-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .anime-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+    .badge {
+      background: rgba(77, 166, 255, 0.15);
+      border: 1px solid rgba(77, 166, 255, 0.3);
+      color: #e0e6f7;
+      padding: 5px 12px;
+      font-size: 0.8em;
+      border-radius: 30px;
+    }
+    .anime-desc {
+      font-size: 0.9em;
+      color: #ccc;
+      line-height: 1.4em;
+      max-height: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      flex-grow: 1;
+      margin-bottom: 10px;
+    }
+    .watch-btn {
+      background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.9em;
+      padding: 8px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
+      transition: all 0.3s ease;
+      align-self: center;
+    }
+
+    .load-more {
+      display: block;
+      margin: 20px auto 40px;
+      padding: 12px 24px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      background: #4da6ff;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .load-more:hover {
+      background: #1c75d8;
+    }
+
+    /* 📱 Адаптация для телефонов */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6em;
+      }
+      .container {
+        grid-template-columns: 1fr; /* по одной карточке */
+        padding: 0 12px 30px;
+      }
+      .anime-box {
+        max-width: 100%;
+      }
+      .anime-img {
+        height: 180px;
+      }
+      .top-bar {
+        flex-wrap: wrap;
+        padding: 12px 16px;
+      }
+      .top-bar-main-content {
+        order: 1;
+        flex-basis: 100%;
+        justify-content: space-between;
+      }
+      .search { /* Make search visible and full-width on mobile */
+        flex-basis: 100%;
+        order: 3;
+        margin: 10px 0 0 0;
+        max-width: none;
+      }
+      .more-dropdown {
+        right: 10px; /* Align with padding */
+        left: auto;
+      }
+    }
+    .more-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: rgba(10, 15, 26, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(77, 166, 255, 0.1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .more-dropdown.visible {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="top-bar">
+    <a href="intro.html"><h1>AnimeFound</h1></a>
+    <div class="top-bar-main-content" style="flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 15px;">
+      <div class="search">
+        <input type="text" id="searchInput" placeholder="Search anime..." />
+      </div>
+      <div class="more-btn-container" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
+        <button class="top-bar-btn" id="moreBtn">More</button>
+        <div id="more-buttons-dropdown" class="more-dropdown">
+          
+          <!-- New placeholder for login/profile status -->
+          <div id="login-profile-section"></div>
+
+          <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
+          <a href="/anime-found" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Game</a>
+          <div style="display: flex; gap: 5px;">
+            <button class="top-bar-btn" id="langBtnRu" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">RU</button>
+            <button class="top-bar-btn" id="langBtnEn" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">EN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:80px;"></div> <!-- Spacer for fixed top bar -->
+  <div class="container" id="animeContainer"></div>
+
+  <p id="noResults" style="text-align:center; display:none; margin-top:20px; font-size:1.2em; color:#ff6666;">
+    No results found.
+  </p>
+
+  <button class="load-more" id="loadMoreBtn">Load More</button>
+
+  <script>
+    const moreBtn = document.getElementById('moreBtn');
+    const moreDropdown = document.getElementById('more-buttons-dropdown');
+
+    moreBtn.addEventListener('click', () => {
+      moreDropdown.classList.toggle('visible');
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', (event) => {
+      if (!moreBtn.contains(event.target) && !moreDropdown.contains(event.target)) {
+        moreDropdown.classList.remove('visible');
+      }
+    });
+
+    // Language selector logic
+    const langBtnRu = document.getElementById('langBtnRu');
+    const langBtnEn = document.getElementById('langBtnEn');
+    let currentLang = 'en';
+    const translations = {
+      en: {
+        searchPlaceholder: 'Search anime...',
+        noResults: 'No results found.',
+        loadMore: 'Load More',
+        watchAnime: 'Watch Anime',
+        trailer: 'Watch Trailer',
+        moreBtn: 'More',
+        siteTitle: 'AnimeFound',
+        randomizerBtn: '🎲 Random',
+        guessAnime: 'Guess Anime'
+      },
+      ru: {
+        searchPlaceholder: 'Поиск аниме...',
+        noResults: 'Ничего не найдено.',
+        loadMore: 'Показать ещё',
+        watchAnime: 'Смотреть аниме',
+        noDesc: 'Описание отсутствует.',
+        moreBtn: 'Ещё',
+        siteTitle: 'AnimeFound',
+        randomizerBtn: '🎲 Рандом',
+        guessAnime: 'Угадай аниме'
+      }
+    };
+    function updateLanguageUI() {
+      document.getElementById('moreBtn').textContent = translations[currentLang].moreBtn;
+      document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
+      document.getElementById('noResults').textContent = translations[currentLang].noResults;
+      document.getElementById('loadMoreBtn').textContent = translations[currentLang].loadMore;
+      document.getElementById('randomizerBtn').textContent = translations[currentLang].randomizerBtn;
+      document.getElementById('guessAnimeBtn').textContent = translations[currentLang].guessAnime;
+      if (currentLang === 'ru') {
+        document.getElementById('guessAnimeBtn').href = 'Anime Found.html';
+      } else {
+        document.getElementById('guessAnimeBtn').href = 'Anime Found_eng.html';
+      }
+      document.querySelector('.top-bar h1').textContent = 'AnimeFound';
+    }
+
+    langBtnRu.addEventListener('click', () => {
+      currentLang = 'ru';
+      document.body.setAttribute('lang', 'ru');
+      updateLanguageUI();
+      loadAnime(true); // reload anime cards with new language
+    });
+
+    langBtnEn.addEventListener('click', () => {
+      currentLang = 'en';
+      document.body.setAttribute('lang', 'en');
+      updateLanguageUI();
+      loadAnime(true); // reload anime cards with new language
+    });
+
+    updateLanguageUI();
+    let currentPage = 1;
+    const limit = 24;
+    let searchMode = false;
+    let searchQuery = "";
+
+    async function loadAnime(reset=false) {
+      try {
+        let url = "";
+        let data = { data: [] };
+        const container = document.getElementById("animeContainer");
+        if (reset) container.innerHTML = "";
+
+        if (currentLang === 'ru') {
+          // Use Shikimori API for Russian
+          if (searchMode && searchQuery) {
+            url = `https://shikimori.one/api/animes?search=${encodeURIComponent(searchQuery)}&limit=${limit}&page=${currentPage}`;
+          } else {
+            url = `https://shikimori.one/api/animes?limit=${limit}&page=${currentPage}&order=popularity`;
+          }
+          const res = await fetch(url);
+          data.data = await res.json();
+        } else {
+          // Use Jikan API for English
+          if (searchMode && searchQuery) {
+            url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchQuery)}&limit=${limit}&page=${currentPage}`;
+          } else {
+            url = `https://api.jikan.moe/v4/top/anime?page=${currentPage}&limit=${limit}`;
+          }
+          const res = await fetch(url);
+          data = await res.json();
+        }
+
+        if (!data.data || data.data.length === 0) {
+          document.getElementById("noResults").style.display = "block";
+          return;
+        } else {
+          document.getElementById("noResults").style.display = "none";
+        }
+
+        const hentaiGenres = ['hentai', 'хентай', 'adult', 'ecchi'];
+        const hentaiRatings = ['rx', 'r18', '18+', 'r+ (mild nudity)'];
+        const blockKeywords = [
+          'атака девушек', 'напор девушек', 'поворот девушек', 'girl attack', 'girl twist', 'ecchi', 'эротика', 'фансервис', 'fanservice', 'sexual', 'sex', 'nsfw', 'r18', 'adult', 'хентай', 'hentai'
+        ];
+        const bannedTitles = [
+          'девичье обучение', 'пятнадцать красивых девушек', 'ансамбль девушек', 'сними меня', 'крусалочка', 'атака пиратов',
+          'неприличные развлечения для девушек', 'жизнь двух девушек', 'полное событие', 'сникерс', 'секретное назначение девушек. ниндзя. спецвыпуски',
+          'секретное назначение девушек. ниндзя. ова', 'девушка в офсайте', 'девушка в скарлупе', 'девушка из векельных новостей',
+          'девушка из прогноза', 'девушка влюбилась в старший спецвыпуск', 'девушка со странностями', 'девушка-волшебница ай',
+          'девушка-волшебница мерруру', 'девушка со странностями 2', 'девушка влюбилась в старшую сестру ова',
+          'девушка-детектив похвалил хулиганы', 'девушка из фантазии', 'девушка-демон за курой спецвыпуски',
+          'девушка с гитарой', 'девушка что надо',
+          'академия святая мария', 'фортуна и удача', 'аякаши и мегами: священный дух', 'аукцион рабынь',
+          // Оригинальные английские названия
+          'offside girl', 'girl in offside', 'ensemble of girls', 'take me off', 'crusalka', 'pirates attack',
+          'naughty entertainment for girls', 'life of two girls', 'full event', 'snickers', 'secret mission girls ninja special',
+          'secret mission girls ninja ova', 'girl in shell', 'girl from vekel news', 'girl from forecast',
+          'girl fell in love with older special', 'girl with oddities', 'magical girl ai', 'magical girl merruru',
+          'girl with oddities 2', 'girl fell in love with older sister ova', 'girl-detective praised hooligans', 'girl from fantasy',
+          'girl-demon for chicken special', 'girl with guitar', 'girl what you need'
+        ];
+        function isHentai(anime) {
+          if (anime.genres && anime.genres.some(g => g.name && (hentaiGenres.includes(g.name.toLowerCase()) || g.name.toLowerCase() === 'ecchi' || g.name.toLowerCase() === 'этти'))) return true;
+          if (anime.rating && hentaiRatings.includes(anime.rating.toLowerCase())) return true;
+          if (anime.russian && anime.russian.toLowerCase().includes('хентай')) return true;
+          if (anime.name && anime.name.toLowerCase().includes('hentai')) return true;
+          if (anime.title && anime.title.toLowerCase().includes('hentai')) return true;
+          // Блокировать по ключевым словам
+          for (const kw of blockKeywords) {
+            if ((anime.russian && anime.russian.toLowerCase().includes(kw)) || (anime.name && anime.name.toLowerCase().includes(kw)) || (anime.title && anime.title.toLowerCase().includes(kw))) {
+              return true;
+            }
+          }
+          return false;
+        }
+        data.data.forEach((anime, index) => {
+          if (isHentai(anime)) return;
+          // Бан по названиям
+          const allNames = [anime.russian, anime.name, anime.title].map(x => (x || '').toLowerCase());
+          if (bannedTitles.some(ban => allNames.some(n => n.includes(ban)))) {
+            return;
+          } 
+          const box = document.createElement("div");
+          box.className = "anime-box";
+          box.style.cursor = "pointer";
+
+          // --- INTEGRATION START ---
+          const animeId = anime.mal_id ? anime.mal_id.toString() : anime.id.toString();
+          box.dataset.animeId = animeId;
+
+          let actionsHTML = '';
+          if (user) {
+              const isFavorited = userAnimeList[animeId] && userAnimeList[animeId].favorited;
+              const isWatched = userAnimeList[animeId] && userAnimeList[animeId].watched;
+              actionsHTML = `
+                <div class="user-actions">
+                    <i class="fas fa-star action-btn ${isFavorited ? 'active' : ''}" data-status="favorited" title="Add to Favorites"></i>
+                    <i class="fas fa-check-circle action-btn ${isWatched ? 'active' : ''}" data-status="watched" title="Mark as Watched"></i>
+                </div>
+              `;
+          }
+          // --- INTEGRATION END ---
+
+          let title, desc, img, episodes, score, year;
+          if (currentLang === 'ru') {
+            // Shikimori fields
+            title = anime.russian || anime.name;
+            img = anime.image && anime.image.preview ? `https://shikimori.one${anime.image.preview}` : "";
+            episodes = anime.episodes;
+            score = anime.score;
+            year = anime.aired_on ? anime.aired_on.split('-')[0] : "";
+            desc = (anime.description && anime.description.trim().length > 0)
+              ? anime.description.slice(0, 150) + "..."
+              : translations.ru.noDesc;
+          } else {
+            // Jikan fields
+            title = anime.title;
+            desc = anime.synopsis ? anime.synopsis.slice(0, 150) + "..." : "No description available";
+            img = anime.images.jpg.image_url;
+            episodes = anime.episodes;
+            score = anime.score;
+            year = anime.year;
+          }
+          const badges = [];
+          if (episodes) badges.push(`<div class="badge">${episodes} eps</div>`);
+          if (score) badges.push(`<div class="badge">⭐ ${score}</div>`);
+          if (year) badges.push(`<div class="badge">${year}</div>`);
+
+          // Watch Anime button links
+          let animeLink = '';
+          if (currentLang === 'ru') {
+            const russianChars = {
+                'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+                'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+                'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
+                'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+            };
+            function slugify(str) {
+                return str.toLowerCase().split('').map(char => russianChars[char] || char)
+                .join('')
+                .replace(/[^a-z0-9\s-]/gi, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
+            }
+            animeLink = `https://anilibria.wiki/release/${slugify(title)}.html`;
+          } else {
+            animeLink = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
+          }
+
+          box.innerHTML = `
+            ${actionsHTML}
+            <img class="anime-img" src="${img}" alt="${title}">
+            <div class="anime-content">
+              <div class="anime-title">${title}</div>
+              <div class="badges">${badges.join("")}</div>
+              <div class="anime-desc">${desc}</div>
+              <button class="watch-btn">${translations[currentLang].watchAnime}</button>
+            </div>
+          `;
+          box.querySelector('.watch-btn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const state = {
+              searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
+              animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
+            };
+            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+// NEW CODE:
+box.querySelector('.watch-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const state = {
+    searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
+    animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
+  };
+  sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+  window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId}`;
+});
+          });
+          box.addEventListener('click', function(e) {
+            if (e.target.classList.contains('watch-btn') || e.target.closest('.user-actions')) return;
+            const state = {
+              searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
+              animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
+            };
+            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+            const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
+            window.location.href = `card.html?${params.toString()}`;
+          });
+
+          // --- INTEGRATION START: Add event listeners for new buttons ---
+          if (user) {
+            box.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const card = e.target.closest('.anime-box');
+                    const clickedAnimeId = card.dataset.animeId;
+                    const status = e.target.dataset.status;
+                    const isActive = e.target.classList.contains('active');
+                    e.target.classList.toggle('active'); // Optimistic UI update
+                    try {
+                        const res = await fetch('/api/user/animelist', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                anime_id: clickedAnimeId, 
+                                status: isActive ? 'none' : status,
+                                old_status: status
+                            }),
+                        });
+                        if (!res.ok) { e.target.classList.toggle('active'); }
+                        else { // Update local list
+                           if(!userAnimeList[clickedAnimeId]) userAnimeList[clickedAnimeId] = {};
+                           if(isActive) { delete userAnimeList[clickedAnimeId][status]; }
+                           else { userAnimeList[clickedAnimeId][status] = true; }
+                        }
+                    } catch (err) { e.target.classList.toggle('active'); }
+                });
+            });
+          }
+          // --- INTEGRATION END ---
+
+          container.appendChild(box);
+        });
+
+      } catch (e) {
+        console.error("Error loading anime:", e);
+      }
+    }
+
+    function reAttachEventListeners() {
+      const container = document.getElementById("animeContainer");
+      const boxes = container.querySelectorAll('.anime-box');
+
+      boxes.forEach(box => {
+        // The data is stored in the HTML, we need to retrieve it.
+        // This is a bit fragile, a better way would be to use data-* attributes.
+        const title = box.querySelector('.anime-title').textContent;
+        const desc = box.querySelector('.anime-desc').textContent;
+        const img = box.querySelector('.anime-img').src;
+        
+        let episodes = '';
+        let score = '';
+        let year = '';
+        
+        const badges = box.querySelectorAll('.badge');
+        badges.forEach(badge => {
+          if (badge.textContent.includes('eps')) {
+            episodes = badge.textContent.replace(' eps', '').trim();
+          } else if (badge.textContent.includes('⭐')) {
+            score = badge.textContent.replace('⭐', '').trim();
+          } else if (!isNaN(badge.textContent)) {
+            year = badge.textContent.trim();
+          }
+        });
+
+        // Re-attach listener for the watch button
+        box.querySelector('.watch-btn').addEventListener('click', function(e) {
+          e.stopPropagation();
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+
+          if (currentLang === 'en') {
+            window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
+          } else {
+            // We can't reconstruct the anilibria link here easily, so we'll just pass the title
+            window.location.href = `choose.html?anime=${encodeURIComponent(title)}&lang=${currentLang}`;
+          }
+        });
+
+        // Re-attach listener for the card itself
+        box.addEventListener('click', function(e) {
+          if (e.target.classList.contains('watch-btn')) return;
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+          const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
+          window.location.href = `card.html?${params.toString()}`;
+        });
+      });
+    }
+
+    function loadInitial() {
+      const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
+
+      if (savedState) {
+        document.getElementById('searchInput').value = savedState.searchQuery;
+        searchQuery = savedState.searchQuery;
+        searchMode = searchQuery.length > 0;
+        currentLang = savedState.currentLang;
+        document.getElementById('animeContainer').innerHTML = savedState.animeHTML;
+        currentPage = savedState.currentPage;
+        
+        updateLanguageUI();
+        
+        // Re-attach event listeners to the restored HTML
+        reAttachEventListeners();
+
+        // Restore scroll position after a short delay
+        setTimeout(() => {
+          window.scrollTo(0, savedState.scrollPos);
+        }, 100);
+
+        sessionStorage.removeItem('animeFoundState');
+      } else {
+        // Load fresh data if no state is saved
+        loadAnime(true);
+      }
+    }
+
+    loadInitial();
+
+    document.getElementById("loadMoreBtn").addEventListener("click", () => {
+      currentPage++;
+      loadAnime();
+    });
+
+    document.getElementById("searchInput").addEventListener("keyup", async function() {
+      searchQuery = this.value.trim();
+      currentPage = 1;
+      searchMode = searchQuery.length > 0;
+      await loadAnime(true);
+    });
+
+    let user = null;
+    let userAnimeList = {}; // Object to store user's anime statuses for quick lookup
+
+    // Fetches user data and their anime list from the server
+    async function fetchUserAndList() {
+      try {
+        const userRes = await fetch('/api/user');
+        if (userRes.ok) {
+          user = await userRes.json();
+          const listRes = await fetch('/api/user/animelist');
+          if (listRes.ok) {
+            const list = await listRes.json();
+            list.forEach(item => {
+              if (!userAnimeList[item.anime_id]) userAnimeList[item.anime_id] = {};
+              userAnimeList[item.anime_id][item.status] = true;
+            });
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching user data:", e);
+        // Even if there's an error, we should still try to load the anime
+      } finally {
+        // Update the UI with user info (or lack thereof)
+        updateLoginUI();
+        // Now that user data is fetched (or failed), load the initial anime list
+        loadInitial();
+      }
+    }
+
+    // Updates the top-bar UI based on login status
+    function updateLoginUI() {
+      const container = document.getElementById('login-profile-section');
+      if (user) {
+        container.innerHTML = `
+          <a href="/profile.html" class="top-bar-btn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">${user.name}</a>
+          <a href="/auth/logout" class="top-bar-btn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Logout</a>
+        `;
+      } else {
+        container.innerHTML = '<a href="/auth/google" class="top-bar-btn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Login with Google</a>';
+      }
+    }
+
+    // Start the process
+    fetchUserAndList();
+
+  </script>
+  
+</body>
+</html><!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">

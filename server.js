@@ -1,4 +1,4 @@
-equire('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -33,7 +33,12 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
 app.use(session({
   secret: process.env.SESSION_SECRET || "secret",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: isVercel || isReplit,
+    httpOnly: true
+  }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -43,45 +48,33 @@ passport.deserializeUser((id, done) => {
   db.get('SELECT * FROM users WHERE id = ?', [id], (err, user) => done(err, user));
 });
 
-const hasGoogleCredentials = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET;
-
-if (hasGoogleCredentials) {
-  passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${host}/auth/google/callback`
-  }, (accessToken, refreshToken, profile, done) => {
-    db.get('SELECT * FROM users WHERE id = ?', [profile.id], (err, user) => {
-      if (user) {
-        db.run('UPDATE users SET name=?, email=? WHERE id=?',
-          [profile.displayName, profile.emails[0].value, profile.id],
-          () => db.get('SELECT * FROM users WHERE id=?', [profile.id], (e,u)=>done(e,u)));
-      } else {
-        const newUser = { id: profile.id, name: profile.displayName, email: profile.emails[0].value, xp: 0 };
-        db.run('INSERT INTO users (id,name,email,xp) VALUES (?,?,?,?)',
-          [newUser.id,newUser.name,newUser.email,newUser.xp],
-          ()=>done(null,newUser));
-      }
-    });
-  }));
-  console.log('✅ Google OAuth configured successfully');
-} else {
-  console.warn('⚠️  Google OAuth not configured - Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET');
-}
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: `${host}/auth/google/callback`
+}, (accessToken, refreshToken, profile, done) => {
+  db.get('SELECT * FROM users WHERE id = ?', [profile.id], (err, user) => {
+    if (user) {
+      db.run('UPDATE users SET name=?, email=? WHERE id=?',
+        [profile.displayName, profile.emails[0].value, profile.id],
+        () => db.get('SELECT * FROM users WHERE id=?', [profile.id], (e,u)=>done(e,u)));
+    } else {
+      const newUser = { id: profile.id, name: profile.displayName, email: profile.emails[0].value, xp: 0 };
+      db.run('INSERT INTO users (id,name,email,xp) VALUES (?,?,?,?)',
+        [newUser.id,newUser.name,newUser.email,newUser.xp],
+        ()=>done(null,newUser));
+    }
+  });
+}));
 
 // --- Routes ---
 app.use(express.static(__dirname));
 
 // Auth
-if (hasGoogleCredentials) {
-  app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
-  app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    (req,res)=>res.redirect('/profile'));
-} else {
-  app.get('/auth/google', (req,res)=>res.status(503).json({error:'Google OAuth not configured. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.'}));
-  app.get('/auth/google/callback', (req,res)=>res.redirect('/'));
-}
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }));
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req,res)=>res.redirect('/profile'));
 app.get('/auth/logout', (req,res,next)=>req.logout(()=>res.redirect('/')));
 
 // API

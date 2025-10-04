@@ -1,3 +1,4 @@
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,7 +110,9 @@
       margin-left: 32px;
       max-width: 400px;
       width: 100%;
-    }
+
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+}
     #searchInput {
       padding: 10px 18px;
       width: 100%;
@@ -225,7 +228,8 @@
       background: #1c75d8;
     }
 
-    /* 📱 Адаптация для телефонов */
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+/* 📱 Адаптация для телефонов */
     @media (max-width: 600px) {
       h1 {
         font-size: 1.6em;
@@ -330,7 +334,8 @@
       }
     });
 
-    // Language selector logic
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+// Language selector logic
     const langBtnRu = document.getElementById('langBtnRu');
     const langBtnEn = document.getElementById('langBtnEn');
     let currentLang = 'en';
@@ -420,7 +425,8 @@
           data = await res.json();
         }
 
-        if (!data.data || data.data.length === 0) {
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+if (!data.data  data.data.length === 0) {
           document.getElementById("noResults").style.display = "block";
           return;
         } else {
@@ -450,14 +456,14 @@
           'girl-demon for chicken special', 'girl with guitar', 'girl what you need'
         ];
         function isHentai(anime) {
-          if (anime.genres && anime.genres.some(g => g.name && (hentaiGenres.includes(g.name.toLowerCase()) || g.name.toLowerCase() === 'ecchi' || g.name.toLowerCase() === 'этти'))) return true;
+          if (anime.genres && anime.genres.some(g => g.name && (hentaiGenres.includes(g.name.toLowerCase())  g.name.toLowerCase() === 'ecchi'  g.name.toLowerCase() === 'этти'))) return true;
           if (anime.rating && hentaiRatings.includes(anime.rating.toLowerCase())) return true;
           if (anime.russian && anime.russian.toLowerCase().includes('хентай')) return true;
           if (anime.name && anime.name.toLowerCase().includes('hentai')) return true;
           if (anime.title && anime.title.toLowerCase().includes('hentai')) return true;
           // Блокировать по ключевым словам
           for (const kw of blockKeywords) {
-            if ((anime.russian && anime.russian.toLowerCase().includes(kw)) || (anime.name && anime.name.toLowerCase().includes(kw)) || (anime.title && anime.title.toLowerCase().includes(kw))) {
+            if ((anime.russian && anime.russian.toLowerCase().includes(kw))  (anime.name && anime.name.toLowerCase().includes(kw))  (anime.title && anime.title.toLowerCase().includes(kw))) {
               return true;
             }
           }
@@ -466,7 +472,7 @@
         data.data.forEach((anime, index) => {
           if (isHentai(anime)) return;
           // Бан по названиям
-          const allNames = [anime.russian, anime.name, anime.title].map(x => (x || '').toLowerCase());
+          const allNames = [anime.russian, anime.name, anime.title].map(x => (x  '').toLowerCase());
           if (bannedTitles.some(ban => allNames.some(n => n.includes(ban)))) {
             return;
           } 
@@ -478,7 +484,8 @@
           const animeId = anime.mal_id ? anime.mal_id.toString() : anime.id.toString();
           box.dataset.animeId = animeId;
 
-          let actionsHTML = '';
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+let actionsHTML = '';
           if (user) {
               const isFavorited = userAnimeList[animeId] && userAnimeList[animeId].favorited;
               const isWatched = userAnimeList[animeId] && userAnimeList[animeId].watched;
@@ -494,7 +501,7 @@
           let title, desc, img, episodes, score, year;
           if (currentLang === 'ru') {
             // Shikimori fields
-            title = anime.russian || anime.name;
+            title = anime.russian  anime.name;
             img = anime.image && anime.image.preview ? `https://shikimori.one${anime.image.preview}` : "";
             episodes = anime.episodes;
             score = anime.score;
@@ -513,7 +520,7 @@
           }
           const badges = [];
           if (episodes) badges.push(`<div class="badge">${episodes} eps</div>`);
-          if (score) badges.push(`<div class="badge">⭐ ${score}</div>`);
+          if (score) badges.push(`<div class="badge">⭐️ ${score}</div>`);
           if (year) badges.push(`<div class="badge">${year}</div>`);
 
           // Watch Anime button links
@@ -526,7 +533,7 @@
                 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
             };
             function slugify(str) {
-                return str.toLowerCase().split('').map(char => russianChars[char] || char)
+                return str.toLowerCase().split('').map(char => russianChars[char]  char)
                 .join('')
                 .replace(/[^a-z0-9\s-]/gi, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
             }
@@ -535,7 +542,8 @@
             animeLink = `https://www.crunchyroll.com/search?from=search&q=${encodeURIComponent(title)}`;
           }
 
-          box.innerHTML = `
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+box.innerHTML = `
             ${actionsHTML}
             <img class="anime-img" src="${img}" alt="${title}">
             <div class="anime-content">
@@ -560,18 +568,21 @@ box.querySelector('.watch-btn').addEventListener('click', function(e) {
     animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
   };
   sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-  window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId}`;
+  window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year  ''}&episodes=${episodes  ''}&score=${score  ''}&id=${animeId}`;
 });
           });
           box.addEventListener('click', function(e) {
-            if (e.target.classList.contains('watch-btn') || e.target.closest('.user-actions')) return;
+            if (e.target.classList.contains('watch-btn')  e.target.closest('.user-actions')) return;
             const state = {
               searchQuery: document.getElementById('searchInput').value, currentLang: currentLang, scrollPos: window.scrollY,
               animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
-            window.open(`card.html?${params.toString()}`, '_blank');
+
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes  '', score: score  '', year: year  '' });
+            window.location.href = `card.html?${params.toString()}`;
+          });
 
           // --- INTEGRATION START: Add event listeners for new buttons ---
           if (user) {
@@ -632,8 +643,8 @@ box.querySelector('.watch-btn').addEventListener('click', function(e) {
         badges.forEach(badge => {
           if (badge.textContent.includes('eps')) {
             episodes = badge.textContent.replace(' eps', '').trim();
-          } else if (badge.textContent.includes('⭐')) {
-            score = badge.textContent.replace('⭐', '').trim();
+          } else if (badge.textContent.includes('⭐️')) {
+            score = badge.textContent.replace('⭐️', '').trim();
           } else if (!isNaN(badge.textContent)) {
             year = badge.textContent.trim();
           }
@@ -659,7 +670,10 @@ box.querySelector('.watch-btn').addEventListener('click', function(e) {
           }
         });
 
-        // Re-attach listener for the card itself
+        // Re-attach listener for the card i
+
+СВЯЩЕНЫЙ НОМЕР, [04.10.2025 7:13]
+tself
         box.addEventListener('click', function(e) {
           if (e.target.classList.contains('watch-btn')) return;
           const state = {
@@ -670,8 +684,9 @@ box.querySelector('.watch-btn').addEventListener('click', function(e) {
             currentPage: currentPage
           };
           sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-          const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
-          window.open(`card.html?${params.toString()}`, '_blank');
+          const params = new URLSearchParams({ title, desc, img, episodes: episodes  '', score: score  '', year: year  '' });
+          window.location.href = card.html?${params.toString()};
+        });
       });
     }
 

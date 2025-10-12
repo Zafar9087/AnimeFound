@@ -111,7 +111,7 @@ app.get('/anime-watch',(req,res)=>res.sendFile(path.join(__dirname,'anime-watch.
 
 // Start server (works for Replit and local development)
 if (!isVercel) {
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || 5001;
   app.listen(port, '0.0.0.0', ()=>console.log(`✅ Server running on port ${port}`));
 }
 

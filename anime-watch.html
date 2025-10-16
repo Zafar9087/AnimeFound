@@ -251,12 +251,7 @@
     <a href="index.html" class="logo">AnimeFound</a>
   </div>
   
-  <div class="container">
-    <div class="video-section">
-      <div class="video-container" id="videoContainer">
-        <!-- Rutube video will be embedded here -->
-      </div>
-    </div>
+  
 
     <div class="episode-header">
       <h1 class="anime-title" id="animeTitle"></h1>
@@ -296,66 +291,68 @@
         </div>
       </div>
     </div>
+    <div class="container">
+    <div class="video-section">
+      <div class="video-container" id="videoContainer">
+        <!-- Rutube video will be embedded here -->
+      </div>
+    </div>
   </div>
 
   <script>
+    // Unified script: embed Rutube by rutube_id only.
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const title = params.get('title') || 'Название аниме';
       const desc = params.get('desc') || 'Описание отсутствует.';
       const img = params.get('img') || '';
-      const year = params.get('year');
-      const episodes = params.get('episodes');
-      const score = params.get('score');
-      const videoId = params.get('videoId');
+      const year = params.get('year') || '';
+      const episodes = params.get('episodes') || '';
+      const score = params.get('score') || '';
+      // The only required value you must provide: rutube_id
+      const rutubeId = params.get('rutube_id') || params.get('id') || '';
 
+      // Fill metadata
       document.getElementById('animeTitle').textContent = title;
-      document.getElementById('animeDescription').textContent = desc;
-      document.getElementById('animePoster').src = img;
+      document.getElementById('animeDescription').textContent = desc || 'Описание отсутствует.';
+      document.getElementById('animePoster').src = img || 'favicon.png';
       document.getElementById('animePoster').alt = title;
 
       const badges = [];
-      if (year) {
-        badges.push(`<span class="badge">📅 ${year}</span>`);
-        document.getElementById('infoYear').textContent = year;
-      }
-      if (episodes) {
-        badges.push(`<span class="badge">📺 ${episodes} эп.</span>`);
-        document.getElementById('infoEpisodes').textContent = `${episodes} эпизодов`;
-      }
-      if (score) {
-        badges.push(`<span class="badge">⭐ ${score}</span>`);
-        document.getElementById('infoScore').textContent = `${score} / 10`;
-      }
+      if (year) { badges.push(`<span class="badge">📅 ${year}</span>`); document.getElementById('infoYear').textContent = year; }
+      if (episodes) { badges.push(`<span class="badge">📺 ${episodes} эп.</span>`); document.getElementById('infoEpisodes').textContent = `${episodes} эпизодов`; }
+      if (score) { badges.push(`<span class="badge">⭐ ${score}</span>`); document.getElementById('infoScore').textContent = `${score} / 10`; }
       document.getElementById('animeBadges').innerHTML = badges.join('');
 
       const videoContainer = document.getElementById('videoContainer');
-      
-      if (videoId) {
-        videoContainer.innerHTML = `
-          <iframe 
-            src="https://rutube.ru/play/embed/${videoId}" 
-            frameBorder="0" 
-            allow="clipboard-write; autoplay" 
-            webkitAllowFullScreen 
-            mozallowfullscreen 
-            allowFullScreen>
-          </iframe>
-        `;
-      } else {
-        const searchQuery = encodeURIComponent(title + ' аниме');
-        videoContainer.innerHTML = `
-          <iframe 
-            src="https://rutube.ru/search/video/?query=${searchQuery}" 
-            frameBorder="0" 
-            allow="clipboard-write; autoplay" 
-            webkitAllowFullScreen 
-            mozallowfullscreen 
-            allowFullScreen>
-          </iframe>
-        `;
+
+      function embed(id) {
+        videoContainer.innerHTML = `<iframe src="https://rutube.ru/play/embed/${encodeURIComponent(id)}" frameborder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>`;
       }
+
+      if (rutubeId) {
+        embed(rutubeId);
+        return;
+      }
+
+      // If rutube_id not provided — show simple manual input and search fallback.
+      videoContainer.innerHTML = `
+        <div style="padding:20px;color:#c9c9c9">
+          <p>rutube_id отсутствует. Вставьте id видео (например: abcde12345) и нажмите «Вставить», или откройте поиск на Rutube.</p>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <input id="manualRutubeId" placeholder="rutube id" style="flex:1;min-width:220px;padding:8px;border-radius:6px;border:1px solid #333;background:#0f0f0f;color:#fff">
+            <button id="embedBtn" class="btn">Вставить</button>
+            <a id="openSearch" class="btn btn-secondary" target="_blank" rel="noopener">Поиск на Rutube</a>
+          </div>
+        </div>
+      `;
+      document.getElementById('openSearch').href = `https://rutube.ru/search/?q=${encodeURIComponent(title || 'аниме')}`;
+      document.getElementById('embedBtn').addEventListener('click', () => {
+        const v = document.getElementById('manualRutubeId').value.trim();
+        if (!v) return alert('Введите rutube_id');
+        embed(v);
+      });
     });
-  </script>
+    </script>
 </body>
 </html>

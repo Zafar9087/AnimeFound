@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Selection</title>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .search-bar {
+      position: relative;
+      width: 50%;
+      max-width: 500px;
+    }
+    #search-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 16px;
+    }
+    #clear-search {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-weight: bold;
+      color: #999;
+    }
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .anime-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .anime-card:hover {
+      transform: scale(1.05);
+    }
+    .anime-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    .anime-card-title {
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="search-container">
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Value">
+      <span id="clear-search" onclick="clearSearch()">X</span>
+    </div>
+  </div>
+
+  <div class="anime-grid" id="anime-grid"></div>
+
+  <script>
+    const animeGrid = document.getElementById('anime-grid');
+    const searchInput = document.getElementById('search-input');
+    let allAnime = [];
+
+    async function fetchAnime() {
+      try {
+        const response = await fetch('https://api.jikan.moe/v4/top/anime');
+        const data = await response.json();
+        allAnime = data.data;
+        displayAnime(allAnime);
+      } catch (error) {
+        console.error('Error fetching anime:', error);
+      }
+    }
+
+    function displayAnime(animeList) {
+      animeGrid.innerHTML = '';
+      animeList.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.onclick = () => openAnimeDetails(anime);
+
+        const image = document.createElement('img');
+        image.src = anime.images.jpg.image_url;
+        image.alt = anime.title;
+
+        const title = document.createElement('div');
+        title.className = 'anime-card-title';
+        title.textContent = anime.title;
+
+        card.appendChild(image);
+        card.appendChild(title);
+        animeGrid.appendChild(card);
+      });
+    }
+
+    function openAnimeDetails(anime) {
+      const url = `anime-watch.html?id=${anime.mal_id}&title=${encodeURIComponent(anime.title)}&image=${encodeURIComponent(anime.images.jpg.image_url)}`;
+      window.location.href = url;
+    }
+
+    searchInput.addEventListener('input', () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredAnime = allAnime.filter(anime =>
+        anime.title.toLowerCase().includes(searchTerm)
+      );
+      displayAnime(filteredAnime);
+    });
+
+    function clearSearch() {
+      searchInput.value = '';
+      displayAnime(allAnime);
+    }
+
+    fetchAnime();
+  </script>
+
+</body>
+</html>

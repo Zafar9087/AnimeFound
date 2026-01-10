@@ -6,10 +6,11 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
   <title>AnimeFound Randomizer</title>
+  <script src="translations.js"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
-      color: #e0e6f7;
+      background: linear-gradient(135deg, #0a0f1a 0%, #1a1a2e 100%);
+      color: #e0e0e0;
       font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       margin: 0;
       min-height: 100vh;
@@ -22,8 +23,11 @@
       left: 0;
       width: 100vw;
       height: 60px;
-      background: rgba(17, 24, 39, 0.6);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      background: rgba(10, 15, 26, 0.8);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -31,12 +35,13 @@
       z-index: 200;
     }
     .top-bar h1, .top-bar a {
-      color: #4da6ff; /* Consistent color */
-      font-size: 1.6em; /* Smaller font size for title */
-      margin: 0; /* Consistent margin */
+      color: #a5b4fc;
+      font-size: 1.6em;
+      margin: 0;
       letter-spacing: 2px;
       font-family: 'Inter', Arial, sans-serif;
       text-decoration: none;
+      font-weight: 700;
     }
     .main-layout {
       display: flex;
@@ -50,36 +55,37 @@
       box-sizing: border-box;
     }
     .settings-panel {
-      background: rgba(17, 24, 39, 0.6); /* Glassmorphism */
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(77, 166, 255, 0.2);
-      border-radius: 24px; /* More rounded */
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Consistent shadow */
-      padding: 20px 15px; /* Even smaller padding */
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(35, 42, 69, 0.5) 100%);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      padding: 20px 15px;
       min-width: 230px;
-      max-width: 230px; /* Even smaller max-width */
+      max-width: 230px;
       display: flex;
       flex-direction: column;
-      gap: 8px; /* Smaller gap */
+      gap: 8px;
       align-items: stretch;
-      transition: box-shadow 0.3s, transform 0.3s;
+      transition: all 0.3s ease;
     }
     .settings-panel:hover {
-      box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
+      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
       transform: translateY(-5px);
+      border-color: rgba(165, 180, 252, 0.5);
     }
     .settings-panel h2 {
       color: #fff;
-      font-size: 1.3em; /* Even smaller title */
+      font-size: 1.3em;
       font-weight: 700;
-      margin-bottom: 12px; /* Smaller margin */
-      text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
+      margin-bottom: 12px;
+      text-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
       letter-spacing: 1px;
     }
     .settings-panel label {
       font-size: 0.9em;
-      color: #e0e6f7;
+      color: #d0d0d0;
       margin-bottom: 6px;
       display: block;
       font-weight: 500;
@@ -87,16 +93,16 @@
     .input-group {
       display: flex;
       align-items: center;
-      background: rgba(10, 15, 26, 0.5);
-      border: 1px solid rgba(77, 166, 255, 0.1);
+      background: rgba(26, 26, 46, 0.6);
+      border: 1px solid rgba(99, 102, 241, 0.2);
       border-radius: 12px;
       padding: 0 4px 0 12px;
-      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
     }
     .input-group:focus-within {
-      border-color: #4da6ff;
-      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2), 0 0 0 2px rgba(77, 166, 255, 0.5);
+      border-color: rgba(165, 180, 252, 0.6);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(99, 102, 241, 0.2);
     }
     .settings-panel input {
       background: transparent;
@@ -108,13 +114,13 @@
       flex: 1;
     }
     .settings-panel input::placeholder {
-      color: #8a9ac1;
+      color: #808080;
     }
     .settings-panel input:focus {
       outline: none;
     }
     #yearBtn {
-      background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       border: none;
       color: white;
       border-radius: 8px;
@@ -126,38 +132,39 @@
     }
     #yearBtn:hover {
       transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     }
     .lang-btn, .random-btn {
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 0.85em; /* Even smaller font size */
+      font-size: 0.85em;
       border-radius: 12px;
       font-weight: 700;
-      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
       transition: all 0.3s ease;
-      margin-top: 10px; /* Smaller margin */
-      padding: 8px 15px;
+      margin-top: 10px;
+      padding: 10px 15px;
     }
     .lang-btn {
-      background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       color: #fff;
       border: none;
       margin-bottom: 10px;
     }
     .lang-btn:hover {
-      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 6px 20px rgba(77, 166, 255, 0.4);
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
     }
     .random-btn {
-      background: linear-gradient(90deg, #2ecc40 0%, #27ae60 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       color: #fff;
       border: none;
-      margin-top: 10px; /* Give some space after lang button */
+      margin-top: 10px;
     }
     .random-btn:hover {
-      background: linear-gradient(90deg, #27ae60 0%, #2ecc40 100%);
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 6px 20px rgba(46, 204, 64, 0.4);
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
     }
     .content-panel {
       flex: 1;
@@ -168,22 +175,23 @@
       padding: 0;
     }
     .anime-card {
-      background: rgba(25, 34, 53, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(77, 166, 255, 0.2);
-      border-radius: 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(35, 42, 69, 0.5) 100%);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       width: 100%;
       max-width: 380px;
       overflow: hidden;
       margin: 0 auto;
-      transition: box-shadow 0.3s, transform 0.3s;
-      color: #e0e6f7;
+      transition: all 0.3s ease;
+      color: #e0e0e0;
     }
     .anime-card:hover {
-      box-shadow: 0 12px 40px rgba(77, 166, 255, 0.2);
-      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+      transform: translateY(-8px);
+      border-color: rgba(165, 180, 252, 0.5);
     }
     .anime-card-header {
       width: 100%;
@@ -199,7 +207,7 @@
       left: 0;
       right: 0;
       height: 50%;
-      background: linear-gradient(to top, rgba(25, 34, 53, 1) 20%, transparent 100%);
+      background: linear-gradient(to top, rgba(26, 26, 46, 1) 20%, transparent 100%);
     }
     .anime-card-body {
       display: flex;
@@ -213,21 +221,21 @@
       z-index: 2;
     }
     .anime-title {
-      font-size: 1.4em; /* Larger title */
+      font-size: 1.4em;
       font-weight: 700;
-      color: #fff; /* White title */
-      text-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
       letter-spacing: 1px;
       margin-bottom: 0;
       text-align: center;
     }
     .anime-desc {
       font-size: 0.9em;
-      color: #c0c8e7;
+      color: #d0d0d0;
       line-height: 1.5em;
-      border-left: 3px solid #4da6ff; /* Blue border */
+      border-left: 3px solid #a5b4fc;
       padding-left: 16px;
-      max-height: 100px; /* Limit height */
+      max-height: 100px;
       overflow-y: auto;
       text-align: left;
       width: 100%;
@@ -235,53 +243,55 @@
     .badges {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px; /* Increased gap */
+      gap: 8px;
       justify-content: center;
     }
     .badge {
-      background: rgba(77, 166, 255, 0.15);
-      border: 1px solid rgba(77, 166, 255, 0.3);
-      color: #e0e6f7;
-      padding: 5px 12px;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(165, 180, 252, 0.4);
+      color: #a5b4fc;
+      padding: 6px 14px;
       font-size: 0.8em;
-      border-radius: 30px; /* Pill shape */
-      font-weight: 500;
+      border-radius: 20px;
+      font-weight: 600;
       letter-spacing: 0.5px;
-      transition: background 0.2s, color 0.2s;
+      transition: all 0.2s;
     }
     .badge:hover {
-      background: rgba(77, 166, 255, 0.3);
+      background: rgba(99, 102, 241, 0.35);
       color: #fff;
+      transform: translateY(-2px);
     }
     .kinopoisk-link {
-      color: #4da6ff;
+      color: #a5b4fc;
       font-weight: bold;
       text-decoration: none;
       display: block;
       margin-top: 10px;
-      transition: color 0.2s;
+      transition: all 0.3s ease;
     }
     .kinopoisk-link:hover {
-      color: #1c75d8;
+      color: #c084fc;
+      transform: translateX(3px);
     }
     .watch-btn-inner {
-      background: linear-gradient(90deg, #4da6ff 0%, #1c75d8 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       color: #fff;
       border: none;
       border-radius: 12px;
-      font-size: 0.9em; /* Smaller font size */
-      padding: 8px 18px; /* Smaller padding */
+      font-size: 0.9em;
+      padding: 10px 18px;
       cursor: pointer;
       font-weight: 700;
-      box-shadow: 0 4px 15px rgba(77, 166, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
       transition: all 0.3s ease;
       margin-top: 10px;
       width: 100%;
     }
     .watch-btn-inner:hover {
-      background: linear-gradient(90deg, #1c75d8 0%, #4da6ff 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(77, 166, 255, 0.3);
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
     }
     #genreSettings {
       background: rgba(10, 15, 26, 0.5);
@@ -340,33 +350,33 @@
 </head>
 <body>
     <div class="top-bar">
-      <a href="intro.html" style="text-decoration:none;"><h1 id="mainTitle">AnimeFound Randomizer</h1></a>
+      <a href="index.html" style="text-decoration:none;"><h1 id="mainTitle">AnimeFound Randomizer</h1></a>
     </div>
     <div style="height: 55px;"></div> <!-- Spacer for fixed top bar -->
     <div class="main-layout">
       <aside class="settings-panel">
-        <h2>Настройки</h2>
-        <button class="random-btn" id="genreToggleBtn" style="width:100%;margin-bottom:10px;">Жанр ▼</button>
+        <h2 data-i18n="settings"></h2>
+        <button class="random-btn" id="genreToggleBtn" style="width:100%;margin-bottom:10px;" data-i18n="genres"></button>
         <div id="genreSettings" style="display:none;">
           <div id="genreCheckboxes" style="max-height:200px;overflow-y:auto;"></div>
         </div>
         <div>
-          <label for="yearInput"><span>Год:</span></label>
+          <label for="yearInput"><span data-i18n="year"></span></label>
           <div class="input-group">
-            <input type="number" id="yearInput" min="1980" max="2025" placeholder="Любой" />
+            <input type="number" id="yearInput" min="1980" max="2025" placeholder="Any" />
             <button id="yearBtn">🔍</button>
           </div>
         </div>
         <div>
-          <label for="scoreInput"><span>Рейтинг:</span></label>
+          <label for="scoreInput"><span data-i18n="score"></span></label>
           <div class="input-group">
-            <input type="number" id="scoreInput" min="0" max="10" step="0.1" placeholder="Любой" />
+            <input type="number" id="scoreInput" min="0" max="10" step="0.1" placeholder="Any" />
           </div>
         </div>
         <div style="margin-top: auto; padding-top: 10px;"> <!-- Pushes buttons to the bottom -->
           <button class="lang-btn" id="langBtn" style="width:100%;">English</button>
         </div>
-        <button class="random-btn" id="randomBtn" style="width:100%;">🎲 Случайное аниме</button>
+        <button class="random-btn" id="randomBtn" style="width:100%;" data-i18n="getRandom"></button>
       </aside>
       <div class="content-panel">
         <div id="animeCard"></div>
@@ -642,12 +652,10 @@
         if (watchBtnInner) {
           watchBtnInner.addEventListener('click', function(e) {
             e.stopPropagation();
-            if (currentLang === 'en') {
-              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
-            } else {
-              const animeLink = `https://anilibria.wiki/release/${slugify(origTitle)}.html`;
-              window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=ru`;
-            }
+            const params = new URLSearchParams({
+              title, desc, img, episodes: episodes || '', score: score || '', year: year || ''
+            });
+            window.location.href = `anime-watch.html?${params.toString()}`;
           });
         }
 
@@ -658,7 +666,7 @@
           const params = new URLSearchParams({
             title, desc, img, episodes: episodes || '', score: score || '', year: year || ''
           });
-          window.location.href = `card.html?${params.toString()}`;
+          window.location.href = `anime-watch.html?${params.toString()}`;
         });
 
       } catch (e) {

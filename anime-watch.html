@@ -6,6 +6,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
   <title>Смотреть аниме</title>
+  <script src="translations.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -14,25 +15,29 @@
       box-sizing: border-box;
     }
     body {
-      background: #0f0f0f;
+      background: linear-gradient(135deg, #0a0f1a 0%, #1a1a2e 100%);
       color: #e0e0e0;
       font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
       min-height: 100vh;
     }
     .header {
-      background: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
+      background: rgba(10, 15, 26, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
       padding: 15px 30px;
       display: flex;
       align-items: center;
       gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     .back-btn {
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #6366f1;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #a5b4fc;
       padding: 10px 20px;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 0.95em;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -43,13 +48,14 @@
       font-weight: 600;
     }
     .back-btn:hover {
-      background: rgba(99, 102, 241, 0.2);
-      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.3);
+      border-color: #a5b4fc;
+      transform: translateX(-3px);
     }
     .logo {
       font-size: 1.3em;
       font-weight: 700;
-      color: #6366f1;
+      color: #a5b4fc;
       text-decoration: none;
     }
     .container {
@@ -57,36 +63,21 @@
       margin: 0 auto;
       padding: 0;
     }
-    .video-section {
-      background: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
-    }
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      background: #000;
-    }
-    .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
     .episode-header {
-      padding: 25px 30px;
-      background: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
+      padding: 40px 30px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
     }
     .anime-title {
-      font-size: 2em;
-      font-weight: 700;
+      font-size: 2.5em;
+      font-weight: 800;
       color: #fff;
       margin-bottom: 15px;
-      line-height: 1.3;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .badges {
       display: flex;
@@ -95,37 +86,75 @@
       margin-bottom: 15px;
     }
     .badge {
-      background: rgba(99, 102, 241, 0.15);
-      border: 1px solid rgba(99, 102, 241, 0.3);
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(165, 180, 252, 0.4);
       color: #a5b4fc;
-      padding: 6px 14px;
+      padding: 8px 16px;
       font-size: 0.85em;
-      border-radius: 6px;
+      border-radius: 20px;
       font-weight: 600;
+      backdrop-filter: blur(5px);
     }
     .description {
-      font-size: 1em;
-      color: #b0b0b0;
-      line-height: 1.7;
+      font-size: 1.05em;
+      color: #d0d0d0;
+      line-height: 1.8;
       max-width: 900px;
     }
+
+    /* Description section */
+    .description-section {
+      padding: 40px 30px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    .description-section h2 {
+      font-size: 1.6em;
+      color: #fff;
+      margin-bottom: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .description-section h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 2px;
+    }
+    .description-section .description {
+      font-size: 1.1em;
+      color: #d0d0d0;
+      line-height: 2;
+      max-width: none;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
     .content-section {
       display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 30px;
-      padding: 30px;
-      background: #0f0f0f;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 40px 30px;
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.5) 0%, rgba(15, 15, 31, 0.5) 100%);
     }
     .poster-section {
       position: sticky;
-      top: 20px;
+      top: 100px;
       align-self: start;
     }
     .poster {
       width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
       margin-bottom: 20px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      transition: transform 0.3s ease;
+    }
+    .poster:hover {
+      transform: translateY(-5px);
     }
     .action-buttons {
       display: flex;
@@ -133,84 +162,168 @@
       gap: 12px;
     }
     .btn {
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       color: #fff;
       text-decoration: none;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 0.95em;
-      padding: 12px 24px;
+      padding: 14px 28px;
       cursor: pointer;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
       transition: all 0.3s ease;
       text-align: center;
       display: block;
     }
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(99, 102, 241, 0.5);
     }
     .btn-secondary {
-      background: #2a2a2a;
-      border: 1px solid #3a3a3a;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: none;
+      backdrop-filter: blur(5px);
     }
     .btn-secondary:hover {
-      background: #3a3a3a;
-      box-shadow: none;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
     .details-section h2 {
-      font-size: 1.4em;
+      font-size: 1.6em;
       color: #fff;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .video-source {
-      margin-top: 20px;
-      padding: 20px;
-      background: #1a1a1a;
-      border-radius: 12px;
-      border: 1px solid #2a2a2a;
-      text-align: center;
-    }
-    .video-source p {
-      color: #b0b0b0;
-      font-size: 0.95em;
-    }
-    .video-source a {
-      color: #6366f1;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .video-source a:hover {
-      text-decoration: underline;
+    .details-section h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 2px;
     }
     .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
-      margin-top: 20px;
+      margin-top: 25px;
     }
     .info-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 20px;
+      background: rgba(26, 26, 46, 0.6);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 14px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      background: rgba(26, 26, 46, 0.8);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
     }
     .info-card h3 {
-      font-size: 0.85em;
-      color: #808080;
+      font-size: 0.8em;
+      color: #a5b4fc;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      font-weight: 700;
     }
     .info-card p {
-      font-size: 1.1em;
+      font-size: 1.2em;
       color: #fff;
       font-weight: 600;
     }
+
+    /* Genres section */
+    .genres-section {
+      margin-top: 30px;
+    }
+    .genres-section h3 {
+      font-size: 1.1em;
+      color: #fff;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    .genres-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .genre-tag {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2));
+      border: 1px solid rgba(165, 180, 252, 0.4);
+      color: #a5b4fc;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: 600;
+      backdrop-filter: blur(5px);
+    }
+
+    /* Additional info */
+    .additional-info {
+      margin-top: 30px;
+    }
+    .additional-info h3 {
+      font-size: 1.2em;
+      color: #fff;
+      margin-bottom: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .additional-info h3::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 2px;
+    }
+
+    /* Series buttons (hide if not needed) */
+    .series-section {
+      margin-top: 20px;
+    }
+    .series-section h3 {
+      margin: 0 0 10px 0;
+      color: #fff;
+      font-size: 0.95em;
+      font-weight: 700;
+    }
+    .series-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .series-buttons button {
+      background: #2a2a2a;
+      color: #e6e6e6;
+      border: 1px solid #3a3a3a;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      min-width: 44px;
+      text-align: center;
+    }
+    .series-buttons button:hover {
+      background: #3a3a3a;
+    }
+    .series-buttons button.active {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      border-color: rgba(99,102,241,0.9);
+      color: #fff;
+      box-shadow: 0 6px 12px rgba(79,70,229,0.2);
+      transform: translateY(-2px);
+    }
+
     @media (max-width: 1024px) {
       .content-section {
         grid-template-columns: 1fr;
@@ -247,7 +360,7 @@
 </head>
 <body>
   <div class="header">
-    <a href="javascript:history.back()" class="back-btn">← Назад</a>
+    <a href="javascript:history.back()" class="back-btn" data-i18n="back"></a>
     <a href="index.html" class="logo">AnimeFound</a>
   </div>
   
@@ -256,51 +369,70 @@
     <div class="episode-header">
       <h1 class="anime-title" id="animeTitle"></h1>
       <div class="badges" id="animeBadges"></div>
-      <div class="description" id="animeDescription"></div>
+    </div>
+
+    <div class="description-section">
+      <h2 data-i18n="description"></h2>
+      <p class="description" id="animeDescription"></p>
     </div>
 
     <div class="content-section">
       <div class="poster-section">
         <img id="animePoster" class="poster" src="" alt="Anime Poster">
         <div class="action-buttons">
-          <a href="https://rutube.ru/u/animach/" target="_blank" class="btn">📺 Больше аниме на Rutube</a>
-          <a href="index.html" class="btn btn-secondary">🔍 Вернуться к поиску</a>
+          <a href="index.html" class="btn btn-secondary">🔍 <span data-i18n="watchAnime"></span></a>
         </div>
       </div>
 
       <div class="details-section">
-        <h2>Информация о видео</h2>
+        <h2 data-i18n="watchAnime"></h2>
         <div class="info-grid">
           <div class="info-card">
-            <h3>Год выпуска</h3>
+            <h3 data-i18n="year"></h3>
             <p id="infoYear">-</p>
           </div>
           <div class="info-card">
-            <h3>Эпизоды</h3>
+            <h3 data-i18n="episodes"></h3>
             <p id="infoEpisodes">-</p>
           </div>
           <div class="info-card">
-            <h3>Рейтинг</h3>
+            <h3 data-i18n="score"></h3>
             <p id="infoScore">-</p>
           </div>
         </div>
 
-        <div class="video-source">
-          <p>Видео предоставлено каналом <a href="https://rutube.ru/u/animach/" target="_blank">Анимач — аниме онлайн</a> на Rutube<br>
-          54,243+ аниме видео доступны для просмотра</p>
+        <div class="genres-section">
+          <h3 data-i18n="genres"></h3>
+          <div class="genres-list" id="genresList"></div>
+        </div>
+
+        <div class="additional-info">
+          <h3 data-i18n="watchAnime"></h3>
+          <div class="info-grid">
+            <div class="info-card">
+              <h3 data-i18n="studio"></h3>
+              <p id="infoStudio">-</p>
+            </div>
+            <div class="info-card">
+              <h3 data-i18n="type"></h3>
+              <p id="infoType">-</p>
+            </div>
+            <div class="info-card">
+              <h3 data-i18n="status"></h3>
+              <p id="infoStatus">-</p>
+            </div>
+            <div class="info-card">
+              <h3 data-i18n="season"></h3>
+              <p id="infoSeason">-</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="container">
-    <div class="video-section">
-      <div class="video-container" id="videoContainer">
-        <!-- Rutube video will be embedded here -->
-      </div>
-    </div>
-  </div>
 
   <script>
-    // Unified script: embed Rutube by rutube_id only.
+    // Fill metadata
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const title = params.get('title') || 'Название аниме';
@@ -309,8 +441,13 @@
       const year = params.get('year') || '';
       const episodes = params.get('episodes') || '';
       const score = params.get('score') || '';
-      // The only required value you must provide: rutube_id
-      const rutubeId = params.get('rutube_id') || params.get('id') || '';
+      
+      // Additional parameters
+      const genres = params.get('genres') || '';
+      const studio = params.get('studio') || '';
+      const type = params.get('type') || '';
+      const status = params.get('status') || '';
+      const season = params.get('season') || '';
 
       // Fill metadata
       document.getElementById('animeTitle').textContent = title;
@@ -324,34 +461,22 @@
       if (score) { badges.push(`<span class="badge">⭐ ${score}</span>`); document.getElementById('infoScore').textContent = `${score} / 10`; }
       document.getElementById('animeBadges').innerHTML = badges.join('');
 
-      const videoContainer = document.getElementById('videoContainer');
+      // Fill additional info
+      if (studio) document.getElementById('infoStudio').textContent = studio;
+      if (type) document.getElementById('infoType').textContent = type;
+      if (status) document.getElementById('infoStatus').textContent = status;
+      if (season) document.getElementById('infoSeason').textContent = season;
 
-      function embed(id) {
-        videoContainer.innerHTML = `<iframe src="https://rutube.ru/play/embed/${encodeURIComponent(id)}" frameborder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>`;
+      // Fill genres
+      if (genres) {
+        const genreList = document.getElementById('genresList');
+        const genreArray = genres.split(',').map(g => g.trim()).filter(g => g);
+        genreList.innerHTML = genreArray.map(genre => 
+          `<span class="genre-tag">${genre}</span>`
+        ).join('');
+      } else {
+        document.querySelector('.genres-section').style.display = 'none';
       }
-
-      if (rutubeId) {
-        embed(rutubeId);
-        return;
-      }
-
-      // If rutube_id not provided — show simple manual input and search fallback.
-      videoContainer.innerHTML = `
-        <div style="padding:20px;color:#c9c9c9">
-          <p>rutube_id отсутствует. Вставьте id видео (например: abcde12345) и нажмите «Вставить», или откройте поиск на Rutube.</p>
-          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-            <input id="manualRutubeId" placeholder="rutube id" style="flex:1;min-width:220px;padding:8px;border-radius:6px;border:1px solid #333;background:#0f0f0f;color:#fff">
-            <button id="embedBtn" class="btn">Вставить</button>
-            <a id="openSearch" class="btn btn-secondary" target="_blank" rel="noopener">Поиск на Rutube</a>
-          </div>
-        </div>
-      `;
-      document.getElementById('openSearch').href = `https://rutube.ru/search/?q=${encodeURIComponent(title || 'аниме')}`;
-      document.getElementById('embedBtn').addEventListener('click', () => {
-        const v = document.getElementById('manualRutubeId').value.trim();
-        if (!v) return alert('Введите rutube_id');
-        embed(v);
-      });
     });
     </script>
 </body>

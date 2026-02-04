@@ -7,13 +7,13 @@ const translations = {
     game: "Угадай аниме",
     more: "Ещё",
     back: "← Назад",
-    
+
     // Index page
     noResults: "Ничего не найдено.",
     loading: "Загрузка...",
     loadMore: "Показать ещё",
     watchAnime: "Смотреть аниме",
-    
+
     // Anime watch page
     description: "Описание",
     year: "Год",
@@ -25,7 +25,7 @@ const translations = {
     season: "Сезон",
     genres: "Жанры",
     noDescription: "Описание отсутствует.",
-    
+
     // Randomizer
     getRandom: "Рандомное аниме",
     watched: "Смотрел",
@@ -35,7 +35,7 @@ const translations = {
     noAnimeFound: "Аниме не найдено",
     restartRound: "Начать раунд заново",
     notWatchedTitle: "Ты не смотрел аниме",
-    
+
     // Game pages
     gameTitle: "Угадай аниме",
     gameYesBtn: "Смотрел",
@@ -43,7 +43,7 @@ const translations = {
     gameScore: "Очки",
     gameRestart: "Начать заново",
     haveForgotten: "Забыл аниме",
-    
+
     // Footer
     copyright: "© 2025 AnimeFound"
   },
@@ -55,13 +55,13 @@ const translations = {
     game: "Guess Anime",
     more: "More",
     back: "← Back",
-    
+
     // Index page
     noResults: "No results found.",
     loading: "Loading...",
     loadMore: "Load More",
     watchAnime: "Watch Anime",
-    
+
     // Anime watch page
     description: "Description",
     year: "Year",
@@ -73,7 +73,7 @@ const translations = {
     season: "Season",
     genres: "Genres",
     noDescription: "No description available.",
-    
+
     // Randomizer
     getRandom: "Get Random Anime",
     watched: "Watched",
@@ -83,7 +83,7 @@ const translations = {
     noAnimeFound: "No anime found",
     restartRound: "Start a new round",
     notWatchedTitle: "You haven't watched these anime",
-    
+
     // Game pages
     gameTitle: "Guess Anime",
     gameYesBtn: "Watched",
@@ -91,7 +91,7 @@ const translations = {
     gameScore: "Score",
     gameRestart: "Start over",
     haveForgotten: "Forgotten anime",
-    
+
     // Footer
     copyright: "© 2025 AnimeFound"
   }
@@ -106,7 +106,7 @@ function setLanguage(lang) {
 }
 
 function t(key) {
-  return translations[currentLang][key] || translations['ru'][key] || key;
+  return translations[currentLang][key] || translations.ru[key] || key;
 }
 
 function updatePageLanguage() {
@@ -115,13 +115,13 @@ function updatePageLanguage() {
     const key = element.getAttribute('data-i18n');
     element.textContent = t(key);
   });
-  
+
   // Получаем все input placeholders с атрибутом data-i18n-placeholder
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
     element.placeholder = t(key);
   });
-  
+
   // Обновляем язык html элемента
   document.documentElement.lang = currentLang;
 }

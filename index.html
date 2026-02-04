@@ -314,7 +314,7 @@
           <div id="login-profile-section"></div>
 
           <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" data-i18n="randomizer" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;"></a>
-          <a href="Anime Found.html" class="top-bar-btn" id="guessAnimeBtn" data-i18n="game" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;"></a>
+          <a href="Anime%20Found.html" class="top-bar-btn" id="guessAnimeBtn" data-i18n="game" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;"></a>
           <div style="display: flex; gap: 5px;">
             <button class="top-bar-btn" id="langBtnRu" onclick="setLanguage('ru')" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">РУ</button>
             <button class="top-bar-btn" id="langBtnEn" onclick="setLanguage('en')" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">EN</button>
@@ -355,9 +355,9 @@
       updatePageLanguage(); // Call global function from translations.js
       const guessBtn = document.getElementById('guessAnimeBtn');
       if (currentLang === 'ru') {
-        guessBtn.href = 'Anime Found.html';
+        guessBtn.href = 'Anime%20Found.html';
       } else {
-        guessBtn.href = 'Anime Found_eng.html';
+        guessBtn.href = 'Anime%20Found_eng.html';
       }
       if (langChanged) {
         loadAnime(true); // reload anime cards with new language
@@ -478,6 +478,11 @@
           // --- INTEGRATION END ---
 
           let title, desc, img, episodes, score, year;
+          let genresText = '';
+          let studioText = '';
+          let typeText = '';
+          let statusText = '';
+          let seasonText = '';
           if (currentLang === 'ru') {
             // Shikimori fields
             title = anime.russian || anime.name;
@@ -488,6 +493,11 @@
             desc = (anime.description && anime.description.trim().length > 0)
               ? anime.description.slice(0, 150) + "..."
               : translations.ru.noDesc;
+            genresText = anime.genres && anime.genres.length ? anime.genres.map(g => g.name).join(', ') : '';
+            studioText = anime.studios && anime.studios.length ? anime.studios.map(s => s.name).join(', ') : '';
+            typeText = anime.kind || '';
+            statusText = anime.status || '';
+            seasonText = anime.season || '';
           } else {
             // Jikan fields
             title = anime.title;
@@ -496,6 +506,11 @@
             episodes = anime.episodes;
             score = anime.score;
             year = anime.year;
+            genresText = anime.genres && anime.genres.length ? anime.genres.map(g => g.name).join(', ') : '';
+            studioText = anime.studios && anime.studios.length ? anime.studios.map(s => s.name).join(', ') : '';
+            typeText = anime.type || '';
+            statusText = anime.status || '';
+            seasonText = anime.season || '';
           }
           const badges = [];
           if (episodes) badges.push(`<div class="badge">${episodes} eps</div>`);
@@ -538,7 +553,22 @@
               animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId}`;
+            const params = new URLSearchParams({
+              id: animeId,
+              title,
+              desc,
+              img,
+              year: year || '',
+              episodes: episodes || '',
+              score: score || '',
+              genres: genresText || '',
+              studio: studioText || '',
+              type: typeText || '',
+              status: statusText || '',
+              season: seasonText || '',
+              lang: currentLang
+            });
+            window.location.href = `anime-watch.html?${params.toString()}`;
                       });
           box.addEventListener('click', function(e) {
             if (e.target.classList.contains('watch-btn') || e.target.closest('.user-actions')) return;
@@ -547,7 +577,21 @@
               animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
+            const params = new URLSearchParams({
+              id: animeId,
+              title,
+              desc,
+              img,
+              episodes: episodes || '',
+              score: score || '',
+              year: year || '',
+              genres: genresText || '',
+              studio: studioText || '',
+              type: typeText || '',
+              status: statusText || '',
+              season: seasonText || '',
+              lang: currentLang
+            });
             window.location.href = `anime-watch.html?${params.toString()}`;
           });
 
@@ -598,6 +642,7 @@
       boxes.forEach(box => {
         // The data is stored in the HTML, we need to retrieve it.
         // This is a bit fragile, a better way would be to use data-* attributes.
+        const animeId = box.dataset.animeId || '';
         const title = box.querySelector('.anime-title').textContent;
         const desc = box.querySelector('.anime-desc').textContent;
         const img = box.querySelector('.anime-img').src;
@@ -648,7 +693,16 @@
             currentPage: currentPage
           };
           sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-          const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '', id: animeId || '' });
+          const params = new URLSearchParams({
+            title,
+            desc,
+            img,
+            episodes: episodes || '',
+            score: score || '',
+            year: year || '',
+            id: animeId,
+            lang: currentLang
+          });
           window.location.href = `anime-watch.html?${params.toString()}`;
       });
     });
@@ -681,8 +735,6 @@
         loadAnime(true);
       }
     }
-
-    loadInitial();
 
     document.getElementById("loadMoreBtn").addEventListener("click", () => {
       currentPage++;
@@ -721,9 +773,11 @@
       } finally {
         // Update the UI with user info (or lack thereof)
         updateLoginUI();
-        // Now that user data is fetched (or failed), load the initial anime list
-        // Avoid double-calling if loadInitial already queued elsewhere
-        if (!window.__animeInitialLoaded) { window.__animeInitialLoaded = true; loadInitial(); }
+        // Load initial anime list once user data (or failure) is resolved
+        if (!window.__animeInitialLoaded) {
+          window.__animeInitialLoaded = true;
+          loadInitial();
+        }
       }
     }
 

@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +6,42 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png">
+  <link rel="apple-touch-icon" href="Flux_Dev_Logo_design_for_AnimeFound_sleek_and_modern_dark_blue_2.png"> <!-- Оставляем PNG для Apple -->
+  <!-- SEO -->
+  <meta name="title" content="AnimeFound - Найди своё аниме">
+  <meta name="description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском. Находи любое аниме легко!">
+
+  <!-- Open Graph (для Facebook, Telegram, VK) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://your-site.com/">
+  <meta property="og:title" content="AnimeFound - Найди своё аниме">
+  <meta property="og:description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском.">
+  <meta property="og:image" content="https://your-site.com/preview.png">
+
+  <!-- Twitter Card (для Twitter/X) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://your-site.com/">
+  <meta name="twitter:title" content="AnimeFound - Найди своё аниме">
+  <meta name="twitter:description" content="AnimeFound — база аниме с трейлерами, описанием, рейтингами и поиском.">
+  <meta name="twitter:image" content="https://your-site.com/preview.png">
+
+  <!-- Favicon -->
+   <!-- Стандартный favicon для старых браузеров и Яндекса -->
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- Современный вариант (SVG) -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- PNG для универсальности -->
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+
+<!-- Apple Touch Icon -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
 
   <title>AnimeFound</title>
   <style>
-     body {
+    body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       background: linear-gradient(135deg, #0a0f1a 0%, #11294d 100%);
@@ -253,8 +282,9 @@
 </head>
 <body>
   
+
   <div class="top-bar">
-    <a href="/intro"><h1>AnimeFound</h1></a>
+    <a href="intro.html"><h1>AnimeFound</h1></a>
     <div class="top-bar-main-content" style="flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 15px;">
       <div class="search">
         <input type="text" id="searchInput" placeholder="Search anime..." />
@@ -262,28 +292,32 @@
       <div class="more-btn-container" style="position: relative; display: flex; align-items: center; flex-shrink: 0;">
         <button class="top-bar-btn" id="moreBtn">More</button>
         <div id="more-buttons-dropdown" class="more-dropdown">
+          
+          <!-- New placeholder for login/profile status -->
           <div id="login-profile-section"></div>
 
-          <a href="/randomizer" class="top-bar-btn" id="randomizerBtn">🎲 Рандом</a>
-          <a href="/anime-found" class="top-bar-btn" id="guessAnimeBtn">Guess Game</a>
+          <a href="randomizer.html" class="top-bar-btn" id="randomizerBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">🎲 Рандом</a>
+          <a href="/anime-found" class="top-bar-btn" id="guessAnimeBtn" style="margin: 0; width: 100%; text-align: center; box-sizing: border-box;">Guess Game</a>
           <div style="display: flex; gap: 5px;">
-            <button class="top-bar-btn" id="langBtnRu">RU</button>
-            <button class="top-bar-btn" id="langBtnEn">EN</button>
+            <button class="top-bar-btn" id="langBtnRu" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">RU</button>
+            <button class="top-bar-btn" id="langBtnEn" style="margin: 0; flex-grow: 1; text-align: center; box-sizing: border-box;">EN</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div style="height:80px;"></div>
-
+  <div style="height:80px;"></div> <!-- Spacer for fixed top bar -->
   <div class="container" id="animeContainer"></div>
+  <div id="pageError" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#ff5252;color:#fff;padding:10px 18px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,0.3);z-index:9999;"></div>
+
   <p id="noResults" style="text-align:center; display:none; margin-top:20px; font-size:1.2em; color:#ff6666;">
     No results found.
   </p>
+
   <button class="load-more" id="loadMoreBtn">Load More</button>
 
   <script>
-      const moreBtn = document.getElementById('moreBtn');
+    const moreBtn = document.getElementById('moreBtn');
     const moreDropdown = document.getElementById('more-buttons-dropdown');
 
     moreBtn.addEventListener('click', () => {
@@ -374,8 +408,8 @@
           } else {
             url = `https://shikimori.one/api/animes?limit=${limit}&page=${currentPage}&order=popularity`;
           }
-          const res = await fetch(url);
-          data.data = await res.json();
+          const res = await safeFetch(url);
+            data.data = await res.json();
         } else {
           // Use Jikan API for English
           if (searchMode && searchQuery) {
@@ -383,7 +417,7 @@
           } else {
             url = `https://api.jikan.moe/v4/top/anime?page=${currentPage}&limit=${limit}`;
           }
-          const res = await fetch(url);
+          const res = await safeFetch(url);
           data = await res.json();
         }
 
@@ -519,12 +553,8 @@
               animeHTML: document.getElementById('animeContainer').innerHTML, currentPage: currentPage
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            if (currentLang === 'en') {
-              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
-            } else {
-              window.location.href = `choose.html?anime=${encodeURIComponent(title)}&animeLink=${encodeURIComponent(animeLink)}&lang=${currentLang}`;
-            }
-          });
+            window.location.href = `anime-watch.html?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(desc)}&img=${encodeURIComponent(img)}&year=${year || ''}&episodes=${episodes || ''}&score=${score || ''}&id=${animeId}`;
+                      });
           box.addEventListener('click', function(e) {
             if (e.target.classList.contains('watch-btn') || e.target.closest('.user-actions')) return;
             const state = {
@@ -533,38 +563,10 @@
             };
             sessionStorage.setItem('animeFoundState', JSON.stringify(state));
             const params = new URLSearchParams({ id: animeId, title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
-            window.location.href = `card.html?${params.toString()}`;
+            window.location.href = `anime-watch.html?${params.toString()}`;
           });
 
-    async function loadAnime(reset=false) {
-      try {
-        // ... твой код API-запроса ...
-        
-        data.data.forEach((anime) => {
-          if (isHentai(anime)) return;
-          const box = document.createElement("div");
-          box.className = "anime-box";
-
-          let title = anime.title || anime.russian;
-          let img = anime.images?.jpg?.image_url || anime.image?.preview || "";
-          
-          box.innerHTML = `
-            <img class="anime-img" src="${img}" alt="${title}" loading="lazy">
-            <div class="anime-content">
-              <div class="anime-title">${title}</div>
-              <button class="watch-btn">${translations[currentLang].watchAnime}</button>
-            </div>
-          `;
-          document.getElementById("animeContainer").appendChild(box);
-        });
-      } catch (e) {
-        console.error("Error loading anime:", e);
-        document.getElementById("noResults").style.display = "block";
-        document.getElementById("noResults").textContent = "Ошибка загрузки, попробуйте позже.";
-      }
-    }
-
-             // --- INTEGRATION START: Add event listeners for new buttons ---
+          // --- INTEGRATION START: Add event listeners for new buttons ---
           if (user) {
             box.querySelectorAll('.action-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
@@ -608,78 +610,78 @@
       const container = document.getElementById("animeContainer");
       const boxes = container.querySelectorAll('.anime-box');
 
-        boxes.forEach(box => {
-          // The data is stored in the HTML, we need to retrieve it.
-          // This is a bit fragile, a better way would be to use data-* attributes.
-          const title = box.querySelector('.anime-title').textContent;
-          const desc = box.querySelector('.anime-desc').textContent;
-          const img = box.querySelector('.anime-img').src;
-          
-          let episodes = '';
-          let score = '';
-          let year = '';
-          
-          const badges = box.querySelectorAll('.badge');
-          badges.forEach(badge => {
-            if (badge.textContent.includes('eps')) {
-              episodes = badge.textContent.replace(' eps', '').trim();
-            } else if (badge.textContent.includes('⭐')) {
-              score = badge.textContent.replace('⭐', '').trim();
-            } else if (!isNaN(badge.textContent)) {
-              year = badge.textContent.trim();
-            }
-          });
-
-          // Re-attach listener for the watch button
-          box.querySelector('.watch-btn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const state = {
-              searchQuery: document.getElementById('searchInput').value,
-              currentLang: currentLang,
-              scrollPos: window.scrollY,
-              animeHTML: document.getElementById('animeContainer').innerHTML,
-              currentPage: currentPage
-            };
-            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-
-            if (currentLang === 'en') {
-              window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
-            } else {
-              // We can't reconstruct the anilibria link here easily, so we'll just pass the title
-              window.location.href = `choose.html?anime=${encodeURIComponent(title)}&lang=${currentLang}`;
-            }
-          });
-
-          // Re-attach listener for the card itself
-          box.addEventListener('click', function(e) {
-            if (e.target.classList.contains('watch-btn')) return;
-            const state = {
-              searchQuery: document.getElementById('searchInput').value,
-              currentLang: currentLang,
-              scrollPos: window.scrollY,
-              animeHTML: document.getElementById('animeContainer').innerHTML,
-              currentPage: currentPage
-            };
-            sessionStorage.setItem('animeFoundState', JSON.stringify(state));
-            const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '' });
-            window.location.href = `card.html?${params.toString()}`;
-          });
+      boxes.forEach(box => {
+        // The data is stored in the HTML, we need to retrieve it.
+        // This is a bit fragile, a better way would be to use data-* attributes.
+        const title = box.querySelector('.anime-title').textContent;
+        const desc = box.querySelector('.anime-desc').textContent;
+        const img = box.querySelector('.anime-img').src;
+        
+        let episodes = '';
+        let score = '';
+        let year = '';
+        
+        const badges = box.querySelectorAll('.badge');
+        badges.forEach(badge => {
+          if (badge.textContent.includes('eps')) {
+            episodes = badge.textContent.replace(' eps', '').trim();
+          } else if (badge.textContent.includes('⭐')) {
+            score = badge.textContent.replace('⭐', '').trim();
+          } else if (!isNaN(badge.textContent)) {
+            year = badge.textContent.trim();
+          }
         });
-      }
 
-      function loadInitial() {
-        const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
+        // Re-attach listener for the watch button
+        box.querySelector('.watch-btn').addEventListener('click', function(e) {
+          e.stopPropagation();
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
 
-        if (savedState) {
-          document.getElementById('searchInput').value = savedState.searchQuery;
-          searchQuery = savedState.searchQuery;
-          searchMode = searchQuery.length > 0;
-          currentLang = savedState.currentLang;
-          document.getElementById('animeContainer').innerHTML = savedState.animeHTML;
-          currentPage = savedState.currentPage;
-          
-          updateLanguageUI();
-          
+          if (currentLang === 'en') {
+            window.location.href = `chooseeng.html?anime=${encodeURIComponent(title)}`;
+          } else {
+            // We can't reconstruct the anilibria link here easily, so we'll just pass the title
+            window.location.href = `choose.html?anime=${encodeURIComponent(title)}&lang=${currentLang}`;
+          }
+        });
+
+        // Re-attach listener for the card itself
+        box.addEventListener('click', function(e) {
+          if (e.target.classList.contains('watch-btn')) return;
+          const state = {
+            searchQuery: document.getElementById('searchInput').value,
+            currentLang: currentLang,
+            scrollPos: window.scrollY,
+            animeHTML: document.getElementById('animeContainer').innerHTML,
+            currentPage: currentPage
+          };
+          sessionStorage.setItem('animeFoundState', JSON.stringify(state));
+          const params = new URLSearchParams({ title, desc, img, episodes: episodes || '', score: score || '', year: year || '', id: animeId || '' });
+          window.location.href = `anime-watch.html?${params.toString()}`;
+      });
+    });
+    }
+
+    function loadInitial() {
+      const savedState = JSON.parse(sessionStorage.getItem('animeFoundState'));
+
+      if (savedState) {
+        document.getElementById('searchInput').value = savedState.searchQuery;
+        searchQuery = savedState.searchQuery;
+        searchMode = searchQuery.length > 0;
+        currentLang = savedState.currentLang;
+        document.getElementById('animeContainer').innerHTML = savedState.animeHTML;
+        currentPage = savedState.currentPage;
+        
+        updateLanguageUI();
+        
         // Re-attach event listeners to the restored HTML
         reAttachEventListeners();
 
@@ -715,10 +717,10 @@
     // Fetches user data and their anime list from the server
     async function fetchUserAndList() {
       try {
-        const userRes = await fetch('/api/user');
+        const userRes = await safeFetch('/api/user');
         if (userRes.ok) {
           user = await userRes.json();
-          const listRes = await fetch('/api/user/animelist');
+          const listRes = await safeFetch('/api/user/animelist');
           if (listRes.ok) {
             const list = await listRes.json();
             list.forEach(item => {
@@ -729,12 +731,38 @@
         }
       } catch (e) {
         console.error("Error fetching user data:", e);
+        showPageError('Ошибка сети при получении данных пользователя. Некоторые функции могут быть недоступны.');
         // Even if there's an error, we should still try to load the anime
       } finally {
         // Update the UI with user info (or lack thereof)
         updateLoginUI();
         // Now that user data is fetched (or failed), load the initial anime list
-        loadInitial();
+        // Avoid double-calling if loadInitial already queued elsewhere
+        if (!window.__animeInitialLoaded) { window.__animeInitialLoaded = true; loadInitial(); }
+      }
+    }
+
+    // Helper: show a persistent page-level error banner
+    function showPageError(msg, timeout=8000) {
+      const el = document.getElementById('pageError');
+      if (!el) return;
+      el.textContent = msg;
+      el.style.display = 'block';
+      if (timeout > 0) setTimeout(()=>{ el.style.display = 'none'; }, timeout);
+    }
+
+    // Helper: wrapper for fetch with network error handling
+    async function safeFetch(url, opts) {
+      try {
+        const r = await fetch(url, opts);
+        if (!r.ok) {
+          // show error for server/client errors (4xx/5xx)
+          showPageError(`Ошибка при запросе ${url}: ${r.status} ${r.statusText}`);
+        }
+        return r;
+      } catch (e) {
+        showPageError(`Сетевой сбой при запросе ${url}`);
+        throw e;
       }
     }
 
@@ -755,5 +783,6 @@
     fetchUserAndList();
 
   </script>
+  
 </body>
 </html>
